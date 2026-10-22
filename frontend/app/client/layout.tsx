@@ -16,7 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="pt-4 pb-2 px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
               Events
             </div>
-            <Link href="/client/events/create" className="flex items-center gap-3 px-3 py-2 text-[#266665] bg-[#DAEDED] rounded-lg font-medium">
+            <Link href="/client/events/create" className="flex items-center gap-3 px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-100">
               <span className="text-lg">✨</span> Plan a private event
             </Link>
             <Link href="/client/events/public/create" className="flex items-center gap-3 px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-100">
