@@ -288,6 +288,28 @@ button {
   letter-spacing: 0.1px;
 }
 
+.password-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.forgot-password-link {
+  margin: 0 0 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--teal);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.forgot-password-link:hover {
+  color: var(--teal-dark);
+  text-decoration: underline;
+}
+
 .role-heading .field-label {
   margin: 0;
 }
@@ -595,6 +617,29 @@ button {
   background: #e7f3eb;
   color: #347353;
   font-size: 25px;
+}
+
+.reset-success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.reset-success .success-icon {
+  margin: 0 0 20px;
+}
+
+.reset-success .eyebrow {
+  margin: 0 0 9px;
+  color: var(--teal);
+}
+
+.reset-success h2 {
+  margin: 0;
+}
+
+.reset-success .form-subtitle {
+  margin: 9px 0 20px;
 }
 
 .welcome-card .eyebrow {

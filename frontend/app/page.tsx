@@ -22,7 +22,7 @@ const roles = [
 
 type Role = (typeof roles)[number]["id"];
 type Mode = "signup" | "login";
-type Step = "form" | "verify" | "dashboard";
+type Step = "form" | "verify" | "reset-request" | "reset-verify" | "reset-password" | "reset-success" | "dashboard";
 
 type Account = {
   role: Role;
@@ -134,6 +134,8 @@ export default function Home() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [verificationInput, setVerificationInput] = useState("");
   const [verificationCode, setVerificationCode] = useState<VerificationCode | null>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [activeAccount, setActiveAccount] = useState<Account | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -219,25 +221,26 @@ export default function Home() {
     resetMessages();
     setVerificationCode(makeVerificationCode());
     setVerificationInput("");
-    setNotice("A new verification code is ready below. Previous codes are no longer valid.");
+    setNotice(step === "reset-verify"
+      ? "A new password reset code is ready. Previous codes are no longer valid."
+      : "A new verification code is ready below. Previous codes are no longer valid.");
   }
 
-  function handleVerify(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function checkVerificationCode() {
     resetMessages();
     if (!verificationCode) {
       setError("Request a new verification code to continue.");
-      return;
+      return false;
     }
     if (Date.now() > verificationCode.expiresAt) {
       setVerificationCode(null);
       setError("This code has expired. Request a new one to continue.");
-      return;
+      return false;
     }
     if (verificationCode.attempts >= MAX_CODE_ATTEMPTS) {
       setVerificationCode(null);
       setError("Too many incorrect attempts. Request a new code to continue.");
-      return;
+      return false;
     }
     if (verificationInput.trim() !== verificationCode.value) {
       const attempts = verificationCode.attempts + 1;
@@ -247,8 +250,15 @@ export default function Home() {
           ? "Too many incorrect attempts. Request a new code to continue."
           : `That code doesn't match. ${MAX_CODE_ATTEMPTS - attempts} attempts remaining.`,
       );
-      return;
+      return false;
     }
+
+    return true;
+  }
+
+  function handleVerify(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!checkVerificationCode()) return;
 
     try {
       const accounts = readAccounts();
@@ -271,12 +281,185 @@ export default function Home() {
     }
   }
 
+  function beginPasswordReset() {
+    setStep("reset-request");
+    setVerificationCode(null);
+    setVerificationInput("");
+    resetMessages();
+  }
+
+  function handleResetRequest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    resetMessages();
+
+    try {
+      const account = readAccounts().find(
+        (item) => getAccountKey(item.email, item.role) === getAccountKey(email, role),
+      );
+      if (!account) {
+        throw new Error("We couldn't find an account with that email and account type.");
+      }
+
+      setEmail(account.email);
+      setVerificationCode(makeVerificationCode());
+      setVerificationInput("");
+      setStep("reset-verify");
+      setNotice("Enter the password reset code to continue.");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "We couldn't start password reset. Please try again.");
+    }
+  }
+
+  function handleResetVerify(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!checkVerificationCode()) return;
+
+    const account = readAccounts().find(
+      (item) => getAccountKey(item.email, item.role) === getAccountKey(email, role),
+    );
+    if (!account) {
+      setVerificationCode(null);
+      setError("We couldn't find that account. Start password reset again.");
+      setStep("reset-request");
+      return;
+    }
+
+    setVerificationCode(null);
+    setVerificationInput("");
+    setStep("reset-password");
+    resetMessages();
+  }
+
+  async function handlePasswordReset(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    resetMessages();
+    setBusy(true);
+
+    try {
+      if (!passwordsMatch(newPassword, confirmNewPassword)) {
+        throw new Error("Use at least 8 characters with an uppercase letter, a lowercase letter, and a number. Both password fields must match.");
+      }
+
+      const accounts = readAccounts();
+      const accountKey = getAccountKey(email, role);
+      if (!accounts.some((item) => getAccountKey(item.email, item.role) === accountKey)) {
+        throw new Error("We couldn't find that account. Start password reset again.");
+      }
+
+      const { salt, hash } = await hashPassword(newPassword);
+      saveAccounts(accounts.map((item) => getAccountKey(item.email, item.role) === accountKey
+        ? { ...item, passwordSalt: salt, passwordHash: hash }
+        : item,
+      ));
+      setNewPassword("");
+      setConfirmNewPassword("");
+      setStep("reset-success");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "We couldn't update your password. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   function switchMode(nextMode: Mode) {
     setMode(nextMode);
     setStep("form");
     setVerificationCode(null);
     setVerificationInput("");
+    setNewPassword("");
+    setConfirmNewPassword("");
     resetMessages();
+  }
+
+  function renderPasswordReset() {
+    if (step === "reset-request") {
+      return (
+        <>
+          <button className="back-button" type="button" onClick={() => { setStep("form"); resetMessages(); }}>
+            <span aria-hidden="true">←</span> Back to sign in
+          </button>
+          <p className="eyebrow">ACCOUNT RECOVERY</p>
+          <h2>Reset your password</h2>
+          <p className="form-subtitle">Enter the email and account type associated with your account.</p>
+          <form className="auth-form" onSubmit={handleResetRequest}>
+            <div className="field">
+              <label className="field-label" htmlFor="reset-email">Email address</label>
+              <input className="text-input" id="reset-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+            </div>
+            <div className="field">
+              <label className="field-label" htmlFor="reset-role">Account type</label>
+              <select className="text-input" id="reset-role" value={role} onChange={(event) => setRole(event.target.value as Role)}>
+                {roles.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
+              </select>
+            </div>
+            {error && <p className="form-alert error-alert" role="alert">{error}</p>}
+            <button className="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button>
+          </form>
+        </>
+      );
+    }
+
+    if (step === "reset-verify") {
+      return (
+        <>
+          <button className="back-button" type="button" onClick={() => { setStep("reset-request"); resetMessages(); }}>
+            <span aria-hidden="true">←</span> Change email
+          </button>
+          <p className="eyebrow">ACCOUNT RECOVERY</p>
+          <h2>Enter your reset code</h2>
+          <p className="form-subtitle">Enter the 6-digit password reset code for <strong>{email}</strong>.</p>
+          <div className="verification-code-box" role="status">
+            <span className="verification-code-label">PASSWORD RESET CODE</span>
+            <strong className="verification-code-value">{verificationCode?.value ?? "------"}</strong>
+            <span className="verification-code-note">Expires in five minutes.</span>
+          </div>
+          <form className="auth-form" onSubmit={handleResetVerify}>
+            <div className="field">
+              <label className="field-label" htmlFor="reset-code">Verification code</label>
+              <input className="text-input code-input" id="reset-code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} placeholder="000000" value={verificationInput} onChange={(event) => setVerificationInput(event.target.value.replace(/\D/g, ""))} required />
+            </div>
+            <p className="field-hint">Code expires in 5 minutes. {verificationCode ? `${MAX_CODE_ATTEMPTS - verificationCode.attempts} attempts available.` : "Request a new code."}</p>
+            {error && <p className="form-alert error-alert" role="alert">{error}</p>}
+            {notice && <p className="form-alert success-alert" role="status">{notice}</p>}
+            <button className="primary-button" type="submit" disabled={!verificationCode}>Verify code <span aria-hidden="true">→</span></button>
+          </form>
+          <p className="switch-prompt">Need another code? <button className="inline-button" type="button" onClick={handleResendCode}>Send a new code</button></p>
+        </>
+      );
+    }
+
+    if (step === "reset-password") {
+      return (
+        <>
+          <p className="eyebrow">ACCOUNT RECOVERY</p>
+          <h2>Choose a new password</h2>
+          <p className="form-subtitle">Create a strong password you haven&apos;t used before.</p>
+          <form className="auth-form" onSubmit={handlePasswordReset}>
+            <div className="field">
+              <label className="field-label" htmlFor="new-password">New password</label>
+              <input className="text-input" id="new-password" type="password" autoComplete="new-password" minLength={8} value={newPassword} onChange={(event) => setNewPassword(event.target.value)} required />
+            </div>
+            <div className="field">
+              <label className="field-label" htmlFor="confirm-new-password">Confirm new password</label>
+              <input className="text-input" id="confirm-new-password" type="password" autoComplete="new-password" minLength={8} value={confirmNewPassword} onChange={(event) => setConfirmNewPassword(event.target.value)} required />
+            </div>
+            <p className="field-hint">Use 8+ characters, including uppercase, lowercase, and a number.</p>
+            {error && <p className="form-alert error-alert" role="alert">{error}</p>}
+            <button className="primary-button" type="submit" disabled={busy}>{busy ? "Updating password..." : "Update password"}</button>
+          </form>
+        </>
+      );
+    }
+
+    return (
+      <div className="reset-success">
+        <div className="success-icon" aria-hidden="true">✓</div>
+        <p className="eyebrow">PASSWORD UPDATED</p>
+        <h2>You&apos;re all set</h2>
+        <p className="form-subtitle">Your password has been changed. Sign in with your new password.</p>
+        <button className="primary-button" type="button" onClick={() => switchMode("login")}>Return to sign in</button>
+      </div>
+    );
   }
 
   function signOut() {
@@ -320,16 +503,16 @@ export default function Home() {
       </header>
 
       <section className="auth-shell" aria-label="EventHub account access">
-        <aside className={`intro-panel intro-panel-${step === "verify" ? "verify" : mode === "login" ? "login" : role === "Vendor" ? "vendor" : "client"}`}>
+        <aside className={`intro-panel intro-panel-${step === "verify" || step.startsWith("reset-") ? "verify" : mode === "login" ? "login" : role === "Vendor" ? "vendor" : "client"}`}>
           <div className="intro-orb intro-orb-one" />
           <div className="intro-orb intro-orb-two" />
           <div className="intro-content">
             <span className="intro-kicker"><span className="kicker-dot" /> EVENTHUB · MADE FOR GATHERINGS</span>
             <h1>
-              {step === "verify" ? <>One last<br /><em>step.</em></> : mode === "login" ? <>Welcome<br /><em>back.</em></> : role === "Vendor" ? <>Get booked for<br /><em>the good days.</em></> : <>Your event,<br /><em>planned with care.</em></>}
+              {step === "reset-request" ? <>Back to<br /><em>your plans.</em></> : step === "reset-verify" ? <>Check your<br /><em>email.</em></> : step === "reset-password" ? <>A fresh<br /><em>start.</em></> : step === "reset-success" ? <>You&apos;re all<br /><em>set.</em></> : step === "verify" ? <>One last<br /><em>step.</em></> : mode === "login" ? <>Welcome<br /><em>back.</em></> : role === "Vendor" ? <>Get booked for<br /><em>the good days.</em></> : <>Your event,<br /><em>planned with care.</em></>}
             </h1>
             <p className="intro-copy">
-              {step === "verify" ? "A quick email check, then you’re ready to bring your next event to life." : getRoleMessage(role)}
+              {step.startsWith("reset-") ? "Secure access to your EventHub account." : step === "verify" ? "A quick email check, then you’re ready to bring your next event to life." : getRoleMessage(role)}
             </p>
             <div className="intro-rule" />
             <p className="intro-caption">A place for every part of the celebration.</p>
@@ -342,7 +525,7 @@ export default function Home() {
 
         <section className="form-panel">
           <div className="form-content">
-            {step === "verify" ? (
+            {step.startsWith("reset-") ? renderPasswordReset() : step === "verify" ? (
               <>
                 <button
                   className="back-button"
@@ -478,7 +661,10 @@ export default function Home() {
                   </div>
                   <div className="field-row">
                     <div className="field">
-                      <label className="field-label" htmlFor="password">Password</label>
+                      <div className="password-label-row">
+                        <label className="field-label" htmlFor="password">Password</label>
+                        {mode === "login" && <button className="forgot-password-link" type="button" onClick={beginPasswordReset}>Forgot password?</button>}
+                      </div>
                       <input
                         className="text-input"
                         id="password"
