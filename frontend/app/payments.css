@@ -1,0 +1,524 @@
+.payments-page {
+  min-height: 100vh;
+  background: #f4f7f9;
+  color: #253643;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.payments-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 max(24px, calc((100vw - 1050px) / 2));
+  border-bottom: 1px solid #e8edf0;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.payments-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #263844;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.payments-brand-mark {
+  display: flex;
+  width: 15px;
+  color: #367c7d;
+}
+
+.payments-brand-mark svg {
+  width: 100%;
+}
+
+.payments-nav {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 28px;
+  color: #596773;
+  font-size: 11px;
+}
+
+.payments-nav a {
+  position: relative;
+  display: inline-flex;
+  height: 100%;
+  align-items: center;
+}
+
+.payments-nav a.active {
+  color: #226a69;
+  font-weight: 700;
+}
+
+.payments-nav a.active::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: #347b79;
+  content: "";
+}
+
+.payments-account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #46545f;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.notification-button {
+  position: relative;
+  display: grid;
+  width: 25px;
+  height: 30px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #63717b;
+}
+
+.notification-button svg {
+  width: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.notification-count {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  display: grid;
+  width: 13px;
+  height: 13px;
+  place-items: center;
+  border-radius: 50%;
+  background: #d64949;
+  color: white;
+  font-size: 8px;
+}
+
+.account-avatar,
+.vendor-avatar {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #e1b99a, #7b6358);
+  color: white;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+}
+
+.account-avatar {
+  width: 23px;
+  height: 23px;
+  font-size: 11px;
+}
+
+.payments-content {
+  width: min(100% - 40px, 940px);
+  margin: 0 auto;
+  padding: 39px 0 48px;
+}
+
+.payments-heading {
+  margin-bottom: 15px;
+}
+
+.payments-heading h1 {
+  margin: 0 0 5px;
+  color: #263844;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  line-height: 1.15;
+}
+
+.payments-heading p {
+  margin: 0;
+  color: #7a8790;
+  font-size: 11px;
+}
+
+.event-tabs {
+  display: flex;
+  gap: 23px;
+  min-height: 36px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e3eaee;
+}
+
+.event-tabs button {
+  position: relative;
+  padding: 0 0 10px;
+  border: 0;
+  background: none;
+  color: #6b7780;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.event-tabs button.selected {
+  color: #276e6c;
+  font-weight: 700;
+}
+
+.event-tabs button.selected::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: #347b79;
+  content: "";
+}
+
+.payments-card,
+.milestones-card {
+  border: 1px solid #e8edf0;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 7px 18px rgba(34, 57, 72, 0.07);
+}
+
+.payments-card {
+  padding: 18px 18px 16px;
+}
+
+.payments-card h2,
+.milestones-card h2 {
+  margin: 0 0 12px;
+  color: #303f4a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.payment-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.payment-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  color: #36444f;
+  font-size: 10px;
+  text-align: left;
+}
+
+.payment-table th {
+  height: 29px;
+  padding: 0 11px;
+  background: #e6f2f2;
+  color: #485b65;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.payment-table th:first-child {
+  width: 39%;
+}
+
+.payment-table td {
+  height: 38px;
+  padding: 5px 11px;
+  border-bottom: 1px solid #ebeff1;
+  white-space: nowrap;
+}
+
+.payment-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.payment-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 17px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.payment-status.successful {
+  background: #e0f4ed;
+  color: #38856b;
+}
+
+.payment-status.failed {
+  background: #fbe9e9;
+  color: #bc5656;
+}
+
+.payment-status.pending {
+  background: #fff3d8;
+  color: #b48724;
+}
+
+.receipt-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #367c7b;
+  font-weight: 700;
+}
+
+.receipt-link svg {
+  width: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.receipt-unavailable {
+  color: #829099;
+}
+
+.balance-pay-button {
+  display: inline-flex;
+  min-height: 29px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 13px;
+  background: #286c6b;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  transition: background 160ms ease;
+}
+
+.balance-pay-button:hover {
+  background: #1f5b5a;
+}
+
+.milestones-card {
+  margin-top: 16px;
+  padding: 19px 18px 13px;
+}
+
+.milestones-card h2 {
+  margin-bottom: 14px;
+}
+
+.vendors-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.vendor {
+  padding: 0 0 14px;
+}
+
+.vendor + .vendor {
+  padding-top: 13px;
+  border-top: 1px solid #edf0f2;
+}
+
+.vendor-heading {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.vendor-identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+}
+
+.vendor-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: linear-gradient(145deg, #e2aa77, #5d4030);
+  font-size: 13px;
+}
+
+.vendor:nth-child(even) .vendor-avatar {
+  background: linear-gradient(145deg, #d6a477, #754e39);
+}
+
+.vendor-identity h3 {
+  overflow: hidden;
+  margin: 0 0 3px;
+  color: #35434d;
+  font-size: 10px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vendor-identity p {
+  margin: 0;
+  color: #687781;
+  font-size: 9px;
+}
+
+.vendor-progress {
+  display: flex;
+  width: min(31%, 195px);
+  align-items: center;
+  gap: 8px;
+  color: #7d8990;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.progress-track {
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  background: #dceafa;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: #327773;
+}
+
+.milestone-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.milestone {
+  min-width: 0;
+  min-height: 69px;
+  padding: 9px 10px 8px;
+  border: 1px solid #e8edf1;
+  border-radius: 3px;
+  background: #f7f9fb;
+}
+
+.milestone.released {
+  border-color: #d0e8e6;
+  background: #e0f1f0;
+}
+
+.milestone-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.milestone h4 {
+  overflow: hidden;
+  margin: 0;
+  color: #35434c;
+  font-size: 9px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.milestone-topline span {
+  color: #687781;
+  font-size: 8px;
+}
+
+.milestone.released .milestone-topline span {
+  color: #38856b;
+  font-weight: 700;
+}
+
+.milestone p {
+  overflow: hidden;
+  margin: 5px 0 4px;
+  color: #849099;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.milestone strong {
+  color: #33434d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 680px) {
+  .payments-header {
+    height: 54px;
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .payments-nav {
+    gap: 14px;
+    font-size: 10px;
+  }
+
+  .payments-nav a:nth-child(1),
+  .payments-nav a:nth-child(2),
+  .account-name {
+    display: none;
+  }
+
+  .payments-content {
+    width: min(100% - 28px, 940px);
+    padding-top: 28px;
+  }
+
+  .payments-heading h1 {
+    font-size: 27px;
+  }
+
+  .vendor-heading {
+    align-items: flex-start;
+  }
+
+  .vendor-progress {
+    width: min(40%, 160px);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    text-align: right;
+  }
+
+  .milestone-list {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .milestone {
+    min-height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .balance-pay-button {
+    transition: none;
+  }
+}

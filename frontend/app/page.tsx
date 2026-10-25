@@ -1,96 +1,232 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import Link from "next/link";
+import { useState, type KeyboardEvent } from "react";
 
-const ticketPrice = 2500;
-const ticketCount = 2;
-const orderTotal = ticketPrice * ticketCount;
-
-const emptyForm = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
+type Payment = {
+  label: string;
+  amount: string;
+  status: "Successful" | "Failed" | "Pending";
+  time: string;
+  receipt?: string;
 };
 
-function formatLkr(amount: number) {
-  return `LKR ${amount.toLocaleString("en-LK")}`;
+type Milestone = {
+  label: string;
+  description: string;
+  amount: string;
+  status: "Released" | "Held";
+};
+
+type Vendor = {
+  name: string;
+  total: string;
+  released: number;
+  milestones: Milestone[];
+};
+
+type EventDetails = {
+  payments: Payment[];
+  vendors: Vendor[];
+};
+
+const events = {
+  wedding: {
+    label: "Perera–Silva wedding",
+    payments: [
+      {
+        label: "Deposit (20%)",
+        amount: "LKR 196,000",
+        status: "Successful",
+        time: "19 Oct, 10:02 pm",
+        receipt: "EH-PS-001",
+      },
+      {
+        label: "Deposit (20%), first try",
+        amount: "LKR 196,000",
+        status: "Failed",
+        time: "19 Oct, 8:58 pm",
+      },
+      {
+        label: "Balance (80%)",
+        amount: "LKR 784,000",
+        status: "Pending",
+        time: "Due 5 Dec",
+      },
+    ],
+    vendors: [
+      {
+        name: "Lens & Light Studio",
+        total: "LKR 180,000",
+        released: 20,
+        milestones: [
+          {
+            label: "Stage 1 · 20%",
+            description: "Booking confirmed",
+            amount: "LKR 36,000",
+            status: "Released",
+          },
+          {
+            label: "Stage 2 · 50%",
+            description: "Vendor arrival",
+            amount: "LKR 90,000",
+            status: "Held",
+          },
+          {
+            label: "Stage 3 · 30%",
+            description: "Event complete",
+            amount: "LKR 54,000",
+            status: "Held",
+          },
+        ],
+      },
+      {
+        name: "Ceylon Spice Catering",
+        total: "LKR 800,000",
+        released: 20,
+        milestones: [
+          {
+            label: "Stage 1 · 20%",
+            description: "Booking confirmed",
+            amount: "LKR 160,000",
+            status: "Released",
+          },
+          {
+            label: "Stage 2 · 50%",
+            description: "Vendor arrival",
+            amount: "LKR 400,000",
+            status: "Held",
+          },
+          {
+            label: "Stage 3 · 30%",
+            description: "Event complete",
+            amount: "LKR 240,000",
+            status: "Held",
+          },
+        ],
+      },
+    ],
+  },
+  office: {
+    label: "Office year-end party",
+    payments: [
+      {
+        label: "Deposit (30%)",
+        amount: "LKR 240,000",
+        status: "Successful",
+        time: "12 Nov, 11:20 am",
+        receipt: "EH-OY-001",
+      },
+      {
+        label: "Balance (70%)",
+        amount: "LKR 560,000",
+        status: "Pending",
+        time: "Due 18 Dec",
+      },
+    ],
+    vendors: [
+      {
+        name: "Colombo Event Co.",
+        total: "LKR 500,000",
+        released: 30,
+        milestones: [
+          {
+            label: "Stage 1 · 30%",
+            description: "Booking confirmed",
+            amount: "LKR 150,000",
+            status: "Released",
+          },
+          {
+            label: "Stage 2 · 40%",
+            description: "Vendor arrival",
+            amount: "LKR 200,000",
+            status: "Held",
+          },
+          {
+            label: "Stage 3 · 30%",
+            description: "Event complete",
+            amount: "LKR 150,000",
+            status: "Held",
+          },
+        ],
+      },
+      {
+        name: "Brew & Bloom Catering",
+        total: "LKR 300,000",
+        released: 30,
+        milestones: [
+          {
+            label: "Stage 1 · 30%",
+            description: "Booking confirmed",
+            amount: "LKR 90,000",
+            status: "Released",
+          },
+          {
+            label: "Stage 2 · 40%",
+            description: "Vendor arrival",
+            amount: "LKR 120,000",
+            status: "Held",
+          },
+          {
+            label: "Stage 3 · 30%",
+            description: "Event complete",
+            amount: "LKR 90,000",
+            status: "Held",
+          },
+        ],
+      },
+    ],
+  },
+} satisfies Record<string, EventDetails & { label: string }>;
+
+type EventKey = keyof typeof events;
+const eventKeys = Object.keys(events) as EventKey[];
+
+function receiptHref(eventName: string, payment: Payment) {
+  const lines = [
+    ["EventHub payment receipt", ""],
+    ["Event", eventName],
+    ["Payment", payment.label],
+    ["Amount", payment.amount],
+    ["Status", payment.status],
+    ["Reference", payment.receipt ?? ""],
+    ["Date", payment.time],
+  ];
+  const csv = lines.map((line) => line.map((value) => `"${value}"`).join(",")).join("\r\n");
+  return `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`;
 }
 
 export default function Home() {
-  const [paymentStatus, setPaymentStatus] = useState<
-    "checkout" | "processing" | "failed"
-  >("checkout");
-  const [formData, setFormData] = useState(emptyForm);
+  const [selectedEvent, setSelectedEvent] = useState<EventKey>("wedding");
+  const event = events[selectedEvent];
 
-  useEffect(() => {
-    if (paymentStatus !== "processing") {
+  function handleTabKeyDown(keyboardEvent: KeyboardEvent<HTMLButtonElement>) {
+    const currentIndex = eventKeys.indexOf(selectedEvent);
+    let nextIndex = currentIndex;
+
+    if (keyboardEvent.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % eventKeys.length;
+    } else if (keyboardEvent.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + eventKeys.length) % eventKeys.length;
+    } else if (keyboardEvent.key === "Home") {
+      nextIndex = 0;
+    } else if (keyboardEvent.key === "End") {
+      nextIndex = eventKeys.length - 1;
+    } else {
       return;
     }
 
-    const timeoutId = window.setTimeout(() => {
-      setPaymentStatus("failed");
-    }, 2200);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [paymentStatus]);
-
-  function handleFieldChange(event: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
-
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
-    }));
-
-    if (event.target.validity.valid) {
-      event.target.setCustomValidity("");
-    }
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const trimmed = {
-      firstName: formData.firstName.trim(),
-      lastName: formData.lastName.trim(),
-      email: formData.email.trim(),
-      phone: formData.phone.trim(),
-    };
-
-    if (Object.values(trimmed).some((value) => value.length === 0)) {
-      form.reportValidity();
-      return;
-    }
-
-    const emailInput = form.elements.namedItem("email") as HTMLInputElement | null;
-    const phoneInput = form.elements.namedItem("phone") as HTMLInputElement | null;
-    const emailPattern = /\S+@\S+\.\S+/;
-    const phonePattern = /^[+]?[(]?[0-9\s\-()]{7,}$/;
-
-    if (!emailPattern.test(trimmed.email)) {
-      emailInput?.setCustomValidity("Please enter a valid email address.");
-      emailInput?.reportValidity();
-      return;
-    }
-    emailInput?.setCustomValidity("");
-
-    if (!phonePattern.test(trimmed.phone)) {
-      phoneInput?.setCustomValidity("Please enter a valid mobile number.");
-      phoneInput?.reportValidity();
-      return;
-    }
-    phoneInput?.setCustomValidity("");
-
-    setPaymentStatus("processing");
+    keyboardEvent.preventDefault();
+    const nextEvent = eventKeys[nextIndex];
+    setSelectedEvent(nextEvent);
+    document.getElementById(`event-tab-${nextEvent}`)?.focus();
   }
 
   return (
-    <main className="checkout-page">
-      <header className="site-header">
-        <a className="brand" href="#" aria-label="EventHub home">
-          <span className="brand-mark" aria-hidden="true">
+    <main className="payments-page">
+      <header className="payments-header">
+        <Link className="payments-brand" href="/" aria-label="EventHub home">
+          <span className="payments-brand-mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"
@@ -99,233 +235,151 @@ export default function Home() {
               <circle cx="12" cy="9" r="2.5" fill="white" />
             </svg>
           </span>
-          <span>EventHub</span>
-        </a>
-
-        <nav className="main-nav" aria-label="Main navigation">
-          <a href="#event">Public events</a>
-          <a href="#payment-info">How payments work</a>
-          <a href="#order-heading">Tickets</a>
+          EventHub
+        </Link>
+        <nav className="payments-nav" aria-label="Main navigation">
+          <a href="#home">Home</a>
+          <a href="#events">My events</a>
+          <a className="active" href="#payments" aria-current="page">
+            Payments
+          </a>
+          <a href="#messages">Messages</a>
         </nav>
-
-        <div className="account-nav">
-          <span>Simple, secure checkout</span>
+        <div className="payments-account">
+          <button className="notification-button" type="button" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+            </svg>
+            <span className="notification-count">3</span>
+          </button>
+          <span className="account-avatar" aria-hidden="true">N</span>
+          <span className="account-name">Nadeesha P.</span>
         </div>
       </header>
 
-      <div className="checkout-content">
-        <a className="back-link" href="#event">
-          <span aria-hidden="true">←</span> Galle Face Jazz Night
-        </a>
-
-        <div className="content-head">
-          <div>
-            <p className="eyebrow eyebrow-muted">Secure checkout</p>
-            <h1>Checkout</h1>
-          </div>
-          <div className="status-pill">
-            <span className="status-dot" aria-hidden="true" />
-            Protected by EventHub
-          </div>
+      <div className="payments-content">
+        <div className="payments-heading">
+          <h1>Payments</h1>
+          <p>Track event payments and vendor milestones in one place.</p>
         </div>
 
-        {paymentStatus === "processing" ? (
-          <section
-            className="payment-status-card"
-            aria-labelledby="payment-status-heading"
-            aria-live="polite"
-            role="status"
-          >
-            <div className="processing-icon" aria-hidden="true">
-              <span />
-            </div>
-            <p className="eyebrow">Payment processing</p>
-            <h2 id="payment-status-heading">Securing your tickets</h2>
-            <p className="status-description">
-              Please wait while we confirm your order. This usually takes a
-              few seconds.
-            </p>
-            <div className="processing-progress" aria-hidden="true">
-              <span />
-            </div>
-            <p className="processing-caption">
-              Keep this page open while your order is being confirmed.
-            </p>
-            <div className="status-order">
-              <span>Galle Face Jazz Night · {ticketCount} tickets</span>
-              <strong>{formatLkr(orderTotal)}</strong>
-            </div>
-          </section>
-        ) : paymentStatus === "failed" ? (
-          <section
-            className="payment-status-card payment-failed-card"
-            aria-labelledby="payment-status-heading"
-            aria-live="polite"
-            role="alert"
-          >
-            <div className="failure-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="m7 7 10 10M17 7 7 17" />
-              </svg>
-            </div>
-            <p className="eyebrow failure-eyebrow">Payment not completed</p>
-            <h2 id="payment-status-heading">We couldn&apos;t process it</h2>
-            <p className="status-description">
-              We couldn&apos;t connect to the payment service, so your order
-              wasn&apos;t completed. You haven&apos;t been charged. Please try
-              again.
-            </p>
-            <div className="status-order">
-              <span>Galle Face Jazz Night · {ticketCount} tickets</span>
-              <strong>{formatLkr(orderTotal)}</strong>
-            </div>
-            <div className="status-actions">
-              <button
-                className="pay-button"
-                onClick={() => setPaymentStatus("processing")}
-                type="button"
-              >
-                Try again
-              </button>
-              <button
-                className="secondary-button"
-                onClick={() => setPaymentStatus("checkout")}
-                type="button"
-              >
-                Back to checkout
-              </button>
-            </div>
-            <p className="support-hint">
-              Still having trouble? Please contact EventHub support.
-            </p>
-          </section>
-        ) : (
-          <div className="checkout-grid">
-            <section className="details-card" aria-labelledby="details-heading">
-              <h2 id="details-heading">Your details</h2>
+        <div className="event-tabs" role="tablist" aria-label="Choose an event">
+          {eventKeys.map((eventKey) => (
+            <button
+              aria-selected={selectedEvent === eventKey}
+              className={selectedEvent === eventKey ? "selected" : ""}
+              aria-controls="event-payments-panel"
+              id={`event-tab-${eventKey}`}
+              key={eventKey}
+              onClick={() => setSelectedEvent(eventKey)}
+              onKeyDown={handleTabKeyDown}
+              role="tab"
+              type="button"
+            >
+              {events[eventKey].label}
+            </button>
+          ))}
+        </div>
 
-              <form onSubmit={handleSubmit} noValidate>
-                <div className="field-row">
-                  <div className="form-field">
-                    <label htmlFor="first-name">First name</label>
-                    <input
-                      autoComplete="given-name"
-                      id="first-name"
-                      name="firstName"
-                      onChange={handleFieldChange}
-                      placeholder="e.g. Sachini"
-                      required
-                      value={formData.firstName}
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label htmlFor="last-name">Last name</label>
-                    <input
-                      autoComplete="family-name"
-                      id="last-name"
-                      name="lastName"
-                      onChange={handleFieldChange}
-                      placeholder="e.g. Mendes"
-                      required
-                      value={formData.lastName}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    autoComplete="email"
-                    id="email"
-                    name="email"
-                    onChange={handleFieldChange}
-                    placeholder="you@example.com"
-                    required
-                    type="email"
-                    value={formData.email}
-                  />
-                  <span className="field-hint">
-                    Tickets and your order receipt will be sent here.
-                  </span>
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="phone">Mobile number</label>
-                  <input
-                    autoComplete="tel"
-                    id="phone"
-                    name="phone"
-                    onChange={handleFieldChange}
-                    placeholder="+94 77 123 4567"
-                    required
-                    type="tel"
-                    value={formData.phone}
-                  />
-                </div>
-
-                <div className="security-note" id="payment-info">
-                  <span className="note-icon" aria-hidden="true">i</span>
-                  <p>
-                    Your order is confirmed only after payment is complete.
-                    Tickets and a receipt will be sent to your email.
-                  </p>
-                </div>
-                <button className="pay-button" type="submit">
-                  Proceed to payment · {formatLkr(orderTotal)}
-                </button>
-              </form>
-            </section>
-
-            <aside className="order-card" aria-labelledby="order-heading">
-              <div className="order-topbar">
-                <h2 id="order-heading">Order</h2>
-                <span className="order-badge">2 tickets</span>
-              </div>
-
-              <div className="event-summary" id="event">
-                <div className="event-art" aria-hidden="true">
-                  <span className="event-art-glow" />
-                  <span className="event-art-stage" />
-                </div>
-                <div className="event-copy">
-                  <h3>Galle Face Jazz Night</h3>
-                  <p>Sat, 14 Nov · 7:00 pm</p>
-                </div>
-              </div>
-
-              <div className="order-details">
-                <div className="order-line">
-                  <span>General × {ticketCount}</span>
-                  <span>{formatLkr(orderTotal)}</span>
-                </div>
-                <div className="tiny-row">
-                  <span>Service fee</span>
-                  <span>Included</span>
-                </div>
-                <div className="tiny-row">
-                  <span>Taxes</span>
-                  <span>Calculated at payment</span>
-                </div>
-              </div>
-
-              <div className="order-total">
-                <span>Total</span>
-                <strong>{formatLkr(orderTotal)}</strong>
-              </div>
-
-              <div className="hold-notice">
-                <span aria-hidden="true">◷</span>
-                <p>Tickets are held for 10 minutes while you complete checkout.</p>
-              </div>
-            </aside>
+        <section
+          aria-labelledby={`event-tab-${selectedEvent} payments-card-heading`}
+          className="payments-card"
+          id="event-payments-panel"
+          role="tabpanel"
+        >
+          <h2 id="payments-card-heading">Payments for this event</h2>
+          <div className="payment-table-wrap">
+            <table className="payment-table">
+              <thead>
+                <tr>
+                  <th scope="col">Payment</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Receipt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {event.payments.map((payment) => (
+                  <tr key={`${payment.label}-${payment.time}`}>
+                    <td>{payment.label}</td>
+                    <td>{payment.amount}</td>
+                    <td>
+                      <span className={`payment-status ${payment.status.toLowerCase()}`}>
+                        {payment.status}
+                      </span>
+                    </td>
+                    <td>{payment.time}</td>
+                    <td>
+                      {payment.receipt ? (
+                        <a
+                          className="receipt-link"
+                          download={`${payment.receipt}.csv`}
+                          href={receiptHref(events[selectedEvent].label, payment)}
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v4h14v-4" />
+                          </svg>
+                          Download
+                        </a>
+                      ) : payment.status === "Pending" ? (
+                        <a className="balance-pay-button" href="/checkout">
+                          Pay now
+                        </a>
+                      ) : (
+                        <span className="receipt-unavailable" aria-label="No receipt">—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
-      </div>
+        </section>
 
-      <footer className="site-footer">
-        <span>© 2026 EventHub</span>
-        <a href="#payment-info">Secure checkout information</a>
-      </footer>
+        <section className="milestones-card" aria-labelledby="milestones-heading">
+          <h2 id="milestones-heading">Milestone progress by vendor</h2>
+          <div className="vendors-list">
+            {event.vendors.map((vendor) => (
+              <article className="vendor" key={vendor.name}>
+                <div className="vendor-heading">
+                  <div className="vendor-identity">
+                    <span className="vendor-avatar" aria-hidden="true">
+                      {vendor.name.slice(0, 1)}
+                    </span>
+                    <div>
+                      <h3>{vendor.name}</h3>
+                      <p>{vendor.total}</p>
+                    </div>
+                  </div>
+                  <div className="vendor-progress" aria-label={`${vendor.released}% released`}>
+                    <div className="progress-track">
+                      <span style={{ width: `${vendor.released}%` }} />
+                    </div>
+                    <span>{vendor.released}% released</span>
+                  </div>
+                </div>
+
+                <ol className="milestone-list">
+                  {vendor.milestones.map((milestone) => (
+                    <li
+                      className={`milestone ${milestone.status.toLowerCase()}`}
+                      key={milestone.label}
+                    >
+                      <div className="milestone-topline">
+                        <h4>{milestone.label}</h4>
+                        <span>{milestone.status}</span>
+                      </div>
+                      <p>{milestone.description}</p>
+                      <strong>{milestone.amount}</strong>
+                    </li>
+                  ))}
+                </ol>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
     </main>
   );
 }

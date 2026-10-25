@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./checkout.css";
+import "./payments.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Checkout | EventHub",
-  description: "Complete your EventHub event ticket checkout.",
+  title: "Payments | EventHub",
+  description: "Track EventHub event payments and vendor milestones.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
