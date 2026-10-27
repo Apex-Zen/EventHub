@@ -113,8 +113,8 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
             Photographers, caterers and decorators across Sri Lanka. Your money is held until the vendor turns up and the event is done.
           </p>
           <div className="landing-hero-actions">
-            <a className="landing-signup" href="#welcome">Plan an event</a>
-            <a className="landing-outline" href="#vendors">Offer your services</a>
+            <button className="landing-signup" onClick={() => onAuth("signup", "Client")} type="button">Plan an event</button>
+            <button className="landing-outline" onClick={() => onAuth("signup", "Vendor")} type="button">Offer your services</button>
           </div>
         </div>
         <a className="landing-scroll-cue" href="#welcome">Scroll to explore <span aria-hidden="true">↓</span></a>
@@ -138,7 +138,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
               <h3>I am planning an event</h3>
               <p>Private events: choose vendors free on your date and send one package. Public events: sell tickets with QR passes.</p>
               <button className="landing-text-link" type="button" onClick={() => onAuth("signup", "Client")}>
-                Explore public events <span aria-hidden="true">→</span>
+                Sign up as a client
               </button>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
               <h3>I provide event services</h3>
               <p>List your services and past work, answer package requests, and get paid 20%, 50% and 30% as the job moves.</p>
               <button className="landing-text-link" type="button" onClick={() => onAuth("signup", "Vendor")}>
-                Explore vendor categories <span aria-hidden="true">→</span>
+                Sign up as a vendor
               </button>
             </div>
           </div>
