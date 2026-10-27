@@ -1,13 +1,15 @@
 "use client";
+import Brand from "./Brand";
 
 import Link from "next/link";
 import type { ReactNode } from "react";
 import LocationIcon from "./icon/LocationIcon";
 
 type AuthMode = "signup" | "login";
+type AccountRole = "Client" | "Vendor";
 
 type LandingPageProps = {
-  onAuth: (mode: AuthMode) => void;
+  onAuth: (mode: AuthMode, role?: AccountRole) => void;
 };
 
 const vendorCategories = [
@@ -91,10 +93,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
     <main className="landing-page">
       <section className="landing-hero" id="home">
         <header className="landing-header">
-          <Link className="landing-brand" href="#home" aria-label="EventHub home">
-            <LocationIcon className="landing-brand-icon" />
-            <span>EventHub</span>
-          </Link>
+          <Brand variant="landing" />
           <nav className="landing-nav" aria-label="Main navigation">
             <Link href="#home">Home</Link>
             <Link href="#public-events">Public events</Link>
@@ -138,7 +137,9 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
               <span className="landing-role-label">FOR CLIENTS</span>
               <h3>I am planning an event</h3>
               <p>Private events: choose vendors free on your date and send one package. Public events: sell tickets with QR passes.</p>
-              <a className="landing-text-link" href="#public-events">Explore public events <span aria-hidden="true">→</span></a>
+              <button className="landing-text-link" type="button" onClick={() => onAuth("signup", "Client")}>
+                Explore public events <span aria-hidden="true">→</span>
+              </button>
             </div>
           </div>
           <div className="landing-role">
@@ -151,7 +152,9 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
               <span className="landing-role-label">FOR VENDORS</span>
               <h3>I provide event services</h3>
               <p>List your services and past work, answer package requests, and get paid 20%, 50% and 30% as the job moves.</p>
-              <a className="landing-text-link" href="#vendors">Explore vendor categories <span aria-hidden="true">→</span></a>
+              <button className="landing-text-link" type="button" onClick={() => onAuth("signup", "Vendor")}>
+                Explore vendor categories <span aria-hidden="true">→</span>
+              </button>
             </div>
           </div>
         </div>
@@ -228,10 +231,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
       <footer className="landing-footer">
         <div className="landing-footer-main">
           <div className="landing-footer-brand">
-            <Link className="landing-brand" href="#home" aria-label="EventHub home">
-              <LocationIcon className="landing-brand-icon" />
-              <span>EventHub</span>
-            </Link>
+            <Brand variant="landing" />
             <p>Event planning with staged payments, for clients and vendors across Sri Lanka.</p>
           </div>
           <div className="landing-footer-column">
