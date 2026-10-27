@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { Role, Mode, Step, ResetMethod, Account, VerificationCode, RESET_CODE_LIFETIME_MS, MAX_CODE_ATTEMPTS, getAccountKey, readAccounts, updateAccounts, hexToBytes, hashPassword, passwordsMatch, makeVerificationCode, findAccount, validateIdentityDocument } from "../lib/auth";
+import { requestEmailVerification, submitEmailVerification } from "../lib/email-verification";
+import { Role, Mode, Step, ResetMethod, Account, RESET_CODE_LIFETIME_MS, getAccountKey, readAccounts, updateAccounts, hexToBytes, hashPassword, passwordsMatch, makeResetCode, findAccount, validateIdentityDocument, isValidUsername } from "../lib/auth";
 export function useAuthFlow() {
     const operation = useRef(0);
     const pending = useRef(false);
+    const verification = useRef<{ id: string; email: string; role: Role; passwordHash: string; passwordSalt: string } | null>(null);
     useEffect(() => () => {
         operation.current += 1;
         pending.current = false;
@@ -14,6 +16,7 @@ export function useAuthFlow() {
     const [step, setStep] = useState<Step>("form");
     const [role, setRole] = useState<Role>("Client");
     const [fullName, setFullName] = useState("");
+    const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,8 +28,6 @@ export function useAuthFlow() {
     const [acceptedVendorTerms, setAcceptedVendorTerms] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [verificationInput, setVerificationInput] = useState("");
-    const [verificationCode, setVerificationCode] = useState<VerificationCode | null>(null);
     const [resetMethod, setResetMethod] = useState<ResetMethod>("email");
     const [resetIdentifier, setResetIdentifier] = useState("");
     const [resetTarget, setResetTarget] = useState("");
@@ -45,12 +46,11 @@ export function useAuthFlow() {
         setNotice("");
     }
     function clearSensitiveFields() {
+        verification.current = null;
         setPassword("");
         setConfirmPassword("");
         setResetPassword("");
         setConfirmResetPassword("");
-        setVerificationInput("");
-        setVerificationCode(null);
         setResetCode("");
         setResetCodeInput("");
         setResetExpiresAt(0);
@@ -108,15 +108,37 @@ export function useAuthFlow() {
         setResetIdentifier(email);
         setStep("forgot");
     }
-    function createVerification(account: Account, message: string) {
+    async function showVerificationStatus(account: Account, operationId: number) {
+        const challengeId = await requestEmailVerification(account.email, account.role);
+        if (operation.current !== operationId) return;
+        verification.current = { id: challengeId, email: account.email, role: account.role, passwordHash: account.passwordHash, passwordSalt: account.passwordSalt };
         setPassword("");
         setConfirmPassword("");
-        setVerificationCode(makeVerificationCode());
-        setVerificationInput("");
         setEmail(account.email);
         setRole(account.role);
         setStep("verify");
-        setNotice(message);
+    }
+    async function verifyEmail(code: string) {
+        const challenge = verification.current;
+        const operationId = startOperation();
+        if (operationId === null) return;
+        try {
+            if (!challenge) throw new Error("Sign in again to request a new verification code.");
+            if (!/^\d{6}$/.test(code)) throw new Error("Enter the six-digit verification code.");
+            await submitEmailVerification(challenge.id, code, challenge.email, challenge.role);
+            if (operation.current !== operationId) return;
+            let verifiedAccount: Account | undefined;
+            await updateAccounts(accounts => {
+                if (operation.current !== operationId) return accounts;
+                const account = findAccount(accounts, challenge.email, challenge.role);
+                if (!account || account.passwordHash !== challenge.passwordHash || account.passwordSalt !== challenge.passwordSalt) throw new Error("Your account changed. Please sign in again.");
+                verifiedAccount = { ...account, isVerified: true };
+                return accounts.map(item => getAccountKey(item.email, item.role) === getAccountKey(challenge.email, challenge.role) ? verifiedAccount! : item);
+            });
+            if (operation.current === operationId && verifiedAccount) completeSignIn(verifiedAccount);
+        } catch (cause) {
+            if (operation.current === operationId) setError(cause instanceof Error ? cause.message : "Verification failed. Please try again.");
+        } finally { finishOperation(operationId); }
     }
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -127,8 +149,17 @@ export function useAuthFlow() {
             const accounts = readAccounts();
             const accountKey = getAccountKey(email, role);
             if (mode === "signup") {
+                const normalizedUsername = username.trim();
+                if (!isValidUsername(normalizedUsername)) {
+                    throw new Error("Choose a username with 3–24 letters, numbers, periods, underscores, or hyphens.");
+                }
+                if (accounts.some((account) => account.username?.toLowerCase() === normalizedUsername.toLowerCase())) {
+                    throw new Error("That username is already in use. Choose another.");
+                }
                 if (role === "Client" && !fullName.trim())
                     throw new Error("Enter your full name.");
+                if (role === "Client" && !phoneNumber.trim())
+                    throw new Error("Enter your phone number.");
                 if (role === "Vendor") {
                     if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
                         throw new Error("Complete your name and phone number to continue.");
@@ -142,13 +173,13 @@ export function useAuthFlow() {
                     if (!nicNumber.trim() && !identityDocument) {
                         throw new Error("Enter your NIC number or upload your NIC or passport.");
                     }
-                    if (!acceptedVendorTerms) {
-                        throw new Error("Accept the Vendor Terms and payout commission to create your account.");
-                    }
                     if (identityDocument) {
                         const documentError = validateIdentityDocument(identityDocument);
                         if (documentError)
                             throw new Error(documentError);
+                    }
+                    if (!acceptedVendorTerms) {
+                        throw new Error("Accept the Vendor Terms and 5–10% payout commission to continue.");
                     }
                 }
                 if (!passwordsMatch(password, confirmPassword)) {
@@ -164,6 +195,8 @@ export function useAuthFlow() {
                     role,
                     fullName: role === "Vendor" ? `${firstName.trim()} ${lastName.trim()}` : fullName.trim(),
                     email: email.trim().toLowerCase(),
+                    username: normalizedUsername,
+                    ...(role === "Client" && { phoneNumber: phoneNumber.trim() }),
                     passwordSalt: salt,
                     passwordHash: hash,
                     isVerified: false,
@@ -180,27 +213,44 @@ export function useAuthFlow() {
                         return current;
                     if (findAccount(current, email, role))
                         throw new Error("An account with this email already exists for this role. Sign in instead.");
+                    if (current.some((item) => item.username?.toLowerCase() === normalizedUsername.toLowerCase()))
+                        throw new Error("That username is already in use. Choose another.");
                     return [...current, account];
                 });
                 if (operation.current !== operationId)
                     return;
                 setIdentityDocument(null);
                 setNicNumber("");
-                createVerification(account, "Your verification code is ready below.");
+                setMode("login");
+                await showVerificationStatus(account, operationId);
                 return;
             }
-            const account = findAccount(accounts, email, role);
-            if (!account) {
-                throw new Error("No account found for this email and role. Check your details or create an account.");
+            const identifier = email.trim().toLowerCase();
+            const matchingAccounts = accounts.filter((item) =>
+                item.email.toLowerCase() === identifier || item.username?.toLowerCase() === identifier
+            );
+            if (matchingAccounts.length === 0) {
+                throw new Error("No account found for this email. Check your details or create an account.");
             }
-            const passwordHash = await hashPassword(password, hexToBytes(account.passwordSalt));
-            if (operation.current !== operationId)
-                return;
-            if (passwordHash.hash !== account.passwordHash) {
-                throw new Error("The email, role, or password is incorrect.");
+            const matchingPasswords: Account[] = [];
+            for (const candidate of matchingAccounts) {
+                const passwordHash = await hashPassword(password, hexToBytes(candidate.passwordSalt));
+                if (operation.current !== operationId)
+                    return;
+                if (passwordHash.hash === candidate.passwordHash)
+                    matchingPasswords.push(candidate);
             }
+            if (matchingPasswords.length === 0)
+                throw new Error("The email or password is incorrect.");
+            if (matchingPasswords.length > 1)
+                throw new Error("More than one account matches these details. Sign in with your unique username.");
+            const [candidate] = matchingPasswords;
+            const account = findAccount(readAccounts(), candidate.email, candidate.role);
+            if (!account || account.passwordSalt !== candidate.passwordSalt || account.passwordHash !== candidate.passwordHash)
+                throw new Error("Your account credentials changed. Please sign in again.");
+            setRole(account.role);
             if (!account.isVerified) {
-                createVerification(account, "Verify your email before signing in. A new code is ready below.");
+                await showVerificationStatus(account, operationId);
                 return;
             }
             completeSignIn(account);
@@ -238,15 +288,16 @@ export function useAuthFlow() {
             const normalizedIdentifier = resetIdentifier.trim().toLowerCase();
             const matches = accounts.filter((item) => {
                 if (resetMethod === "email")
-                    return item.email.toLowerCase() === normalizedIdentifier;
-                const accountPhone = item.vendorProfile?.phoneNumber.replace(/\D/g, "");
+                    return item.email.toLowerCase() === normalizedIdentifier || item.username?.toLowerCase() === normalizedIdentifier;
+                const accountPhone = (item.phoneNumber ?? item.vendorProfile?.phoneNumber)?.replace(/\D/g, "");
                 return accountPhone !== undefined && accountPhone === normalizedIdentifier.replace(/\D/g, "");
             });
-            const account = matches.find((item) => item.role === role);
-            if (!account) {
-                throw new Error("No matching account was found for this role and contact. Check the details or sign in instead.");
-            }
-            const generatedCode = makeVerificationCode();
+            if (matches.length === 0)
+                throw new Error("No matching account was found for this contact. Check the details or sign in instead.");
+            if (matches.length > 1)
+                throw new Error("More than one account uses this contact. Enter your unique username in the Email field, or use a phone number unique to the account.");
+            const [account] = matches;
+            const generatedCode = makeResetCode();
             generatedCode.expiresAt = Date.now() + RESET_CODE_LIFETIME_MS;
             setResetTarget(account.email);
             setRole(account.role);
@@ -256,9 +307,7 @@ export function useAuthFlow() {
             setResetPassword("");
             setConfirmResetPassword("");
             setStep("reset");
-            setNotice(resetMethod === "email"
-                ? "Demo mode: no email was sent. Use the reset code shown below to continue."
-                : "Demo mode: no SMS was sent. Use the reset code shown below to continue.");
+            setNotice("Delivery is unavailable. Use the reset code shown below to continue.");
         }
         catch (cause) {
             setError(cause instanceof Error ? cause.message : "Could not start password reset. Please try again.");
@@ -320,68 +369,10 @@ export function useAuthFlow() {
             finishOperation(operationId);
         }
     }
-    function handleResendCode() {
-        resetMessages();
-        setVerificationCode(makeVerificationCode());
-        setVerificationInput("");
-        setNotice("A new verification code is ready below. Previous codes are no longer valid.");
-    }
-    async function handleVerify(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        resetMessages();
-        if (!verificationCode) {
-            setError("Request a new verification code to continue.");
-            return;
-        }
-        if (Date.now() > verificationCode.expiresAt) {
-            setVerificationCode(null);
-            setError("This code has expired. Request a new one to continue.");
-            return;
-        }
-        if (verificationCode.attempts >= MAX_CODE_ATTEMPTS) {
-            setVerificationCode(null);
-            setError("Too many incorrect attempts. Request a new code to continue.");
-            return;
-        }
-        if (verificationInput.trim() !== verificationCode.value) {
-            const attempts = verificationCode.attempts + 1;
-            setVerificationCode(attempts >= MAX_CODE_ATTEMPTS ? null : { ...verificationCode, attempts });
-            setError(attempts >= MAX_CODE_ATTEMPTS
-                ? "Too many incorrect attempts. Request a new code to continue."
-                : `That code doesn't match. ${MAX_CODE_ATTEMPTS - attempts} attempts remaining.`);
-            return;
-        }
-        const operationId = startOperation();
-        if (operationId === null)
-            return;
-        try {
-            let verifiedAccount: Account | undefined;
-            await updateAccounts(accounts => {
-                if (operation.current !== operationId)
-                    return accounts;
-                const account = findAccount(accounts, email, role);
-                if (!account)
-                    throw new Error("The account could not be found. Sign in again.");
-                verifiedAccount = { ...account, isVerified: true };
-                return accounts.map(item => getAccountKey(item.email, item.role) === getAccountKey(email, role) ? verifiedAccount! : item);
-            });
-            if (operation.current === operationId && verifiedAccount)
-                completeSignIn(verifiedAccount);
-        }
-        catch (cause) {
-            if (operation.current === operationId)
-                setError(cause instanceof Error ? cause.message : "Verification failed. Please try again.");
-        }
-        finally {
-            finishOperation(operationId);
-        }
-    }
     function switchMode(nextMode: Mode) {
         leaveFlow();
         setMode(nextMode);
         setStep("form");
-        setVerificationCode(null);
-        setVerificationInput("");
         resetMessages();
     }
     function signOut() {
@@ -397,7 +388,6 @@ export function useAuthFlow() {
         leaveFlow();
         setActiveAccount(null);
         setStep("form");
-        setVerificationCode(null);
         setShowLanding(true);
         resetMessages();
     }
@@ -419,9 +409,9 @@ export function useAuthFlow() {
     return {
         showLanding, mode, step, role, activeAccount, switchMode, signOut, goHome, openAuth, returnToLogin,
         accountForm: { values: {
-                mode, role, fullName, email, acceptedVendorTerms, password, confirmPassword, rememberEmail, error, notice, busy
+                mode, role, fullName, username, email, phoneNumber, acceptedVendorTerms, password, confirmPassword, rememberEmail, error, notice, busy
             }, actions: {
-                openForgotPassword, setFullName, setEmail, setAcceptedVendorTerms, setPassword, setConfirmPassword, setRememberEmail, changeRole, openGoogle, handleSubmit, switchMode
+                openForgotPassword, setFullName, setUsername, setEmail, setPhoneNumber, setAcceptedVendorTerms, setPassword, setConfirmPassword, setRememberEmail, changeRole, openGoogle, handleSubmit, switchMode
             } },
         forgotPasswordForm: { values: { resetMethod, resetIdentifier, error }, actions: {
                 setResetIdentifier, changeResetMethod, returnToLogin, handleForgotPassword
@@ -432,9 +422,9 @@ export function useAuthFlow() {
                 setResetCodeInput, setResetPassword, setConfirmResetPassword, requestAnotherCode, handleResetPassword
             } },
         verifyEmailForm: { values: {
-                role, email, verificationInput, verificationCode, error, notice, busy
+                role, email, error, busy
             }, actions: {
-                setVerificationInput, returnToLogin, handleVerify, handleResendCode
+                returnToLogin, verifyEmail
             } },
         vendorFields: { values: {
                 firstName, lastName, email, phoneNumber, serviceCategory, businessRegistrationNumber, nicNumber, identityDocument

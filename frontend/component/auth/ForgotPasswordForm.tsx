@@ -23,7 +23,7 @@ export default function ForgotPasswordForm({ values, actions }: ForgotPasswordFo
   return <>
     <p className="eyebrow">ACCOUNT RECOVERY</p>
     <h2>Forgot your password?</h2>
-    <p className="form-subtitle">Enter the email or phone number on your account. We&apos;ll prepare a reset code.</p>
+    <p className="form-subtitle">Enter the email or phone number saved with your account to continue.</p>
     <div className="recovery-tabs" role="tablist" aria-label="Choose password reset method">
       {methods.map(method => <button key={method} ref={element => { tabs.current[method] = element; }}
         id={"reset-" + method + "-tab"} type="button" role="tab"
@@ -36,14 +36,14 @@ export default function ForgotPasswordForm({ values, actions }: ForgotPasswordFo
       aria-labelledby={"reset-" + method + "-tab"} hidden={resetMethod !== method}>
       {resetMethod === method && <form className="auth-form recovery-form" onSubmit={handleForgotPassword}>
         <TextField id={"reset-identifier-" + method} label={method === "email" ? "Email" : "Phone number"}
-          type={method === "email" ? "email" : "tel"} autoComplete={method === "email" ? "email" : "tel"}
+          type={method === "email" ? "text" : "tel"} autoComplete={method === "email" ? "username" : "tel"}
           placeholder={method === "email" ? "you@example.com" : "+94 71 555 0192"}
           value={resetIdentifier} onValueChange={setResetIdentifier} required />
         {error && <FormAlert kind="error">{error}</FormAlert>}
-        <button className="primary-button" type="submit">Prepare reset code</button>
+        <button className="primary-button" type="submit">Continue</button>
       </form>}
     </div>)}
     <button className="back-button" type="button" onClick={returnToLogin}><span aria-hidden="true">←</span> Back to log in</button>
-    <p className="recovery-note">Reset codes expire in 30 minutes. Demo mode does not send email or SMS.</p>
+    <p className="recovery-note">Email and SMS delivery are unavailable. If an account is found, the reset code will appear on the next screen.</p>
   </>;
 }

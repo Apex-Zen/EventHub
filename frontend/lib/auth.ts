@@ -20,6 +20,8 @@ export type Account = {
     role: Role;
     fullName: string;
     email: string;
+    username?: string;
+    phoneNumber?: string;
     passwordSalt: string;
     passwordHash: string;
     isVerified: boolean;
@@ -29,15 +31,8 @@ export type Account = {
         businessRegistrationNumber: string;
     };
 };
-export type VerificationCode = {
-    value: string;
-    expiresAt: number;
-    attempts: number;
-};
 export const ACCOUNTS_KEY = "eventhub.demo.accounts";
-export const CODE_LIFETIME_MS = 5 * 60 * 1000;
 export const RESET_CODE_LIFETIME_MS = 30 * 60 * 1000;
-export const MAX_CODE_ATTEMPTS = 5;
 export const vendorCategories = [
     "Photography",
     "Catering",
@@ -51,7 +46,10 @@ export const vendorCategories = [
 export function getAccountKey(email: string, role: Role) {
     return `${email.trim().toLowerCase()}::${role}`;
 }
-const STORAGE_ERROR = "Saved accounts could not be read. Clear this site’s demo account storage and try again.";
+export function isValidUsername(username: string) {
+    return /^[a-zA-Z0-9._-]{3,24}$/.test(username);
+}
+const STORAGE_ERROR = "Saved accounts could not be read. Clear this site's saved account data and try again.";
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null;
 }
@@ -59,6 +57,10 @@ function isAccount(value: unknown): value is Account {
     if (!isRecord(value))
         return false;
     if ((value.role !== "Client" && value.role !== "Vendor") || typeof value.fullName !== "string" || !value.fullName.trim() || typeof value.email !== "string" || !value.email.trim() || typeof value.isVerified !== "boolean")
+        return false;
+    if (value.username !== undefined && (typeof value.username !== "string" || !isValidUsername(value.username)))
+        return false;
+    if (value.phoneNumber !== undefined && (typeof value.phoneNumber !== "string" || !value.phoneNumber.trim()))
         return false;
     if (typeof value.passwordSalt !== "string" || !/^[a-f0-9]{32}$/i.test(value.passwordSalt) || typeof value.passwordHash !== "string" || !/^[a-f0-9]{64}$/i.test(value.passwordHash))
         return false;
@@ -71,7 +73,7 @@ function isAccount(value: unknown): value is Account {
 }
 export function readAccounts(): Account[] {
     const saved = window.localStorage.getItem(ACCOUNTS_KEY);
-    if (!saved)
+    if (saved === null)
         return [];
     let parsed: unknown;
     try {
@@ -90,7 +92,7 @@ export function readAccounts(): Account[] {
 // Serialize read-modify-write operations across tabs. No asynchronous work belongs inside the update callback.
 export async function updateAccounts(update: (accounts: Account[]) => Account[]): Promise<void> {
     if (!navigator.locks)
-        throw new Error("Safe demo account storage requires a browser with Web Locks support on localhost or HTTPS.");
+        throw new Error("Safe account storage requires a browser with Web Locks support on localhost or HTTPS.");
     await navigator.locks.request(ACCOUNTS_KEY, () => {
         const accounts = update(readAccounts());
         if (!accounts.every(isAccount))
@@ -121,20 +123,21 @@ export async function hashPassword(password: string, salt?: Uint8Array<ArrayBuff
 export function passwordsMatch(first: string, second: string) {
     return first.length >= 8 && /[A-Z]/.test(first) && /[a-z]/.test(first) && /\d/.test(first) && first === second;
 }
-export function makeVerificationCode(): VerificationCode {
-    const code = window.crypto.getRandomValues(new Uint32Array(1))[0] % 1000000;
+export function makeResetCode() {
+    const values = new Uint32Array(1);
+    window.crypto.getRandomValues(values);
     return {
-        value: code.toString().padStart(6, "0"),
-        expiresAt: Date.now() + CODE_LIFETIME_MS,
+        value: (values[0] % 1_000_000).toString().padStart(6, "0"),
+        expiresAt: 0,
         attempts: 0,
     };
 }
 export function getRoleMessage(role: Role) {
     switch (role) {
         case "Client":
-            return "Your space to discover, plan, and enjoy memorable events.";
+            return "Create an account to get started with event planning.";
         case "Vendor":
-            return "A home for your services, bookings, and event business.";
+            return "Set up an account for your event service business.";
     }
 }
 export function findAccount(accounts: Account[], email: string, role: Role) {

@@ -24,10 +24,10 @@ export default function Home() {
         </AuthHeader>
         <section className="welcome-card" aria-labelledby="welcome-title">
           <div className="success-icon" aria-hidden="true">✓</div>
-          <p className="eyebrow">SIGNED IN · {activeAccount.role.toUpperCase()}</p>
+          <p className="eyebrow">{activeAccount.role.toUpperCase()} ACCOUNT · SAVED IN THIS BROWSER</p>
           <h1 id="welcome-title">Welcome, {activeAccount.fullName || activeAccount.email}.</h1>
           <p className="welcome-copy">{getRoleMessage(activeAccount.role)}</p>
-          <div className="verified-label"><span aria-hidden="true">✓</span> Email verified</div>
+          <div className="verified-label"><span aria-hidden="true">✓</span> Account set up</div>
         </section>
       </main>
     );
@@ -60,7 +60,7 @@ export default function Home() {
               {step === "verify" ? <>One last<br /><em>step.</em></> : step === "forgot" ? <>A fresh start<br /><em>is one step away.</em></> : step === "reset" ? <>Choose a new<br /><em>password.</em></> : step === "google" ? <>Gather well.<br /><em>We’ll get you there.</em></> : mode === "login" ? <>Welcome<br /><em>back.</em></> : role === "Vendor" ? <>Get booked for<br /><em>the dates you are free.</em></> : <>Your event,<br /><em>planned with care.</em></>}
             </h1>
             <p className="intro-copy">
-              {step === "verify" ? "A quick email check, then you’re ready to bring your next event to life." : step === "forgot" || step === "reset" ? "We’ll help you get safely back into your EventHub account." : step === "google" ? "Google sign-in will be available when account connection is configured." : mode === "login" ? "One login for clients, vendors, the Event Manager and staff. Gate staff and guests never log in." : getRoleMessage(role)}
+              {step === "verify" ? "Enter the 6-digit code sent to your email to finish setting up your account." : step === "forgot" || step === "reset" ? "Set a new password for an account saved in this browser." : step === "google" ? "Google sign-in is unavailable. Use your email and password instead." : mode === "login" ? "Sign in to an account saved in this browser." : getRoleMessage(role)}
             </p>
             <div className="intro-rule" />
             <p className="intro-caption">A place for every part of the celebration.</p>

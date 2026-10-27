@@ -34,7 +34,7 @@ export default function ResetPasswordForm({ values, actions }: ResetPasswordForm
       <h2>Set a new password</h2>
       <p className="form-subtitle">For <strong>{resetTarget}</strong>. Reset codes expire in 30 minutes.</p>
       <div className="reset-code-card" role="status">
-        <span>DEMO RESET CODE · NOT SENT</span>
+        <span>RESET CODE · DISPLAYED ON THIS DEVICE</span>
         <strong>{resetCode || "Expired"}</strong>
       </div>
       {notice && <FormAlert kind="success">{notice}</FormAlert>}

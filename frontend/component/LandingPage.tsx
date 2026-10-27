@@ -23,6 +23,29 @@ const vendorCategories = [
 
 type VendorIconName = (typeof vendorCategories)[number]["icon"];
 
+const paymentStages = [
+  {
+    percentage: "20%",
+    title: "Booking confirmed",
+    description: "Planned release after the vendor accepts your package and payment processing is connected.",
+    icon: "check",
+  },
+  {
+    percentage: "50%",
+    title: "Vendor arrives",
+    description: "Planned release when the vendor checks in at the venue. Location check-in is not available yet.",
+    icon: "location",
+  },
+  {
+    percentage: "30%",
+    title: "Event completed",
+    description: "Planned release after the event is marked complete. Event management and payments are not active yet.",
+    icon: "flag",
+  },
+] as const;
+
+type PaymentStageIconName = (typeof paymentStages)[number]["icon"];
+
 const events = [
   {
     date: ["14", "NOV"],
@@ -50,27 +73,6 @@ const events = [
   },
 ];
 
-const paymentStages = [
-  {
-    percentage: "20%",
-    title: "Booking confirmed",
-    detail: "Released when the vendor accepts your package and your card payment goes through.",
-    icon: "✓",
-  },
-  {
-    percentage: "50%",
-    title: "Vendor arrives",
-    detail: "Released when the vendor checks in at the venue, within 100–200 m by GPS or with a code.",
-    icon: "⌖",
-  },
-  {
-    percentage: "30%",
-    title: "Event completed",
-    detail: "Released when the event manager marks the event complete. Then you can rate each vendor.",
-    icon: "⚑",
-  },
-];
-
 function VendorIcon({ name }: { name: VendorIconName }) {
   const paths: Record<VendorIconName, ReactNode> = {
     camera: <><path d="M4 8.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 10v8a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 18v-8A1.5 1.5 0 0 1 4 8.5Z" /><circle cx="12" cy="13.5" r="3.5" /></>,
@@ -88,6 +90,19 @@ function VendorIcon({ name }: { name: VendorIconName }) {
   );
 }
 
+function PaymentStageIcon({ name }: { name: PaymentStageIconName }) {
+  const paths: Record<PaymentStageIconName, ReactNode> = {
+    check: <path d="m5 12 4 4L19 6" />,
+    location: <><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></>,
+    flag: <><path d="M5 22V4m0 1c6-4 9 4 15 0v11c-6 4-9-4-15 0" /></>,
+  };
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      {paths[name]}
+    </svg>
+  );
+}
+
 export default function LandingPage({ onAuth }: LandingPageProps) {
   return (
     <main className="landing-page">
@@ -98,7 +113,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
             <Link href="#home">Home</Link>
             <Link href="#public-events">Public events</Link>
             <Link href="#payments">How payments work</Link>
-            <Link href="#vendors">For vendors</Link>
+            <Link href="#welcome">For vendors</Link>
           </nav>
           <div className="landing-actions">
             <button className="landing-login" onClick={() => onAuth("login")} type="button">Log in</button>
@@ -107,10 +122,10 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
         </header>
 
         <div className="landing-hero-copy">
-          <p className="landing-kicker">WEDDINGS · BIRTHDAYS · COMPANY NIGHTS · PUBLIC EVENTS</p>
-          <h1>Book vendors for your event.<br />Pay them in stages.</h1>
+          <p className="landing-kicker">WEDDINGS · BIRTHDAYS · FAMILY GATHERINGS · COMPANY EVENTS</p>
+          <h1>Bring your event plans<br />together.</h1>
           <p className="landing-hero-description">
-            Photographers, caterers and decorators across Sri Lanka. Your money is held until the vendor turns up and the event is done.
+            EventHub is being built to help event hosts and local service providers connect. Create an account to get started.
           </p>
           <div className="landing-hero-actions">
             <button className="landing-signup" onClick={() => onAuth("signup", "Client")} type="button">Plan an event</button>
@@ -122,10 +137,10 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
 
       <section className="landing-welcome landing-section" id="welcome">
         <div className="landing-welcome-copy">
-          <p className="landing-eyebrow">ONE PLACE FOR EVERY CELEBRATION</p>
+          <p className="landing-eyebrow">A CLEARER START FOR YOUR EVENT</p>
           <h2>Welcome to EventHub</h2>
           <p className="landing-section-intro">
-            One place for the people who plan events and the people who make them happen. Pick how you want to start.
+            Choose the account that matches what brings you here: planning an event or offering a service.
           </p>
           <div className="landing-role">
             <span className="landing-role-icon" aria-hidden="true">
@@ -136,7 +151,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
             <div>
               <span className="landing-role-label">FOR CLIENTS</span>
               <h3>I am planning an event</h3>
-              <p>Private events: choose vendors free on your date and send one package. Public events: sell tickets with QR passes.</p>
+              <p>Create a client account to get started with EventHub.</p>
               <button className="landing-text-link" type="button" onClick={() => onAuth("signup", "Client")}>
                 Sign up as a client
               </button>
@@ -151,7 +166,7 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
             <div>
               <span className="landing-role-label">FOR VENDORS</span>
               <h3>I provide event services</h3>
-              <p>List your services and past work, answer package requests, and get paid 20%, 50% and 30% as the job moves.</p>
+              <p>Create a vendor account with your contact details and service category.</p>
               <button className="landing-text-link" type="button" onClick={() => onAuth("signup", "Vendor")}>
                 Sign up as a vendor
               </button>
@@ -161,12 +176,11 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
         <div className="landing-welcome-image" role="img" aria-label="Newlyweds celebrating beneath a floral wedding arch" />
       </section>
 
-      <section className="landing-vendors" id="vendors">
+      <section className="landing-vendors" id="services">
         <div className="landing-vendors-inner">
           <div className="landing-centered-heading">
-            <p className="landing-eyebrow">YOUR DAY, YOUR WAY</p>
             <h2>Vendors you can book</h2>
-            <p>Every vendor shows prices, past work and a public score from real clients.</p>
+            <p>Explore popular services and starting prices for your next event.</p>
           </div>
           <div className="landing-vendor-grid">
             {vendorCategories.map((vendor) => (
@@ -210,19 +224,18 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
 
       <section className="landing-payments" id="payments">
         <div className="landing-centered-heading">
-          <p className="landing-eyebrow landing-eyebrow-light">CLEAR, SECURE, STAGE BY STAGE</p>
           <h2>How payment works</h2>
-          <p>You pay by card. EventHub holds the money and releases it to each vendor in three stages.</p>
+          <p>A planned 20% / 50% / 30% release schedule.</p>
         </div>
         <div className="landing-payment-grid">
           {paymentStages.map((stage) => (
             <article className="landing-payment-card" key={stage.percentage}>
               <div className="landing-payment-top">
                 <strong>{stage.percentage}</strong>
-                <span aria-hidden="true">{stage.icon}</span>
+                <span><PaymentStageIcon name={stage.icon} /></span>
               </div>
               <h3>{stage.title}</h3>
-              <p>{stage.detail}</p>
+              <p>{stage.description}</p>
             </article>
           ))}
         </div>
@@ -232,31 +245,20 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
         <div className="landing-footer-main">
           <div className="landing-footer-brand">
             <Brand variant="landing" />
-            <p>Event planning with staged payments, for clients and vendors across Sri Lanka.</p>
+            <p>Event planning and service categories for Sri Lanka.</p>
           </div>
           <div className="landing-footer-column">
-            <h3>PLAN</h3>
-            <a href="#welcome">Private events</a>
-            <a href="#public-events">Public events</a>
-            <a href="#payments">How payments work</a>
+            <h3>GET STARTED</h3>
+            <a href="#welcome">Client accounts</a>
+            <a href="#services">Service categories</a>
           </div>
           <div className="landing-footer-column">
             <h3>VENDORS</h3>
-            <a href="#vendors">Join as a vendor</a>
-            <a href="#payments">Payouts and commission</a>
-            <a href="#vendors">Vendor help</a>
-          </div>
-          <div className="landing-footer-column">
-            <h3>COMPANY</h3>
-            <a href="#home">About</a>
-            <a href="#home">Terms</a>
-            <a href="#home">Privacy</a>
-            <a href="#home">Contact</a>
+            <a href="#welcome">Create a vendor account</a>
           </div>
         </div>
         <div className="landing-footer-bottom">
-          <span>EventHub (Pvt) Ltd, Colombo 03</span>
-          <span>hello@eventhub.lk · +94 11 234 5678</span>
+          <span>EventHub · Sri Lanka</span>
         </div>
       </footer>
     </main>

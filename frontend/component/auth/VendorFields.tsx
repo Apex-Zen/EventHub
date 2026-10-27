@@ -33,7 +33,6 @@ export default function VendorFields({ values, actions }: VendorFieldsProps) {
   return (
 
     <>
-      <p className="vendor-form-section">ABOUT YOU</p>
       <div className="field-row">
         <div className="field">
           <TextField
@@ -100,7 +99,6 @@ export default function VendorFields({ values, actions }: VendorFieldsProps) {
           <option value="" disabled>Choose a category</option>
           {vendorCategories.map((category) => <option key={category} value={category}>{category}</option>)}
         </select>
-        <p className="field-hint">Photography, catering, decoration, sound and lighting, venue, cake, transport.</p>
       </div>
       <div className="field">
         <TextField
@@ -113,8 +111,7 @@ export default function VendorFields({ values, actions }: VendorFieldsProps) {
           required
         />
       </div>
-    
-      <p className="vendor-form-section">ID VERIFICATION</p>
+      <p className="vendor-form-section">REQUIRED ID VERIFICATION</p>
       <div className="field">
         <TextField
           id="nic-number"
@@ -148,7 +145,6 @@ export default function VendorFields({ values, actions }: VendorFieldsProps) {
           }}
         />
       </label>
-      <p className="vendor-document-note">Demo mode: identity documents are not uploaded or saved. A secure verification service is not connected yet.</p>
     </>
   );
 }
