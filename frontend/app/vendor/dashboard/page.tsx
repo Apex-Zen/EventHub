@@ -4,6 +4,8 @@ import VendorPackageRequest from '../../components/VendorPackageRequest';
 import VendorProfileCard from '../../components/VendorProfileCard';
 import VendorServicesCard from '../../components/VendorServicesCard';
 import VendorReviewsCard from '../../components/VendorReviewsCard';
+import VendorPortfolioCard from '../../components/VendorPortfolioCard';
+import VendorDiaryCard from '../../components/VendorDiaryCard';
 
 export default function DashboardPage() {
   return (
@@ -17,7 +19,7 @@ export default function DashboardPage() {
       {/* Top Stat Cards Row */}
       <VendorStatCards />
 
-      {/* Middle Row: Request Card & Profile Card */}
+      {/* Row 1: Package Request & Profile Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2">
           <VendorPackageRequest />
@@ -27,13 +29,23 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Row: Services Card & Reviews Card Side by Side */}
+      {/* Row 2: Services & Reviews */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
         <div className="lg:col-span-2">
           <VendorServicesCard />
         </div>
         <div className="lg:col-span-1">
           <VendorReviewsCard />
+        </div>
+      </div>
+
+      {/* Row 3: Portfolio & Diary (Calendar) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        <div className="lg:col-span-2">
+          <VendorPortfolioCard />
+        </div>
+        <div className="lg:col-span-1">
+          <VendorDiaryCard />
         </div>
       </div>
     </div>
