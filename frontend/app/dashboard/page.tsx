@@ -1,9 +1,9 @@
 
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LocationIcon from "@/components/icons/LocationIcons";
 import {
   LayoutDashboard,
   BarChart3,
@@ -26,6 +26,11 @@ import {
   LogOut,
   ChevronDown
 } from "lucide-react";
+
+// ==========================================
+// NAVIGATION CONFIGURATION
+// Sidebar menu items mapped with route URLs and icons
+// ==========================================
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
@@ -47,19 +52,24 @@ const navItems = [
   { name: "Profile", href: "/profile", icon: User },
 ];
 
+// ==========================================
+// COMPONENT: SIDEBAR
+// Fixed vertical navigation panel for Event Manager
+// ==========================================
 function Sidebar() {
   const pathname = usePathname();
 
   return (
     <aside className="w-64 bg-white border-r border-slate-100 flex flex-col justify-between h-screen sticky top-0 select-none shrink-0">
+      {/* Upper Navigation Section */}
       <div className="overflow-y-auto px-4 py-6 scrollbar-thin">
-        <div className="flex items-center gap-2 px-3 mb-6">
-          <div className="w-6 h-6 rounded-full border-2 border-sky-500 flex items-center justify-center">
-            <div className="w-2 h-2 bg-sky-500 rounded-full"></div>
-          </div>
+        {/* Brand / Logo with Reusable LocationIcon */}
+        <div className="flex items-center gap-2.5 px-3 mb-6">
+          <LocationIcon />
           <span className="text-xl font-bold text-slate-800 tracking-tight">EventHub</span>
         </div>
 
+        {/* Event Scope Switcher Dropdown */}
         <div className="mb-6 px-1">
           <span className="text-[11px] font-semibold text-slate-400 tracking-wider uppercase block mb-1">
             EVENT MANAGER
@@ -74,6 +84,7 @@ function Sidebar() {
           </div>
         </div>
 
+        {/* Sidebar Nav Links */}
         <nav className="space-y-0.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -96,6 +107,7 @@ function Sidebar() {
         </nav>
       </div>
 
+      {/* User Profile & Logout Section at Bottom */}
       <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-white">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs">
@@ -114,7 +126,12 @@ function Sidebar() {
   );
 }
 
+// ==========================================
+// MAIN PAGE: DASHBOARD OVERVIEW
+// Primary administrative dashboard screen
+// ==========================================
 export default function DashboardPage() {
+  // Key Operational Metric Cards Data
   const stats = [
     { label: "Live events", count: "2", subtext: "today" },
     { label: "Packages to approve", count: "5", subtext: "oldest waiting 6 h" },
@@ -124,9 +141,12 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
+      {/* Left Navigation Sidebar */}
       <Sidebar />
 
+      {/* Main Content Area */}
       <main className="flex-1 p-8 overflow-y-auto">
+        {/* Header Greeting & Action Bar */}
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-3xl font-serif font-bold text-slate-900 tracking-tight">
@@ -141,6 +161,7 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        {/* Section 1: KPI Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           {stats.map((stat, idx) => (
             <div key={idx} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
@@ -151,7 +172,9 @@ export default function DashboardPage() {
           ))}
         </div>
 
+        {/* Section 2: Package Approval Queue & Today's Schedule */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+          {/* Approval Queue Panel */}
           <div className="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-serif font-bold text-slate-900">
@@ -201,6 +224,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Today's Live Events Panel */}
           <div className="lg:col-span-5 bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
             <h2 className="text-lg font-serif font-bold text-slate-900 mb-6">Today</h2>
 
@@ -244,7 +268,9 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Section 3: Operational Alerts & Financial Commission */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Urgent Incidents & Disputes */}
           <div className="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
             <h2 className="text-lg font-serif font-bold text-slate-900 mb-6">Alerts</h2>
 
@@ -293,6 +319,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Monthly Commission Breakdown */}
           <div className="lg:col-span-5 bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
             <h2 className="text-lg font-serif font-bold text-slate-900 mb-6">
               Commission this month
