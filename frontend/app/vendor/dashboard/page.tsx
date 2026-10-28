@@ -2,6 +2,8 @@ import React from 'react';
 import VendorStatCards from '../../components/VendorStatCards';
 import VendorPackageRequest from '../../components/VendorPackageRequest';
 import VendorProfileCard from '../../components/VendorProfileCard';
+import VendorServicesCard from '../../components/VendorServicesCard';
+import VendorReviewsCard from '../../components/VendorReviewsCard';
 
 export default function DashboardPage() {
   return (
@@ -15,13 +17,23 @@ export default function DashboardPage() {
       {/* Top Stat Cards Row */}
       <VendorStatCards />
 
-      {/* Middle Row: Request Card (2 cols) & Profile Card (1 col) */}
+      {/* Middle Row: Request Card & Profile Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2">
           <VendorPackageRequest />
         </div>
         <div className="lg:col-span-1">
           <VendorProfileCard />
+        </div>
+      </div>
+
+      {/* Row: Services Card & Reviews Card Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        <div className="lg:col-span-2">
+          <VendorServicesCard />
+        </div>
+        <div className="lg:col-span-1">
+          <VendorReviewsCard />
         </div>
       </div>
     </div>
