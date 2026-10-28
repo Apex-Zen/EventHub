@@ -46,20 +46,20 @@ export default function VendorSidebar() {
 
       {/* Bottom Section: User Profile */}
       <div className="p-4 border-t border-gray-200 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
-          {/* Placeholder for Kasun's profile image */}
-          <img src="https://via.placeholder.com/40" alt="Kasun Fernando" />
-        </div>
-        <div className="flex-1">
-          <div className="text-sm font-semibold text-gray-900">Kasun Fernando</div>
-          <div className="text-xs text-gray-500">Lens & Light Studio</div>
-        </div>
-        <button className="text-gray-400 hover:text-gray-600">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-        </button>
-      </div>
+  {/* Profile Avatar with Initials */}
+  <div className="w-10 h-10 rounded-full bg-teal-600 text-white font-semibold flex items-center justify-center text-sm shadow-sm">
+    KF
+  </div>
+  <div className="flex-1">
+    <div className="text-sm font-semibold text-gray-900">Kasun Fernando</div>
+    <div className="text-xs text-gray-500">Lens & Light Studio</div>
+  </div>
+  <button className="text-gray-400 hover:text-gray-600" title="Logout">
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+    </svg>
+  </button>
+</div>
     </aside>
   );
 }
