@@ -1,5 +1,6 @@
 import React from 'react';
 import VendorStatCards from '../../components/VendorStatCards';
+import VendorPackageRequest from '../../components/VendorPackageRequest';
 
 export default function DashboardPage() {
   return (
@@ -9,6 +10,9 @@ export default function DashboardPage() {
 
       {/* Stat Cards Component */}
       <VendorStatCards />
+
+      {/* New Package Request Component */}
+      <VendorPackageRequest />
     </div>
   );
 }
