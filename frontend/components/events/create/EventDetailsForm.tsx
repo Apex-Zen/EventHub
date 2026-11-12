@@ -4,7 +4,13 @@ import React, { useState } from 'react';
 import MiniCalendar from './MiniCalendar';
 import TimeSlotSelector from './TimeSlotSelector';
 import RangeSliderField from './RangeSliderField';
-import { EventDetailsFormData, TimeSlot } from './types';
+import CustomDropdown from './CustomDropdown';
+import {
+  EventDetailsFormData,
+  TimeSlot,
+  EVENT_TYPE_OPTIONS,
+  DISTRICT_OPTIONS,
+} from './types';
 
 interface EventDetailsFormProps {
   initialData?: Partial<EventDetailsFormData>;
@@ -58,45 +64,13 @@ export default function EventDetailsForm({
       </h2>
 
       {/* Event type dropdown */}
-      <div>
-        <label
-          htmlFor="event-type"
-          className="block text-sm font-medium text-[#1B2430] mb-2"
-        >
-          Event type
-        </label>
-        <div className="relative">
-          <select
-            id="event-type"
-            value={formData.eventType}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, eventType: e.target.value }))
-            }
-            className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md text-sm text-[#1B2430] focus:outline-none focus:ring-1 focus:ring-[#266665] focus:border-[#266665] appearance-none cursor-pointer"
-          >
-            <option value="Wedding">Wedding</option>
-            <option value="Birthday party">Birthday party</option>
-            <option value="Office party">Office party</option>
-            <option value="Anniversary">Anniversary</option>
-            <option value="Private dinner">Private dinner</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
+      <CustomDropdown
+        id="event-type"
+        label="Event type"
+        value={formData.eventType}
+        options={EVENT_TYPE_OPTIONS}
+        onChange={(val) => setFormData((prev) => ({ ...prev, eventType: val }))}
+      />
 
       {/* Date & Location Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
@@ -118,48 +92,16 @@ export default function EventDetailsForm({
             onChange={handleTimeSlotChange}
           />
 
-          <div>
-            <label
-              htmlFor="district"
-              className="block text-sm font-medium text-[#1B2430] mb-2"
-            >
-              Location / district
-            </label>
-            <div className="relative">
-              <select
-                id="district"
-                value={formData.district}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, district: e.target.value }))
-                }
-                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md text-sm text-[#1B2430] focus:outline-none focus:ring-1 focus:ring-[#266665] focus:border-[#266665] appearance-none cursor-pointer"
-              >
-                <option value="Colombo">Colombo</option>
-                <option value="Gampaha">Gampaha</option>
-                <option value="Kalutara">Kalutara</option>
-                <option value="Kandy">Kandy</option>
-                <option value="Galle">Galle</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p className="text-xs text-gray-400 mt-1.5">
-              Only vendors who serve this district are shown.
-            </p>
-          </div>
+          <CustomDropdown
+            id="district"
+            label="Location / district"
+            value={formData.district}
+            options={DISTRICT_OPTIONS}
+            onChange={(val) =>
+              setFormData((prev) => ({ ...prev, district: val }))
+            }
+            helperText="Only vendors who serve this district are shown."
+          />
         </div>
       </div>
 
