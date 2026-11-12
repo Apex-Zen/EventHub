@@ -15,7 +15,7 @@ const defaultRules: MatchingRule[] = [
 ];
 
 export default function HowMatchingWorksCard({
-  imageSrc = '/images/private-event.jpg',
+  imageSrc = '/images/select-page.jpg',
   imageAlt = 'Private event setting',
   title = 'How matching works',
   rules = defaultRules,
