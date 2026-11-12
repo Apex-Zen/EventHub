@@ -5,9 +5,9 @@ import { PlanningCardProps } from './types';
 
 export default function PlanningCard({ card }: PlanningCardProps) {
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden flex flex-col transition hover:shadow-md">
+    <article className="bg-white rounded-lg shadow-sm border border-gray-200/80 overflow-hidden flex flex-col transition hover:shadow-md">
       {/* Card Header Image */}
-      <div className="h-52 sm:h-56 md:h-60 bg-gray-200 overflow-hidden">
+      <div className="h-60 sm:h-64 md:h-72 bg-gray-200 overflow-hidden">
         <img
           src={card.imageSrc}
           alt={card.imageAlt || card.title}
@@ -17,13 +17,13 @@ export default function PlanningCard({ card }: PlanningCardProps) {
 
       {/* Card Body */}
       <div className="p-6 sm:p-7 flex-1 flex flex-col items-start">
-        <span className="text-xs font-bold text-[#266665] tracking-wider uppercase mb-2">
+        <span className="text-[11px] font-semibold text-[#266665] tracking-widest uppercase mb-2">
           {card.category}
         </span>
-        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+        <h3 className="font-serif text-2xl sm:text-[26px] font-bold text-[#1B2430] leading-snug mb-3">
           {card.title}
         </h3>
-        <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6 flex-1">
+        <p className="text-[#4B5563] text-sm sm:text-base leading-relaxed mb-6 flex-1">
           {card.description}
         </p>
 

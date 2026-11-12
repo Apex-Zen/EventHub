@@ -33,7 +33,7 @@ export default function PlanningSection({
     <section aria-labelledby="planning-section-heading">
       <h2
         id="planning-section-heading"
-        className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6"
+        className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#1B2430] leading-tight mb-6"
       >
         {title}
       </h2>

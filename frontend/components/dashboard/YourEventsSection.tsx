@@ -44,18 +44,18 @@ export default function YourEventsSection({
   return (
     <section
       aria-labelledby="your-events-heading"
-      className="bg-white rounded-xl shadow-sm border border-gray-200/80 p-6 sm:p-8"
+      className="bg-white rounded-lg shadow-sm border border-gray-200/80 p-6 sm:p-8"
     >
       <div className="flex justify-between items-center mb-6 sm:mb-8">
         <h2
           id="your-events-heading"
-          className="font-serif text-2xl sm:text-3xl font-bold text-gray-900"
+          className="font-serif text-2xl sm:text-3xl font-bold text-[#1B2430] leading-tight"
         >
           {title}
         </h2>
         <Link
           href={seeAllHref}
-          className="text-sm font-medium text-[#266665] hover:underline"
+          className="text-sm font-medium text-[#266665] hover:text-[#123B3A] hover:underline transition-colors"
         >
           See all
         </Link>

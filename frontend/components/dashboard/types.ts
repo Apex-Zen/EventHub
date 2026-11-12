@@ -1,4 +1,4 @@
-export type BadgeVariant = 'teal' | 'gray';
+export type BadgeVariant = 'teal' | 'gray' | 'green' | 'amber' | 'red';
 
 export interface PlanningCardData {
   id: string;
