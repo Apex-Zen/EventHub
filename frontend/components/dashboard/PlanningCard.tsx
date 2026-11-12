@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import PrimaryButton from '@/components/ui/PrimaryButton';
 import { PlanningCardProps } from './types';
 
 export default function PlanningCard({ card }: PlanningCardProps) {
