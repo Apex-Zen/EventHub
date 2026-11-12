@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 interface MiniCalendarProps {
   selectedDate?: string; // Format: YYYY-MM-DD
@@ -11,40 +11,54 @@ export default function MiniCalendar({
   selectedDate,
   onSelectDate,
 }: MiniCalendarProps) {
-  // Today's real-world date normalized to midnight
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, []);
+  // State for today's date, initialized strictly on the client
+  const [today, setToday] = useState<Date | null>(null);
 
-  // Parse initial selected date or default to today
-  const initialDateObj = useMemo(() => {
-    if (selectedDate) {
+  // Parse year/month from selectedDate if provided, otherwise null initially
+  const initialYear = selectedDate ? parseInt(selectedDate.split('-')[0], 10) : null;
+  const initialMonth = selectedDate ? parseInt(selectedDate.split('-')[1], 10) - 1 : null;
+
+  const [viewYear, setViewYear] = useState<number>(initialYear || 2026);
+  const [viewMonth, setViewMonth] = useState<number>(initialMonth !== null && !isNaN(initialMonth) ? initialMonth : 10);
+
+  // Initialize today and default view month/year safely on client mount
+  useEffect(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    setToday(now);
+
+    // If no selectedDate was passed, sync view to current month/year
+    if (!selectedDate) {
+      setViewYear(now.getFullYear());
+      setViewMonth(now.getMonth());
+    } else {
       const parts = selectedDate.split('-');
       if (parts.length === 3) {
-        const parsed = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-        parsed.setHours(0, 0, 0, 0);
-        if (!isNaN(parsed.getTime())) return parsed;
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        if (!isNaN(y) && !isNaN(m)) {
+          setViewYear(y);
+          setViewMonth(m);
+        }
       }
     }
-    return today;
-  }, [selectedDate, today]);
-
-  // Current viewing month and year
-  const [viewYear, setViewYear] = useState<number>(initialDateObj.getFullYear());
-  const [viewMonth, setViewMonth] = useState<number>(initialDateObj.getMonth()); // 0-indexed
+  }, [selectedDate]);
 
   // Rolling 12-month window bounds
-  // Min month: current month/year of today
-  const minMonthDate = useMemo(() => new Date(today.getFullYear(), today.getMonth(), 1), [today]);
-  // Max month: 12 months ahead (e.g. if today is Nov 2026, max is Nov 2027)
-  const maxMonthDate = useMemo(() => new Date(today.getFullYear(), today.getMonth() + 11, 1), [today]);
+  const minMonthDate = useMemo(() => {
+    if (!today) return null;
+    return new Date(today.getFullYear(), today.getMonth(), 1);
+  }, [today]);
+
+  const maxMonthDate = useMemo(() => {
+    if (!today) return null;
+    return new Date(today.getFullYear(), today.getMonth() + 11, 1);
+  }, [today]);
 
   const currentViewDate = useMemo(() => new Date(viewYear, viewMonth, 1), [viewYear, viewMonth]);
 
-  const canGoPrev = currentViewDate > minMonthDate;
-  const canGoNext = currentViewDate < maxMonthDate;
+  const canGoPrev = minMonthDate ? currentViewDate > minMonthDate : false;
+  const canGoNext = maxMonthDate ? currentViewDate < maxMonthDate : true;
 
   const handlePrevMonth = () => {
     if (!canGoPrev) return;
@@ -66,7 +80,7 @@ export default function MiniCalendar({
     }
   };
 
-  // Month header label e.g. "November 2026"
+  // Month header label e.g. "December 2026"
   const monthYearLabel = currentViewDate.toLocaleDateString('en-US', {
     month: 'long',
     year: 'numeric',
@@ -101,7 +115,7 @@ export default function MiniCalendar({
     targetDate.setHours(0, 0, 0, 0);
 
     // Guard: past dates cannot be selected
-    if (targetDate < today) return;
+    if (today && targetDate < today) return;
 
     const y = viewYear;
     const m = String(viewMonth + 1).padStart(2, '0');
@@ -168,7 +182,7 @@ export default function MiniCalendar({
           const thisDate = new Date(viewYear, viewMonth, day);
           thisDate.setHours(0, 0, 0, 0);
 
-          const isPast = thisDate < today;
+          const isPast = today ? thisDate < today : false;
           const isSelected =
             selectedDateParts !== null &&
             selectedDateParts.year === viewYear &&
