@@ -1,10 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
 import { StepItem } from './types';
 
 interface PlanEventHeaderProps {
   title?: string;
-  backHref?: string;
   currentStep?: number;
   steps?: StepItem[];
 }
@@ -18,20 +16,11 @@ const defaultSteps: StepItem[] = [
 
 export default function PlanEventHeader({
   title = 'Plan a private event',
-  backHref = '/client/dashboard',
   currentStep = 1,
   steps = defaultSteps,
 }: PlanEventHeaderProps) {
   return (
     <div className="mb-8">
-      {/* Back link */}
-      <Link
-        href={backHref}
-        className="inline-flex items-center text-sm font-medium text-[#266665] hover:text-[#123B3A] no-underline transition-colors mb-3"
-      >
-        <span className="mr-1">&larr;</span> Back to home
-      </Link>
-
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         {/* Title */}
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1B2430] leading-tight">
