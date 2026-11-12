@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MiniCalendar from './MiniCalendar';
 import TimeSlotSelector from './TimeSlotSelector';
 import RangeSliderField from './RangeSliderField';
@@ -20,7 +20,7 @@ interface EventDetailsFormProps {
 
 const defaultFormData: EventDetailsFormData = {
   eventType: 'Wedding',
-  targetDate: '2026-12-12',
+  targetDate: '',
   timeSlot: 'Night',
   district: 'Colombo',
   expectedAttendance: 250,
@@ -37,11 +37,24 @@ export default function EventDetailsForm({
     ...initialData,
   });
 
-  const handleSelectDay = (day: number) => {
-    const formattedDay = day < 10 ? `0${day}` : `${day}`;
+  // Safely initialize today's date after mounting on the client side
+  useEffect(() => {
+    if (!initialData?.targetDate && !formData.targetDate) {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      setFormData((prev) => ({
+        ...prev,
+        targetDate: `${y}-${m}-${d}`,
+      }));
+    }
+  }, [initialData?.targetDate]);
+
+  const handleSelectDate = (dateStr: string) => {
     setFormData((prev) => ({
       ...prev,
-      targetDate: `2026-12-${formattedDay}`,
+      targetDate: dateStr,
     }));
   };
 
@@ -80,8 +93,8 @@ export default function EventDetailsForm({
             Target date
           </label>
           <MiniCalendar
-            initialSelectedDay={parseInt(formData.targetDate.split('-')[2], 10) || 12}
-            onSelectDate={handleSelectDay}
+            selectedDate={formData.targetDate}
+            onSelectDate={handleSelectDate}
           />
         </div>
 
