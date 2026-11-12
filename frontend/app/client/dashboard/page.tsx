@@ -7,7 +7,7 @@ export default function ClientDashboard() {
       
       {/* Hero Banner Section */}
       <div className="relative h-72 bg-gray-900 rounded-xl overflow-hidden mb-10 shadow-sm">
-        <div className="absolute inset-0 bg-cover bg-center opacity-60 bg-[url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop')]"></div>
+        <div className="absolute inset-0 bg-cover bg-center opacity-60 bg-[url('/images/hero-bg.jpg')]"></div>
         <div className="absolute inset-0 bg-black/30"></div>
         
         <div className="relative z-10 flex flex-col justify-center h-full px-12 text-white">
@@ -25,7 +25,7 @@ export default function ClientDashboard() {
           {/* Private Event Card */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col">
             <div className="h-56 bg-gray-200">
-              <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" alt="Private Event" className="w-full h-full object-cover" />
+              <img src="/images/private-event.jpg" alt="Private Event" className="w-full h-full object-cover" />
             </div>
             <div className="p-6 flex-1 flex flex-col items-start">
               <span className="text-xs font-bold text-gray-500 tracking-wider mb-3 uppercase">Private Event</span>
@@ -42,7 +42,7 @@ export default function ClientDashboard() {
           {/* Public Event Card */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col">
             <div className="h-56 bg-gray-200">
-              <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2070&auto=format&fit=crop" alt="Public Event" className="w-full h-full object-cover" />
+              <img src="/images/public-event.jpg" alt="Public Event" className="w-full h-full object-cover" />
             </div>
             <div className="p-6 flex-1 flex flex-col items-start">
               <span className="text-xs font-bold text-gray-500 tracking-wider mb-3 uppercase">Public Event</span>
@@ -71,7 +71,7 @@ export default function ClientDashboard() {
           <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition">
             <div className="flex items-center gap-6">
               <div className="w-24 h-20 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" alt="Wedding" className="w-full h-full object-cover" />
+                <img src="/images/event-1.jpg" alt="Wedding" className="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 className="font-bold text-xl text-gray-900">Perera-Silva wedding</h4>
@@ -88,7 +88,7 @@ export default function ClientDashboard() {
           <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition">
             <div className="flex items-center gap-6">
               <div className="w-24 h-20 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop" alt="Office Party" className="w-full h-full object-cover" />
+                <img src="/images/event-2.jpg" alt="Office Party" className="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 className="font-bold text-xl text-gray-900">Office year-end party</h4>
@@ -105,7 +105,7 @@ export default function ClientDashboard() {
           <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition">
             <div className="flex items-center gap-6">
               <div className="w-24 h-20 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=2070&auto=format&fit=crop" alt="Jazz Night" className="w-full h-full object-cover" />
+                <img src="/images/event-3.jpg" alt="Jazz Night" className="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 className="font-bold text-xl text-gray-900">Galle Face Jazz Night</h4>
