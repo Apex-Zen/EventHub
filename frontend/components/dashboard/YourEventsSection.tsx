@@ -55,7 +55,7 @@ export default function YourEventsSection({
         </h2>
         <Link
           href={seeAllHref}
-          className="text-sm font-medium text-[#266665] hover:text-[#123B3A] hover:underline transition-colors"
+          className="text-sm font-medium text-[#266665] hover:text-[#123B3A] no-underline hover:no-underline transition-colors"
         >
           See all
         </Link>

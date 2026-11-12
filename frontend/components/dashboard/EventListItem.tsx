@@ -33,7 +33,7 @@ export default function EventListItem({ event }: EventListItemProps) {
         />
         <Link
           href={event.href || '#'}
-          className="text-sm font-medium text-[#1B2430] hover:text-[#266665] hover:underline transition-colors"
+          className="text-sm font-medium text-[#1B2430] hover:text-[#266665] no-underline hover:no-underline transition-colors"
         >
           Open
         </Link>
