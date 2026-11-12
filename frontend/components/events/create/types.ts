@@ -25,3 +25,45 @@ export interface EventDetailsFormData {
   totalBudget: number;
 }
 
+export const EVENT_TYPE_OPTIONS = [
+  'Wedding',
+  'Homecoming',
+  'Engagement Party',
+  'Pre-shoot',
+  'Birthday Party',
+  'Anniversary Celebration',
+  'Coming of Age Ceremony',
+  'Housewarming Party',
+  'Almsgiving',
+  'Annual Get-together',
+  'School Concert',
+  'Annual Award Ceremony',
+] as const;
+
+export const DISTRICT_OPTIONS = [
+  'Ampara',
+  'Anuradhapura',
+  'Badulla',
+  'Batticaloa',
+  'Colombo',
+  'Galle',
+  'Gampaha',
+  'Hambantota',
+  'Jaffna',
+  'Kalutara',
+  'Kandy',
+  'Kegalle',
+  'Kilinochchi',
+  'Kurunegala',
+  'Mannar',
+  'Matale',
+  'Matara',
+  'Monaragala',
+  'Mullaitivu',
+  'Nuwara Eliya',
+  'Polonnaruwa',
+  'Puttalam',
+  'Ratnapura',
+  'Trincomalee',
+  'Vavuniya',
+] as const;
