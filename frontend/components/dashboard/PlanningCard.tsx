@@ -27,8 +27,11 @@ export default function PlanningCard({ card }: PlanningCardProps) {
           {card.description}
         </p>
 
-        <Link href={card.href} className="inline-block">
-          <PrimaryButton>{card.buttonText}</PrimaryButton>
+        <Link
+          href={card.href}
+          className="inline-block px-5 py-2.5 bg-[#266665] hover:bg-[#123B3A] active:bg-[#123B3A] text-white text-sm font-medium rounded transition-colors"
+        >
+          {card.buttonText}
         </Link>
       </div>
     </article>
