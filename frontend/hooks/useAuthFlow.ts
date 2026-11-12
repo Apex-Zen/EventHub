@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { requestEmailVerification, submitEmailVerification } from "../lib/email-verification";
-import { Role, Mode, Step, ResetMethod, Account, RESET_CODE_LIFETIME_MS, getAccountKey, readAccounts, updateAccounts, hexToBytes, hashPassword, passwordsMatch, makeResetCode, findAccount, validateIdentityDocument, isValidUsername } from "../lib/auth";
+import { Role, Mode, Step, ResetMethod, Account, RESET_CODE_LIFETIME_MS, getAccountKey, readAccounts, updateAccounts, hexToBytes, hashPassword, passwordsMatch, makeResetCode, findAccount, validateIdentityDocument } from "../lib/auth";
 export function useAuthFlow() {
     const operation = useRef(0);
     const pending = useRef(false);
@@ -16,7 +16,6 @@ export function useAuthFlow() {
     const [step, setStep] = useState<Step>("form");
     const [role, setRole] = useState<Role>("Client");
     const [fullName, setFullName] = useState("");
-    const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,6 +24,7 @@ export function useAuthFlow() {
     const [businessRegistrationNumber, setBusinessRegistrationNumber] = useState("");
     const [nicNumber, setNicNumber] = useState("");
     const [identityDocument, setIdentityDocument] = useState<File | null>(null);
+    const [acceptedClientTerms, setAcceptedClientTerms] = useState(false);
     const [acceptedVendorTerms, setAcceptedVendorTerms] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -57,6 +57,7 @@ export function useAuthFlow() {
         setResetTarget("");
         setIdentityDocument(null);
         setNicNumber("");
+        setAcceptedClientTerms(false);
         setAcceptedVendorTerms(false);
     }
     function leaveFlow() {
@@ -149,17 +150,13 @@ export function useAuthFlow() {
             const accounts = readAccounts();
             const accountKey = getAccountKey(email, role);
             if (mode === "signup") {
-                const normalizedUsername = username.trim();
-                if (!isValidUsername(normalizedUsername)) {
-                    throw new Error("Choose a username with 3–24 letters, numbers, periods, underscores, or hyphens.");
-                }
-                if (accounts.some((account) => account.username?.toLowerCase() === normalizedUsername.toLowerCase())) {
-                    throw new Error("That username is already in use. Choose another.");
-                }
-                if (role === "Client" && !fullName.trim())
+                const clientFullName = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ") || fullName.trim();
+                if (role === "Client" && !clientFullName)
                     throw new Error("Enter your full name.");
                 if (role === "Client" && !phoneNumber.trim())
                     throw new Error("Enter your phone number.");
+                if (role === "Client" && !acceptedClientTerms)
+                    throw new Error("Accept the Terms and Privacy Policy to continue.");
                 if (role === "Vendor") {
                     if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
                         throw new Error("Complete your name and phone number to continue.");
@@ -193,9 +190,8 @@ export function useAuthFlow() {
                     return;
                 const account: Account = {
                     role,
-                    fullName: role === "Vendor" ? `${firstName.trim()} ${lastName.trim()}` : fullName.trim(),
+                    fullName: role === "Vendor" ? `${firstName.trim()} ${lastName.trim()}` : clientFullName,
                     email: email.trim().toLowerCase(),
-                    username: normalizedUsername,
                     ...(role === "Client" && { phoneNumber: phoneNumber.trim() }),
                     passwordSalt: salt,
                     passwordHash: hash,
@@ -213,8 +209,6 @@ export function useAuthFlow() {
                         return current;
                     if (findAccount(current, email, role))
                         throw new Error("An account with this email already exists for this role. Sign in instead.");
-                    if (current.some((item) => item.username?.toLowerCase() === normalizedUsername.toLowerCase()))
-                        throw new Error("That username is already in use. Choose another.");
                     return [...current, account];
                 });
                 if (operation.current !== operationId)
@@ -409,9 +403,9 @@ export function useAuthFlow() {
     return {
         showLanding, mode, step, role, activeAccount, switchMode, signOut, goHome, openAuth, returnToLogin,
         accountForm: { values: {
-                mode, role, fullName, username, email, phoneNumber, acceptedVendorTerms, password, confirmPassword, rememberEmail, error, notice, busy
+                mode, role, fullName, firstName, lastName, email, phoneNumber, acceptedClientTerms, acceptedVendorTerms, password, confirmPassword, rememberEmail, error, notice, busy
             }, actions: {
-                openForgotPassword, setFullName, setUsername, setEmail, setPhoneNumber, setAcceptedVendorTerms, setPassword, setConfirmPassword, setRememberEmail, changeRole, openGoogle, handleSubmit, switchMode
+                openForgotPassword, setFullName, setFirstName, setLastName, setEmail, setPhoneNumber, setAcceptedClientTerms, setAcceptedVendorTerms, setPassword, setConfirmPassword, setRememberEmail, changeRole, openGoogle, handleSubmit, switchMode
             } },
         forgotPasswordForm: { values: { resetMethod, resetIdentifier, error }, actions: {
                 setResetIdentifier, changeResetMethod, returnToLogin, handleForgotPassword

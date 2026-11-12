@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
 import Brand from "./Brand";
-export default function AuthHeader({ onHome, children }: { onHome: () => void; children: ReactNode }) {
- return <header className="topbar"><Brand onClick={onHome} />{children}</header>;
+export default function AuthHeader({ onHome, children, brandVariant = "auth" }: { onHome: () => void; children: ReactNode; brandVariant?: "auth" | "landing" }) {
+ return <header className="topbar"><Brand variant={brandVariant} onClick={onHome} />{children}</header>;
 }

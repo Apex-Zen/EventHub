@@ -76,10 +76,11 @@ function harness(initial = [], verificationOptions = {}) {
 function signup(h, email = "new@example.com") {
   h.render().openAuth("signup", "Client");
   const actions = h.render().accountForm.actions;
-  actions.setFullName("New User");
-  actions.setUsername("newuser");
+  actions.setFirstName("New");
+  actions.setLastName("User");
   actions.setEmail(email);
   actions.setPhoneNumber("+94712345678");
+  actions.setAcceptedClientTerms(true);
   actions.setPassword("Strong123");
   actions.setConfirmPassword("Strong123");
   return h.render().accountForm.actions.handleSubmit(event);
@@ -234,7 +235,7 @@ test("changing recovery method clears the identifier both ways", () => {
 test("client signup rejects whitespace-only names", async () => {
   const h = harness(); h.render().openAuth("signup");
   const actions = h.render().accountForm.actions;
-  actions.setFullName("   "); actions.setUsername("validuser"); actions.setEmail("name@example.com");
+  actions.setFullName("   "); actions.setEmail("name@example.com");
   actions.setPassword("Strong123"); actions.setConfirmPassword("Strong123");
   await h.render().accountForm.actions.handleSubmit(event);
   assert.match(h.render().accountForm.values.error, /full name/);
@@ -246,7 +247,6 @@ test("client signup requires and saves a phone number", async () => {
   h.render().openAuth("signup");
   let flow = h.render();
   flow.accountForm.actions.setFullName("New User");
-  flow.accountForm.actions.setUsername("newuser");
   flow.accountForm.actions.setEmail("new@example.com");
   flow.accountForm.actions.setPassword("Strong123");
   flow.accountForm.actions.setConfirmPassword("Strong123");
@@ -254,6 +254,10 @@ test("client signup requires and saves a phone number", async () => {
   assert.match(h.render().accountForm.values.error, /phone number/);
 
   h.render().accountForm.actions.setPhoneNumber("+94712345678");
+  await h.render().accountForm.actions.handleSubmit(event);
+  assert.match(h.render().accountForm.values.error, /Terms and Privacy Policy/);
+
+  h.render().accountForm.actions.setAcceptedClientTerms(true);
   const pending = h.render().accountForm.actions.handleSubmit(event);
   h.resolveHash();
   await pending;
@@ -269,7 +273,6 @@ test("vendor signup requires an NIC number or a valid ID document", async () => 
   flow.vendorFields.actions.setPhoneNumber("+94712345678");
   flow.vendorFields.actions.setServiceCategory("Photography");
   flow.vendorFields.actions.setBusinessRegistrationNumber("PV 00123456");
-  flow.accountForm.actions.setUsername("testvendor");
   flow.accountForm.actions.setPassword("Strong123");
   flow.accountForm.actions.setConfirmPassword("Strong123");
   flow = h.render();
@@ -288,6 +291,7 @@ test("vendor signup requires an NIC number or a valid ID document", async () => 
   await submit;
   const [createdAccount] = h.service.readAccounts();
   assert.equal(createdAccount.email, "vendor@example.com");
+  assert.equal(createdAccount.username, undefined);
   assert.equal(createdAccount.vendorProfile.businessRegistrationNumber, "PV 00123456");
   assert.equal("nicNumber" in createdAccount.vendorProfile, false);
 });
@@ -372,9 +376,12 @@ test("authentication components render login, both signups, recovery, reset, ver
     const vendorFields = React.createElement(load("component/auth/VendorFields.tsx").default, flow.vendorFields);
     const html = renderToStaticMarkup(React.createElement(load("component/auth/AccountForm.tsx").default, { ...flow.accountForm, vendorFields }));
     assert.match(html, /<form/);
-    if (mode === "signup") assert.match(html, /Username/);
+    if (mode === "signup" && role === "Vendor") {
+      assert.doesNotMatch(html, /Username|Sign up with Google|class="auth-divider"/);
+    }
+    if (mode === "signup" && role === "Client") assert.doesNotMatch(html, /Username/);
     if (mode === "signup" && role === "Client") assert.match(html, /Phone number/);
-    if (mode === "signup") {
+    if (mode === "signup" && role === "Client") {
       assert.match(html, /Sign up with Google/);
       assert.doesNotMatch(html, /Account details are saved only in this browser/);
       assert.doesNotMatch(html, /Create account[\s\S]*→/);

@@ -13,6 +13,9 @@ import AccountForm from "../component/auth/AccountForm";
 export default function Home() {
  const flow = useAuthFlow();
  const { showLanding, mode, step, role, activeAccount, switchMode, signOut, goHome, openAuth } = flow;
+  const isRecovery = step === "forgot" || step === "reset" || step === "google";
+  const isSignup = mode === "signup" && step === "form";
+  const isLogin = mode === "login" && step === "form";
   if (step === "dashboard" && activeAccount) {
     return (
       <main className="auth-page">
@@ -38,9 +41,14 @@ export default function Home() {
   }
 
   return (
-    <main className={`auth-page${step === "forgot" || step === "reset" || step === "google" ? " auth-page-recovery" : ""}`}>
-      <AuthHeader onHome={goHome}>
-        {mode === "login" || step !== "form" ? (
+    <main className={`auth-page${isSignup ? " auth-page-signup" : ""}${isLogin ? " auth-page-login" : ""}${isRecovery ? " auth-page-recovery" : ""}`}>
+      <AuthHeader onHome={goHome} brandVariant={isSignup || isLogin || isRecovery ? "landing" : "auth"}>
+        {isSignup ? (
+          <div className="auth-topbar-prompt">
+            <span>Already have an account?</span>
+            <button type="button" onClick={() => switchMode("login")}>Log in</button>
+          </div>
+        ) : mode === "login" || step !== "form" ? (
           <div className="auth-topbar-prompt">
             <span>New to EventHub?</span>
             <button type="button" onClick={() => switchMode("signup")}>Create an account</button>
@@ -50,17 +58,17 @@ export default function Home() {
         )}
       </AuthHeader>
 
-      <section className={`auth-shell${step === "forgot" || step === "reset" || step === "google" ? " auth-shell-recovery" : ""}`} aria-label="EventHub account access">
+      <section className={`auth-shell${isRecovery ? " auth-shell-recovery" : ""}${isSignup ? " auth-shell-signup" : ""}${isLogin ? " auth-shell-login" : ""}`} aria-label="EventHub account access">
         <aside className={`intro-panel intro-panel-${step === "verify" ? "verify" : mode === "login" || step !== "form" ? "login" : role === "Vendor" ? "vendor" : "client"}`}>
           <div className="intro-orb intro-orb-one" />
           <div className="intro-orb intro-orb-two" />
           <div className="intro-content">
             <span className="intro-kicker"><span className="kicker-dot" /> EVENTHUB · MADE FOR GATHERINGS</span>
             <h1>
-              {step === "verify" ? <>One last<br /><em>step.</em></> : step === "forgot" ? <>A fresh start<br /><em>is one step away.</em></> : step === "reset" ? <>Choose a new<br /><em>password.</em></> : step === "google" ? <>Gather well.<br /><em>We’ll get you there.</em></> : mode === "login" ? <>Welcome<br /><em>back.</em></> : role === "Vendor" ? <>Get booked for<br /><em>the dates you are free.</em></> : <>Your event,<br /><em>planned with care.</em></>}
+              {step === "verify" ? <>One last<br /><em>step.</em></> : step === "forgot" ? <>A fresh start<br /><em>is one step away.</em></> : step === "reset" ? <>Choose a new<br /><em>password.</em></> : step === "google" ? <>Gather well.<br /><em>We’ll get you there.</em></> : mode === "login" ? <>Welcome<br /><em>back.</em></> : role === "Vendor" ? <>Get booked for<br /><em>the dates you are free.</em></> : <>Your event, planned with<br /><em>vendors you can trust.</em></>}
             </h1>
             <p className="intro-copy">
-              {step === "verify" ? "Enter the 6-digit code sent to your email to finish setting up your account." : step === "forgot" || step === "reset" ? "Set a new password for an account saved in this browser." : step === "google" ? "Google sign-in is unavailable. Use your email and password instead." : mode === "login" ? "Sign in to an account saved in this browser." : getRoleMessage(role)}
+              {step === "verify" ? "Enter the 6-digit code sent to your email to finish setting up your account." : step === "forgot" || step === "reset" ? "Set a new password for an account saved in this browser." : step === "google" ? "Google sign-in is unavailable. Use your email and password instead." : mode === "login" ? "Sign in to an account saved in this browser." : role === "Client" ? "From the first idea to the final detail, plan a celebration that feels like yours." : getRoleMessage(role)}
             </p>
             <div className="intro-rule" />
             <p className="intro-caption">A place for every part of the celebration.</p>

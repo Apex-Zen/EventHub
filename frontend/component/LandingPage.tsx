@@ -245,20 +245,31 @@ export default function LandingPage({ onAuth }: LandingPageProps) {
         <div className="landing-footer-main">
           <div className="landing-footer-brand">
             <Brand variant="landing" />
-            <p>Event planning and service categories for Sri Lanka.</p>
+            <p>Event planning with staged payments, for clients and vendors across Sri Lanka.</p>
           </div>
           <div className="landing-footer-column">
-            <h3>GET STARTED</h3>
-            <a href="#welcome">Client accounts</a>
-            <a href="#services">Service categories</a>
+            <h3>PLAN</h3>
+            <a href="#welcome">Private events</a>
+            <a href="#public-events">Public events</a>
+            <a href="#payments">How payments work</a>
           </div>
           <div className="landing-footer-column">
             <h3>VENDORS</h3>
-            <a href="#welcome">Create a vendor account</a>
+            <a href="#welcome">Join as a vendor</a>
+            <a href="#payments">Payouts and commission</a>
+            <a href="#welcome">Vendor help</a>
+          </div>
+          <div className="landing-footer-column">
+            <h3>COMPANY</h3>
+            <a href="#home">About</a>
+            <a href="#home">Terms</a>
+            <a href="#home">Privacy</a>
+            <a href="mailto:hello@eventhub.lk">Contact</a>
           </div>
         </div>
         <div className="landing-footer-bottom">
-          <span>EventHub · Sri Lanka</span>
+          <span>EventHub (Pvt) Ltd, Colombo 03</span>
+          <span>hello@eventhub.lk · +94 11 234 5678</span>
         </div>
       </footer>
     </main>
