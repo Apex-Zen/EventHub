@@ -1,7 +1,17 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import LocationIcon from './icons/LocationIcon';
 
 export default function Navbar() {
+  const pathname = usePathname();
+
+  const isHomeActive = pathname === '/client/dashboard' || pathname === '/';
+  const isEventsActive = pathname.startsWith('/client/events');
+  const isPaymentsActive = pathname.startsWith('/client/payments');
+  const isMessagesActive = pathname.startsWith('/client/messages');
+
   return (
     <nav className="flex items-center justify-between px-8 py-3 bg-white shadow-sm">
       <div className="flex items-center">
@@ -12,10 +22,30 @@ export default function Navbar() {
       </div>
       
       <div className="flex items-center gap-8 text-sm font-medium">
-        <Link href="/client/dashboard" className="text-[#266665] font-semibold">Home</Link>
-        <Link href="#" className="text-gray-600 hover:text-[#266665]">My events</Link>
-        <Link href="#" className="text-gray-600 hover:text-[#266665]">Payments</Link>
-        <Link href="#" className="text-gray-600 hover:text-[#266665]">Messages</Link>
+        <Link
+          href="/client/dashboard"
+          className={isHomeActive ? 'text-[#266665] font-semibold' : 'text-gray-600 hover:text-[#266665]'}
+        >
+          Home
+        </Link>
+        <Link
+          href="/client/events"
+          className={isEventsActive ? 'text-[#266665] font-semibold' : 'text-gray-600 hover:text-[#266665]'}
+        >
+          My events
+        </Link>
+        <Link
+          href="/client/payments"
+          className={isPaymentsActive ? 'text-[#266665] font-semibold' : 'text-gray-600 hover:text-[#266665]'}
+        >
+          Payments
+        </Link>
+        <Link
+          href="/client/messages"
+          className={isMessagesActive ? 'text-[#266665] font-semibold' : 'text-gray-600 hover:text-[#266665]'}
+        >
+          Messages
+        </Link>
       </div>
 
       <div className="flex items-center gap-5">
