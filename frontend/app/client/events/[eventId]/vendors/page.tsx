@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { Suspense, useState, useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   VendorsHeader,
   VendorFilterSidebar,
@@ -39,12 +39,39 @@ const initialFilterState: FilterState = {
 // Seed vendors with basePrice values
 const seedVendors: VendorItem[] = defaultMockVendors;
 
-export default function ChooseVendorsPage() {
+function parsePositiveNumber(value: string | null, fallback: number): number {
+  if (value === null || value.trim() === '') return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function parsePositiveInteger(value: string | null, fallback: number): number {
+  const parsed = parsePositiveNumber(value, fallback);
+  return Number.isInteger(parsed) ? parsed : fallback;
+}
+
+function ChooseVendorsPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [vendors, setVendors] = useState<VendorItem[]>(seedVendors);
   const [filterState, setFilterState] = useState<FilterState>(initialFilterState);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const guestCount = parsePositiveInteger(searchParams.get('guests'), 250);
+  const budget = parsePositiveNumber(searchParams.get('budget'), 1500000);
+  const eventType = searchParams.get('eventType') || 'Wedding';
+  const date = searchParams.get('date') || '2026-12-12';
+  const timeSlot = searchParams.get('timeSlot') || 'Night';
+  const district = searchParams.get('district') || 'Colombo';
+  const eventDate = new Date(`${date}T00:00:00`);
+  const formattedDate = Number.isNaN(eventDate.getTime())
+    ? date
+    : eventDate.toLocaleDateString('en-US', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
 
   // ----- Toggle add/remove -----
   const handleToggleAdd = (id: string) => {
@@ -97,8 +124,8 @@ export default function ChooseVendorsPage() {
     .filter((v) => v.isAdded)
     .map((v) => ({
       id: v.id,
-      name: v.pricePerGuest ? `${v.name} × 250` : v.name,
-      price: v.pricePerGuest ? v.basePrice * 250 : v.basePrice,
+      name: v.pricePerGuest ? `${v.name} × ${guestCount}` : v.name,
+      price: v.pricePerGuest ? v.basePrice * guestCount : v.basePrice,
     }));
 
   // ----- Category sidebar options -----
@@ -143,7 +170,11 @@ export default function ChooseVendorsPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8 sm:px-8 lg:px-12">
-      <VendorsHeader onEventDetailsClick={handleEventDetailsClick} />
+      <VendorsHeader
+        eventName={eventType}
+        eventDetailsText={`${formattedDate} · ${timeSlot} · ${district} · ${guestCount.toLocaleString()} guests · Budget LKR ${budget.toLocaleString()}`}
+        onEventDetailsClick={handleEventDetailsClick}
+      />
 
       {/* Mobile filter toggle */}
       <div className="lg:hidden mb-5">
@@ -216,12 +247,26 @@ export default function ChooseVendorsPage() {
         <aside className="min-w-0 lg:sticky lg:top-6">
           <PackageSummaryCard
             items={packageItems}
-            totalBudget={1500000}
+            totalBudget={budget}
             onReviewPackage={() => router.push('/client/events/1/build-package')}
           />
         </aside>
       </div>
 
     </div>
+  );
+}
+
+export default function ChooseVendorsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full max-w-7xl mx-auto px-6 py-8 sm:px-8 lg:px-12">
+          Loading vendors…
+        </div>
+      }
+    >
+      <ChooseVendorsPageContent />
+    </Suspense>
   );
 }
