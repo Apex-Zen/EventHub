@@ -4,6 +4,8 @@ export interface VendorItem {
   category: string;
   location: string;
   price: string;
+  basePrice: number;
+  priceMultiplier?: number;
   pricePerGuest?: boolean;
   rating: number;
   reviewCount: number;

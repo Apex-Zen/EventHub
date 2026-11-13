@@ -5,7 +5,7 @@ import { VendorItem } from './types';
 interface VendorListProps {
   vendors?: VendorItem[];
   onToggleAdd?: (id: string) => void;
-  onViewProfile?: (id: string) => void;
+  onViewProfile?: (vendor: VendorItem) => void;
 }
 
 export const defaultMockVendors: VendorItem[] = [
@@ -15,6 +15,7 @@ export const defaultMockVendors: VendorItem[] = [
     category: 'Photography',
     location: 'Colombo',
     price: 'LKR 180,000',
+    basePrice: 180000,
     rating: 4.8,
     reviewCount: 62,
     availability: 'Free on 12 Dec, night',
@@ -28,6 +29,7 @@ export const defaultMockVendors: VendorItem[] = [
     category: 'Photography',
     location: 'Colombo',
     price: 'LKR 145,000',
+    basePrice: 145000,
     rating: 4.5,
     reviewCount: 31,
     availability: 'Free on 12 Dec, night',
@@ -41,11 +43,12 @@ export const defaultMockVendors: VendorItem[] = [
     category: 'Catering',
     location: 'Colombo',
     price: 'LKR 3,200',
+    basePrice: 3200,
     pricePerGuest: true,
     rating: 4.7,
     reviewCount: 88,
     availability: 'Free on 12 Dec, night',
-    imageSrc: '/images/ceylon-spice.jpg',
+    imageSrc: '/images/ceylone-spice.jpg',
     imageAlt: 'Ceylon Spice Caterers buffet service staff preparing dishes',
     isAdded: true,
   },
@@ -55,6 +58,7 @@ export const defaultMockVendors: VendorItem[] = [
     category: 'Decoration',
     location: 'Colombo',
     price: 'LKR 220,000',
+    basePrice: 220000,
     rating: 4.6,
     reviewCount: 40,
     availability: 'Free on 12 Dec, night',
@@ -73,13 +77,13 @@ export default function VendorList({
   const categories = Array.from(new Set(vendors.map((v) => v.category)));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-7">
       {categories.map((cat) => {
         const catVendors = vendors.filter((v) => v.category === cat);
         return (
           <section key={cat} aria-label={`${cat} section`}>
             {/* Category Subheader */}
-            <h4 className="text-xs font-semibold tracking-wider uppercase text-[#4B5563] mb-3">
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
               {cat.toUpperCase()} ({catVendors.length})
             </h4>
 
