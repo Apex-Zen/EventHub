@@ -140,9 +140,16 @@ export default function ChooseVendorsPage() {
     onSortChange: handleSortChange,
   };
 
+  const handleEventDetailsClick = () => {
+    const eventId = window.location.pathname.match(/\/events\/([^/]+)\/vendors\/?$/)?.[1];
+    const params = new URLSearchParams(window.location.search);
+    if (eventId) params.set('eventId', eventId);
+    router.push(`/client/events/create?${params.toString()}`);
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8 sm:px-8 lg:px-12">
-      <VendorsHeader />
+      <VendorsHeader onEventDetailsClick={handleEventDetailsClick} />
 
       {/* Mobile filter toggle */}
       <div className="lg:hidden mb-5">
