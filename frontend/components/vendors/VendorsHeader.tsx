@@ -2,16 +2,12 @@ import React from 'react';
 
 interface VendorsHeaderProps {
   eventName?: string;
-  wishlistCount?: number;
-  compareCount?: number;
   eventDetailsText?: string;
   currentStep?: number;
 }
 
 export default function VendorsHeader({
   eventName = 'Perera–Silva wedding',
-  wishlistCount = 4,
-  compareCount = 3,
   eventDetailsText = 'Sat 12 Dec 2026 · Night · Colombo · 250 guests · Budget LKR 1,500,000',
   currentStep = 2,
 }: VendorsHeaderProps) {
@@ -23,32 +19,21 @@ export default function VendorsHeader({
   ];
 
   return (
-    <div className="mb-8 space-y-4">
+    <div className="mb-7 space-y-5">
       {/* Event Title */}
       <div>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1B2430] leading-tight">
+        <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1B2430] leading-tight">
           Vendors for {eventName}
         </h1>
 
-        {/* Wishlist and Compare links */}
-        <div className="flex items-center gap-3 text-xs sm:text-sm text-[#266665] mt-1.5 font-medium">
-          <button type="button" className="hover:underline">
-            Wishlist ({wishlistCount})
-          </button>
-          <span>·</span>
-          <button type="button" className="hover:underline">
-            Compare ({compareCount})
-          </button>
-        </div>
-
         {/* Event context subtitle */}
-        <p className="text-xs sm:text-sm text-[#4B5563] mt-1">
+        <p className="mt-2 text-sm text-gray-500">
           {eventDetailsText}
         </p>
       </div>
 
       {/* Stepper Progress */}
-      <nav aria-label="Progress" className="flex items-center gap-4 pt-2 flex-wrap">
+      <nav aria-label="Progress" className="flex items-center gap-x-4 gap-y-3 pt-1 flex-wrap">
         {steps.map((step) => {
           const isDone = step.completed;
           const isCurrent = step.current;

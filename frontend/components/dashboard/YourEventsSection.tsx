@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import EventListItem from './EventListItem';
 import { EventItemData, YourEventsSectionProps } from './types';
@@ -7,11 +9,11 @@ const defaultEvents: EventItemData[] = [
   {
     id: '1',
     title: 'Perera–Silva wedding',
-    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · 4 vendors',
+    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · 2 of 4 vendors confirmed',
     imageSrc: '/images/event-1.jpg',
     imageAlt: 'Wedding reception',
-    statusText: '2 of 4 accepted',
-    statusVariant: 'teal',
+    statusText: 'Deposit paid',
+    statusVariant: 'green',
     href: '#',
   },
   {
@@ -41,6 +43,13 @@ export default function YourEventsSection({
   seeAllHref = '#',
   events = defaultEvents,
 }: YourEventsSectionProps) {
+  const [activeTab, setActiveTab] = useState<'drafts' | 'confirmed'>('drafts');
+  const drafts = events.filter((event) =>
+    /draft|in progress|planning/i.test(event.statusText),
+  );
+  const confirmed = events.filter((event) => !drafts.includes(event));
+  const visibleEvents = activeTab === 'drafts' ? drafts : confirmed;
+
   return (
     <section
       aria-labelledby="your-events-heading"
@@ -61,10 +70,52 @@ export default function YourEventsSection({
         </Link>
       </div>
 
-      <div className="divide-y divide-gray-100">
-        {events.map((event) => (
-          <EventListItem key={event.id} event={event} />
-        ))}
+      <div role="tablist" aria-label="Event status" className="flex gap-6 border-b border-gray-200 mb-2">
+        <button
+          id="drafts-tab"
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'drafts'}
+          aria-controls="events-panel"
+          onClick={() => setActiveTab('drafts')}
+          className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors ${
+            activeTab === 'drafts'
+              ? 'border-[#266665] text-[#266665]'
+              : 'border-transparent text-gray-500 hover:text-[#1B2430]'
+          }`}
+        >
+          Drafts <span className="ml-2 text-xs text-gray-500">{drafts.length}</span>
+        </button>
+        <button
+          id="confirmed-tab"
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'confirmed'}
+          aria-controls="events-panel"
+          onClick={() => setActiveTab('confirmed')}
+          className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors ${
+            activeTab === 'confirmed'
+              ? 'border-[#266665] text-[#266665]'
+              : 'border-transparent text-gray-500 hover:text-[#1B2430]'
+          }`}
+        >
+          Confirmed <span className="ml-2 text-xs text-gray-500">{confirmed.length}</span>
+        </button>
+      </div>
+
+      <div
+        id="events-panel"
+        role="tabpanel"
+        aria-labelledby={activeTab === 'drafts' ? 'drafts-tab' : 'confirmed-tab'}
+        className="divide-y divide-gray-100"
+      >
+        {visibleEvents.length ? (
+          visibleEvents.map((event) => <EventListItem key={event.id} event={event} />)
+        ) : (
+          <p className="py-8 text-center text-sm text-[#4B5563]">
+            No {activeTab === 'drafts' ? 'drafts' : 'confirmed events'}.
+          </p>
+        )}
       </div>
     </section>
   );

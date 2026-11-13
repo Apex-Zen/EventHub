@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   PlanEventHeader,
   EventDetailsForm,
@@ -9,6 +10,8 @@ import {
 } from '@/components/events/create';
 
 export default function CreatePrivateEventPage() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState<EventDetailsFormData>({
     eventType: 'Wedding',
     targetDate: '2026-12-12',
@@ -34,11 +37,19 @@ export default function CreatePrivateEventPage() {
 
   const handleFindVendors = (data: EventDetailsFormData) => {
     setFormData(data);
-    setNotification({
-      type: 'success',
-      message: `Searching available vendors in ${data.district} for ${data.eventType} on ${data.targetDate} (${data.timeSlot})...`,
+
+    // Build query string so the vendor page can optionally read event context
+    const params = new URLSearchParams({
+      date: data.targetDate,
+      timeSlot: data.timeSlot,
+      district: data.district,
+      guests: String(data.expectedAttendance),
+      budget: String(data.totalBudget),
+      eventType: data.eventType,
     });
-    setTimeout(() => setNotification(null), 4000);
+
+    // Navigate to the vendor selection page (eventId = 1 for new events)
+    router.push(`/client/events/1/vendors?${params.toString()}`);
   };
 
   return (
