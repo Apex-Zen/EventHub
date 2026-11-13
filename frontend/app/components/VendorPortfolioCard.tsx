@@ -10,7 +10,7 @@ const portfolioImages = [
 
 export default function VendorPortfolioCard() {
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm h-full">
+    <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm h-fit">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold text-gray-900 font-serif">Portfolio</h3>
         <button className="text-xs text-teal-700 font-semibold hover:underline">
