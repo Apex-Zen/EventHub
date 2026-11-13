@@ -25,17 +25,17 @@ export default function PackageSummaryCard({
   const isUnderBudget = diff >= 0;
 
   return (
-    <aside className="bg-white rounded-lg border border-gray-200/80 shadow-xs p-6 flex flex-col">
-      <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1B2430] leading-snug mb-5">
+    <aside className="flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+      <h3 className="mb-5 font-serif text-lg font-semibold leading-snug text-[#1B2430]">
         {title}
       </h3>
 
       {/* Package Items */}
-      <ul className="space-y-3.5 mb-6">
+      <ul className="mb-5 space-y-3">
         {items.map((item) => (
-          <li key={item.id} className="flex items-center justify-between text-sm">
-            <span className="text-[#1B2430] font-medium">{item.name}</span>
-            <span className="text-[#1B2430] font-semibold">
+          <li key={item.id} className="flex items-start justify-between gap-3 text-sm">
+            <span className="min-w-0 flex-1 leading-snug text-gray-600">{item.name}</span>
+            <span className="shrink-0 text-right font-semibold tabular-nums text-[#1B2430]">
               {item.price.toLocaleString()}
             </span>
           </li>
@@ -43,17 +43,17 @@ export default function PackageSummaryCard({
       </ul>
 
       {/* Divider */}
-      <div className="border-t border-gray-100 pt-4 mb-2">
+      <div className="mb-2 border-t border-gray-100 pt-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-[#4B5563]">Total</span>
-          <span className="font-serif font-bold text-xl sm:text-2xl text-[#1B2430]">
+          <span className="text-sm font-medium text-gray-500">Total</span>
+          <span className="font-serif text-lg font-bold tabular-nums text-[#1B2430] sm:text-xl">
             LKR {total.toLocaleString()}
           </span>
         </div>
       </div>
 
       {/* Budget difference indicator */}
-      <div className="mb-6">
+      <div className="mb-5">
         <p className="text-xs text-[#266665] font-medium">
           {isUnderBudget
             ? `LKR ${diff.toLocaleString()} under budget`
@@ -65,7 +65,7 @@ export default function PackageSummaryCard({
       <button
         type="button"
         onClick={onReviewPackage}
-        className="w-full py-3 bg-[#266665] hover:bg-[#123B3A] active:bg-[#123B3A] text-white text-sm font-medium rounded transition-colors"
+        className="h-11 w-full rounded-md bg-[#266665] text-sm font-medium text-white transition-colors hover:bg-[#123B3A] active:bg-[#123B3A]"
       >
         Review package
       </button>

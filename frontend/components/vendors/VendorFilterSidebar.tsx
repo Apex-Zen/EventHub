@@ -33,21 +33,21 @@ export default function VendorFilterSidebar({
   onSortChange,
 }: VendorFilterSidebarProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200/80 shadow-xs p-6 space-y-6">
-      <h3 className="font-serif text-xl font-bold text-[#1B2430]">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm space-y-5">
+      <h3 className="font-serif text-lg font-semibold text-[#1B2430]">
         Filter
       </h3>
 
       {/* Category Checkboxes */}
       <div className="space-y-3">
-        <h4 className="text-xs font-semibold tracking-wider uppercase text-[#4B5563]">
+        <h4         className="text-xs font-semibold uppercase tracking-wider text-gray-500">
           CATEGORY
         </h4>
         <div className="space-y-2.5">
           {categories.map((cat) => (
             <label
               key={cat.id}
-              className="flex items-center gap-2.5 text-sm text-[#1B2430] cursor-pointer"
+              className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-600"
             >
               <input
                 type="checkbox"
@@ -65,10 +65,10 @@ export default function VendorFilterSidebar({
 
       {/* Rating Filter */}
       <div className="space-y-3">
-        <h4 className="text-xs font-semibold tracking-wider uppercase text-[#4B5563]">
+        <h4         className="text-xs font-semibold uppercase tracking-wider text-gray-500">
           RATING
         </h4>
-        <label className="flex items-center gap-2.5 text-sm text-[#1B2430] cursor-pointer">
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-600">
           <input
             type="checkbox"
             checked={fourStarsOnly}
@@ -85,7 +85,7 @@ export default function VendorFilterSidebar({
       <div className="space-y-2">
         <label
           htmlFor="vendor-sort"
-          className="text-xs font-semibold tracking-wider uppercase text-[#4B5563] block"
+          className="block text-xs font-semibold uppercase tracking-wider text-gray-500"
         >
           SORT
         </label>
