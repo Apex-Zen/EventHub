@@ -1,9 +1,12 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import LocationIcon from '../components/icons/locationicon'; // 
 
 const menuItems = [
-  { name: 'Dashboard', path: '/vendor/dashboard', active: true },
+  { name: 'Dashboard', path: '/vendor/dashboard' },
   { name: 'Profile', path: '/vendor/profile' },
   { name: 'Services', path: '/vendor/services' },
   { name: 'Halls', path: '/vendor/halls' },
@@ -18,6 +21,8 @@ const menuItems = [
 ];
 
 export default function VendorSidebar() {
+  const pathname = usePathname();
+
   return (
     <aside className="flex w-full flex-col border-b border-gray-200 bg-white lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:justify-between lg:border-b-0 lg:border-r">
       {/* Top Section: Logo and Menu */}
@@ -30,19 +35,25 @@ export default function VendorSidebar() {
           VENDOR
         </div>
         <nav className="flex gap-1 overflow-x-auto px-4 pb-3 lg:flex-col lg:overflow-visible lg:pb-0">
-          {menuItems.map((item) => (
-            <Link key={item.name} href={item.path} className="shrink-0 lg:shrink">
-              <div
-                className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                  item.active
+          {menuItems.map((item) => {
+            const isActive =
+              pathname === item.path || pathname.startsWith(`${item.path}/`);
+
+            return (
+              <Link
+                key={item.name}
+                href={item.path}
+                aria-current={isActive ? 'page' : undefined}
+                className={`shrink-0 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors lg:shrink ${
+                  isActive
                     ? 'bg-teal-50 text-teal-700 border-l-4 border-teal-600'
                     : 'text-gray-600 hover:bg-[#DBECEC]'
                 }`}
               >
                 {item.name}
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
