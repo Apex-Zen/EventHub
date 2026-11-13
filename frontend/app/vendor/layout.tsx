@@ -1,6 +1,8 @@
 import React from 'react';
 import VendorSidebar from '../components/VendorSidebar';
 
+
+
 export default function VendorLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-gray-50">

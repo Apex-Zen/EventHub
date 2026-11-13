@@ -36,7 +36,7 @@ export default function VendorSidebar() {
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   item.active
                     ? 'bg-teal-50 text-teal-700 border-l-4 border-teal-600'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    : 'text-gray-600 hover:bg-[#DBECEC]'
                 }`}
               >
                 {item.name}
