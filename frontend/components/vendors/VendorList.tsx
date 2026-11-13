@@ -5,7 +5,6 @@ import { VendorItem } from './types';
 interface VendorListProps {
   vendors?: VendorItem[];
   onToggleAdd?: (id: string) => void;
-  onViewProfile?: (vendor: VendorItem) => void;
 }
 
 export const defaultMockVendors: VendorItem[] = [
@@ -71,7 +70,6 @@ export const defaultMockVendors: VendorItem[] = [
 export default function VendorList({
   vendors = defaultMockVendors,
   onToggleAdd,
-  onViewProfile,
 }: VendorListProps) {
   // Group vendors by category
   const categories = Array.from(new Set(vendors.map((v) => v.category)));
@@ -94,7 +92,6 @@ export default function VendorList({
                   key={vendor.id}
                   vendor={vendor}
                   onToggleAdd={onToggleAdd}
-                  onViewProfile={onViewProfile}
                 />
               ))}
             </div>

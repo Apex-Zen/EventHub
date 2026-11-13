@@ -7,7 +7,6 @@ import {
   VendorFilterSidebar,
   VendorList,
   PackageSummaryCard,
-  VendorProfileModal,
   defaultMockVendors,
   VendorItem,
   PackageItem,
@@ -45,17 +44,12 @@ export default function ChooseVendorsPage() {
 
   const [vendors, setVendors] = useState<VendorItem[]>(seedVendors);
   const [filterState, setFilterState] = useState<FilterState>(initialFilterState);
-  const [selectedVendorForModal, setSelectedVendorForModal] = useState<VendorItem | null>(null);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
 
   // ----- Toggle add/remove -----
   const handleToggleAdd = (id: string) => {
     setVendors((prev) =>
       prev.map((v) => (v.id === id ? { ...v, isAdded: !v.isAdded } : v))
-    );
-    // Also update the modal vendor if open
-    setSelectedVendorForModal((prev) =>
-      prev && prev.id === id ? { ...prev, isAdded: !prev.isAdded } : prev
     );
   };
 
@@ -214,7 +208,6 @@ export default function ChooseVendorsPage() {
             <VendorList
               vendors={filteredSortedVendors}
               onToggleAdd={handleToggleAdd}
-              onViewProfile={(v) => setSelectedVendorForModal(v)}
             />
           )}
         </main>
@@ -229,14 +222,6 @@ export default function ChooseVendorsPage() {
         </aside>
       </div>
 
-      {/* Vendor profile modal */}
-      {selectedVendorForModal && (
-        <VendorProfileModal
-          vendor={selectedVendorForModal}
-          onClose={() => setSelectedVendorForModal(null)}
-          onToggleAdd={handleToggleAdd}
-        />
-      )}
     </div>
   );
 }

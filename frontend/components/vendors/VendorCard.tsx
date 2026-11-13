@@ -1,17 +1,14 @@
 import React from 'react';
-import Link from 'next/link';
 import { VendorItem } from './types';
 
 interface VendorCardProps {
   vendor: VendorItem;
   onToggleAdd?: (id: string) => void;
-  onViewProfile?: (vendor: VendorItem) => void;
 }
 
 export default function VendorCard({
   vendor,
   onToggleAdd,
-  onViewProfile,
 }: VendorCardProps) {
   return (
     <article className="flex flex-col items-stretch gap-4 overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:gap-5 sm:p-5">
@@ -73,13 +70,9 @@ export default function VendorCard({
 
         {/* Actions */}
         <div className="mt-4 flex items-center justify-end gap-3 border-t border-gray-100 pt-3 sm:mt-auto sm:border-t-0 sm:pt-4">
-          <button
-            type="button"
-            onClick={() => onViewProfile && onViewProfile(vendor)}
-            className="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-medium text-[#266665] transition-colors hover:bg-[#266665]/5 hover:text-[#123B3A]"
-          >
+          <span className="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-medium text-[#266665]">
             View profile
-          </button>
+          </span>
 
           {vendor.isAdded ? (
             <button
