@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f3f6fb;
-  --foreground: #1e293b;
-  --accent: #258fe0;
+  --background: #f7fbfb;
+  --foreground: #1b2430;
+  --primary: #266665;
+  --primary-pressed: #123b3a;
+  --tint: #dbecec;
+  --status-paid: #2e9d5b;
+  --status-pending: #e0a100;
+  --status-failed: #d64545;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-poppins), sans-serif;
+  --font-display: var(--font-playfair-display), Georgia, serif;
   --font-mono: "SFMono-Regular", Consolas, monospace;
 }
 
@@ -21,10 +27,10 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 12% 8%, rgb(226 239 255 / 55%), transparent 36%),
+    radial-gradient(ellipse at 12% 8%, rgb(219 236 236 / 55%), transparent 36%),
     var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 * {
@@ -53,7 +59,7 @@ body {
 
 .payment-card,
 .processing-card {
-  border: 1px solid #e8edf4;
+  border: 1px solid #e2ebeb;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 20px 55px rgb(34 54 78 / 9%), 0 2px 8px rgb(34 54 78 / 3%);
@@ -72,8 +78,8 @@ body {
 .payment-heading h1,
 .processing-card h2 {
   margin: 0;
-  color: #273446;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-weight: 700;
 }
 
@@ -104,9 +110,9 @@ body {
 .merchant-summary {
   display: grid;
   gap: 10px;
-  border: 1px solid #e2effc;
+  border: 1px solid #c7dddd;
   border-radius: 10px;
-  background: linear-gradient(135deg, #f1f8ff, #eaf4ff);
+  background: linear-gradient(135deg, #f2f8f8, var(--tint));
   padding: 16px;
 }
 
@@ -120,14 +126,14 @@ body {
 }
 
 .merchant-summary strong {
-  color: #273446;
+  color: var(--foreground);
   font-size: 13px;
   font-weight: 600;
   text-align: right;
 }
 
 .merchant-summary .amount {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-size: 16px;
   font-weight: 700;
 }
@@ -142,7 +148,7 @@ body {
   display: grid;
   min-width: 0;
   gap: 7px;
-  color: #334154;
+  color: var(--foreground);
   font-size: 12px;
   font-weight: 600;
 }
@@ -154,7 +160,7 @@ body {
   border-radius: 8px;
   background: #fff;
   padding: 0 13px;
-  color: #263345;
+  color: var(--foreground);
   font: inherit;
   font-size: 13px;
   font-weight: 400;
@@ -168,16 +174,16 @@ body {
 }
 
 .field input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgb(49 158 234 / 12%);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(38 102 101 / 12%);
 }
 
 .field input[aria-invalid="true"] {
-  border-color: #e25757;
+  border-color: var(--status-failed);
 }
 
 .field input[aria-invalid="true"]:focus {
-  box-shadow: 0 0 0 3px rgb(226 87 87 / 12%);
+  box-shadow: 0 0 0 3px rgb(214 69 69 / 12%);
 }
 
 .field-hint,
@@ -192,7 +198,7 @@ body {
 }
 
 .field-error {
-  color: #c83f43;
+  color: var(--status-failed);
 }
 
 .field-row {
@@ -205,7 +211,7 @@ body {
   min-height: 46px;
   border: 0;
   border-radius: 8px;
-  background: linear-gradient(135deg, #329dea, #268bdd);
+  background: var(--primary);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -215,12 +221,12 @@ body {
 }
 
 .pay-button:hover {
-  background: linear-gradient(135deg, #268bdd, #1d7bc4);
+  background: var(--primary-pressed);
 }
 
 .pay-button:disabled {
   cursor: wait;
-  background: #76b8e9;
+  background: #83b1b0;
 }
 
 .pay-button:focus-visible,
@@ -229,7 +235,7 @@ body {
 .progress-button:focus-visible,
 .use-another-card:focus-visible,
 .pay-again-button:focus-visible {
-  outline: 3px solid rgb(49 158 234 / 35%);
+  outline: 3px solid rgb(38 102 101 / 35%);
   outline-offset: 3px;
 }
 
@@ -238,7 +244,7 @@ body {
   margin-top: 18px;
   border: 0;
   background: transparent;
-  color: #329dea;
+  color: var(--primary);
   cursor: pointer;
   font: inherit;
   font-size: 13px;
@@ -248,7 +254,7 @@ body {
 }
 
 .cancel-link:hover {
-  color: #208bd7;
+  color: var(--primary-pressed);
 }
 
 .processing-card {
@@ -264,7 +270,7 @@ body {
 .declined-page-card {
   width: min(calc(100% - 32px), 570px);
   margin: 64px auto 40px;
-  border: 1px solid #e8edf4;
+  border: 1px solid #e2ebeb;
   border-radius: 5px;
   background: #fff;
   padding: 42px 44px 38px;
@@ -280,13 +286,13 @@ body {
   justify-content: center;
   margin: 0 auto 12px;
   border-radius: 50%;
-  background: #fdeced;
+  background: #fceeee;
 }
 
 .declined-page-icon svg {
   width: 27px;
   height: 27px;
-  stroke: #e65356;
+  stroke: var(--status-failed);
   stroke-linecap: round;
   stroke-width: 1.7;
 }
@@ -296,17 +302,17 @@ body {
   min-height: 21px;
   align-items: center;
   border-radius: 999px;
-  background: #fff0f0;
+  background: #fceeee;
   padding: 0 10px;
-  color: #d9595d;
+  color: var(--status-failed);
   font-size: 9px;
   font-weight: 700;
 }
 
 .declined-page-card h1 {
   margin: 14px 0 0;
-  color: #253142;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-size: 27px;
   line-height: 1.25;
 }
@@ -342,13 +348,13 @@ body {
 
 .declined-receipt dd {
   margin: 0;
-  color: #303b4b;
+  color: var(--foreground);
   font-weight: 600;
   text-align: right;
 }
 
 .declined-receipt dd.declined-reason {
-  color: #df4d50;
+  color: var(--status-failed);
   font-weight: 500;
 }
 
@@ -365,7 +371,7 @@ body {
   min-height: 38px;
   align-items: center;
   justify-content: center;
-  border: 1px solid #329dea;
+  border: 1px solid var(--primary);
   border-radius: 0;
   padding: 0 16px;
   font: inherit;
@@ -376,20 +382,20 @@ body {
 
 .use-another-card {
   background: #fff;
-  color: #329dea;
+  color: var(--primary);
 }
 
 .pay-again-button {
-  background: #329dea;
+  background: var(--primary);
   color: #fff;
 }
 
 .use-another-card:hover {
-  background: #f0f8ff;
+  background: #f2f8f8;
 }
 
 .pay-again-button:hover {
-  background: #208bd7;
+  background: var(--primary-pressed);
 }
 
 .processing-label {
@@ -404,7 +410,7 @@ body {
 .spinner {
   width: 56px;
   height: 56px;
-  border: 5px solid #329dea;
+  border: 5px solid var(--primary);
   border-right-color: transparent;
   border-radius: 50%;
 }
@@ -418,7 +424,7 @@ body {
   border-radius: 999px;
   background: #fff6df;
   padding: 5px 11px;
-  color: #d99a00;
+  color: var(--status-pending);
   font-size: 10px;
   font-weight: 700;
 }
@@ -438,7 +444,7 @@ body {
 
 .success-page {
   min-height: 100vh;
-  background: #f5f8fc;
+  background: var(--background);
 }
 
 .dashboard-header {
@@ -446,7 +452,7 @@ body {
   min-height: 62px;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  border-bottom: 1px solid #e8edf3;
+  border-bottom: 1px solid #e2ebeb;
   background: #fff;
   padding: 0 max(24px, calc((100% - 1076px) / 2));
 }
@@ -456,8 +462,8 @@ body {
   width: max-content;
   align-items: center;
   gap: 8px;
-  color: #273446;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-size: 21px;
   font-weight: 700;
   text-decoration: none;
@@ -466,7 +472,7 @@ body {
 .brand svg {
   width: 20px;
   height: 20px;
-  stroke: #329dea;
+  stroke: var(--primary);
   stroke-width: 2;
 }
 
@@ -489,8 +495,8 @@ body {
 }
 
 .dashboard-nav a.active {
-  border-bottom-color: #329dea;
-  color: #329dea;
+  border-bottom-color: var(--primary);
+  color: var(--primary);
 }
 
 .dashboard-user {
@@ -498,7 +504,7 @@ body {
   align-items: center;
   justify-self: end;
   gap: 11px;
-  color: #303b4b;
+  color: var(--foreground);
   font-size: 12px;
   font-weight: 600;
 }
@@ -530,7 +536,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #e74e4e;
+  background: var(--status-failed);
   color: #fff;
   font-size: 10px;
 }
@@ -542,8 +548,8 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #dceeff;
-  color: #287db9;
+  background: var(--tint);
+  color: var(--primary);
   font-size: 10px;
 }
 
@@ -565,13 +571,13 @@ body {
   justify-content: center;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: #e8f7ef;
+  background: #e7f5ec;
 }
 
 .success-icon svg {
   width: 31px;
   height: 31px;
-  stroke: #31a86c;
+  stroke: var(--status-paid);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2;
@@ -580,17 +586,17 @@ body {
 .success-badge {
   display: inline-block;
   border-radius: 999px;
-  background: #e8f7ef;
+  background: #e7f5ec;
   padding: 5px 11px;
-  color: #31a86c;
+  color: var(--status-paid);
   font-size: 10px;
   font-weight: 700;
 }
 
 .success-card h1 {
   margin: 18px 0 0;
-  color: #263345;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-size: 32px;
   line-height: 1.2;
 }
@@ -611,7 +617,7 @@ body {
 
 .receipt-label {
   margin: 0 0 12px;
-  color: #329dea;
+  color: var(--primary);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
@@ -636,7 +642,7 @@ body {
 
 .receipt-details dd {
   margin: 0;
-  color: #303b4b;
+  color: var(--foreground);
   font-weight: 600;
   text-align: right;
 }
@@ -654,7 +660,7 @@ body {
   min-height: 40px;
   align-items: center;
   justify-content: center;
-  border: 1px solid #329dea;
+  border: 1px solid var(--primary);
   border-radius: 0;
   padding: 0 18px;
   font: inherit;
@@ -666,20 +672,20 @@ body {
 
 .receipt-button {
   background: #fff;
-  color: #329dea;
+  color: var(--primary);
 }
 
 .progress-button {
-  background: #329dea;
+  background: var(--primary);
   color: #fff;
 }
 
 .receipt-button:hover {
-  background: #f0f8ff;
+  background: #f2f8f8;
 }
 
 .progress-button:hover {
-  background: #208bd7;
+  background: var(--primary-pressed);
 }
 
 .payments-dashboard {
@@ -690,8 +696,8 @@ body {
 .dashboard-title,
 .dashboard-panel h2 {
   margin: 0;
-  color: #273446;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-weight: 700;
 }
 
@@ -703,7 +709,7 @@ body {
 .event-tabs {
   display: flex;
   gap: 24px;
-  border-bottom: 1px solid #e3e9f0;
+  border-bottom: 1px solid #d5e4e4;
 }
 
 .event-tabs button {
@@ -718,8 +724,8 @@ body {
 }
 
 .event-tabs button.selected {
-  border-bottom-color: #329dea;
-  color: #329dea;
+  border-bottom-color: var(--primary);
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -744,13 +750,13 @@ body {
   width: 100%;
   min-width: 700px;
   border-collapse: collapse;
-  color: #3d4959;
+  color: var(--foreground);
   font-size: 12px;
   text-align: left;
 }
 
 .payments-table th {
-  background: #eaf4ff;
+  background: var(--tint);
   color: #68778a;
   font-size: 10px;
   font-weight: 600;
@@ -764,7 +770,7 @@ body {
 }
 
 .payments-table tbody tr {
-  border-bottom: 1px solid #e4e9ef;
+  border-bottom: 1px solid #e2ebeb;
 }
 
 .payments-table tbody tr:last-child {
@@ -784,24 +790,24 @@ body {
 }
 
 .status-success {
-  background: #e8f7ef;
-  color: #31a86c;
+  background: #e7f5ec;
+  color: var(--status-paid);
 }
 
 .status-failed {
-  background: #fdecec;
-  color: #de5d5d;
+  background: #fceeee;
+  color: var(--status-failed);
 }
 
 .status-pending {
   background: #fff6df;
-  color: #d99a00;
+  color: var(--status-pending);
 }
 
 .table-link {
   border: 0;
   background: transparent;
-  color: #329dea;
+  color: var(--primary);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -814,7 +820,7 @@ body {
 .table-pay-button {
   min-height: 38px;
   border: 0;
-  background: #329dea;
+  background: var(--primary);
   padding: 0 18px;
   color: #fff;
   cursor: pointer;
@@ -823,7 +829,7 @@ body {
 }
 
 .table-pay-button:hover {
-  background: #208bd7;
+  background: var(--primary-pressed);
 }
 
 .milestone-panel {
@@ -862,12 +868,12 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  background: #eaf4ff;
+  background: var(--tint);
   font-size: 19px;
 }
 
 .vendor-name-group strong {
-  color: #3d4959;
+  color: var(--foreground);
   font-size: 12px;
 }
 
@@ -886,12 +892,12 @@ body {
   height: 7px;
   flex: 1;
   gap: 2px;
-  background: #d4e9fa;
+  background: #c4dddd;
 }
 
 .progress-track span {
   width: 20%;
-  background: #329dea;
+  background: var(--primary);
 }
 
 .vendor-progress small {
@@ -909,14 +915,14 @@ body {
 .milestone-stage {
   min-width: 0;
   min-height: 103px;
-  border: 1px solid #e0e7ef;
+  border: 1px solid #d5e4e4;
   border-radius: 4px;
-  background: #f6f9fc;
+  background: #f7fbfb;
   padding: 12px;
 }
 
 .milestone-stage.released {
-  background: #eaf4ff;
+  background: var(--tint);
 }
 
 .stage-heading {
@@ -927,7 +933,7 @@ body {
 }
 
 .stage-heading strong {
-  color: #3d4959;
+  color: var(--foreground);
   font-size: 12px;
 }
 
@@ -939,9 +945,9 @@ body {
 
 .milestone-stage.released .stage-heading span {
   border-radius: 999px;
-  background: #e0f4e9;
+  background: #e7f5ec;
   padding: 4px 8px;
-  color: #31a86c;
+  color: var(--status-paid);
 }
 
 .milestone-stage p {
@@ -952,8 +958,8 @@ body {
 
 .stage-amount {
   display: block;
-  color: #273446;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-size: 15px;
 }
 
