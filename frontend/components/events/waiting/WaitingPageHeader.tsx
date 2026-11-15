@@ -1,19 +1,26 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import BookingStepper from '@/components/events/BookingStepper';
 
 interface WaitingPageHeaderProps {
   eventTitle?: string;
   backHref?: string;
   sentInfo?: string;
+  currentStep?: number;
+  onStepClick?: (stepNumber: number) => void;
 }
 
 export default function WaitingPageHeader({
   eventTitle = 'Perera–Silva wedding',
   backHref,
   sentInfo = 'Sent Mon 19 Oct, 9.40 pm. Responses close Wed 21 Oct, 9.40 pm.',
+  currentStep = 4,
+  onStepClick,
 }: WaitingPageHeaderProps) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-3">
       {/* Back link */}
       <div>
         <Link
@@ -35,7 +42,13 @@ export default function WaitingPageHeader({
           {sentInfo}
         </p>
       )}
+
+      {/* Stepper Progress (5 steps) */}
+      <BookingStepper
+        currentStep={currentStep}
+        onStepClick={onStepClick}
+        className="pt-1"
+      />
     </div>
   );
 }
-

@@ -1,23 +1,16 @@
 import React from 'react';
-import { StepItem } from './types';
+import BookingStepper from '../BookingStepper';
 
 interface PlanEventHeaderProps {
   title?: string;
   currentStep?: number;
-  steps?: StepItem[];
+  onStepClick?: (stepNumber: number) => void;
 }
-
-const defaultSteps: StepItem[] = [
-  { number: 1, label: 'Event details' },
-  { number: 2, label: 'Choose vendors' },
-  { number: 3, label: 'Build package' },
-  { number: 4, label: 'Pay deposit' },
-];
 
 export default function PlanEventHeader({
   title = 'Plan a private event',
   currentStep = 1,
-  steps = defaultSteps,
+  onStepClick,
 }: PlanEventHeaderProps) {
   return (
     <div className="mb-8">
@@ -28,31 +21,7 @@ export default function PlanEventHeader({
         </h1>
 
         {/* Step Progress Bar */}
-        <nav aria-label="Progress" className="flex items-center gap-3 sm:gap-4 flex-wrap">
-          {steps.map((step) => {
-            const isActive = step.number === currentStep;
-            return (
-              <div key={step.number} className="flex items-center gap-2">
-                <span
-                  className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold ${
-                    isActive
-                      ? 'bg-[#266665] text-white'
-                      : 'border border-gray-300 text-gray-500 bg-white'
-                  }`}
-                >
-                  {step.number}
-                </span>
-                <span
-                  className={`text-xs sm:text-sm font-medium ${
-                    isActive ? 'text-[#1B2430] font-semibold' : 'text-gray-400'
-                  }`}
-                >
-                  {step.label}
-                </span>
-              </div>
-            );
-          })}
-        </nav>
+        <BookingStepper currentStep={currentStep} onStepClick={onStepClick} />
       </div>
     </div>
   );
