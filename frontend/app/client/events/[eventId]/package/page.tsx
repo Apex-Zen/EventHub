@@ -152,6 +152,16 @@ function BuildPackagePageContent() {
     }
   };
 
+  const handleSendPackageRequest = () => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const remainingIds = vendors.map((v) => v.id);
+    if (remainingIds.length > 0) {
+      currentParams.set('vendors', remainingIds.join(','));
+    }
+    const query = currentParams.toString();
+    router.push(`/client/events/${encodeURIComponent(eventId)}/waiting${query ? `?${query}` : ''}`);
+  };
+
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       {/* Header section */}
@@ -235,6 +245,7 @@ function BuildPackagePageContent() {
             vendorCount={vendors.length}
             total={total}
             budget={budget}
+            onSendPackageRequest={handleSendPackageRequest}
           />
         </div>
       </div>
@@ -255,4 +266,3 @@ export default function BuildPackagePage() {
     </Suspense>
   );
 }
-
