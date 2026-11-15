@@ -109,16 +109,32 @@ function WaitingForVendorsPageContent() {
     router.push(`/client/events/${encodeURIComponent(eventId)}/deposit${query ? `?${query}` : ''}`);
   };
 
+  // Stepper navigation handler
+  const handleStepClick = (stepNumber: number) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const query = currentParams.toString();
+    if (stepNumber === 1) {
+      currentParams.set('eventId', eventId);
+      router.push(`/client/events/create?${currentParams.toString()}`);
+    } else if (stepNumber === 2) {
+      router.push(`/client/events/${encodeURIComponent(eventId)}/vendors${query ? `?${query}` : ''}`);
+    } else if (stepNumber === 3) {
+      router.push(`/client/events/${encodeURIComponent(eventId)}/package${query ? `?${query}` : ''}`);
+    }
+  };
+
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
       {/* Top Section: Header & Countdown Timer */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <WaitingPageHeader
           eventTitle={`Perera–Silva ${eventType.toLowerCase()}`}
           backHref={backHref}
           sentInfo="Sent Mon 19 Oct, 9.40 pm. Responses close Wed 21 Oct, 9.40 pm."
+          currentStep={4}
+          onStepClick={handleStepClick}
         />
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 pt-1 md:pt-6">
           <WaitingTimer label="TIME LEFT" timeRemaining="31 h 12 m" />
         </div>
       </div>

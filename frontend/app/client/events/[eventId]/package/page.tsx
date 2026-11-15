@@ -7,6 +7,7 @@ import {
   PackageSummaryCard,
   PackageVendor,
 } from '@/components/events/package';
+import BookingStepper from '@/components/events/BookingStepper';
 import { defaultMockVendors } from '@/components/vendors';
 
 // Default service options & initial services by category
@@ -122,13 +123,6 @@ function BuildPackagePageContent() {
 
   const total = vendors.reduce((sum, v) => sum + v.price, 0);
 
-  const steps = [
-    { number: 1, label: 'Event details', done: true, stepNumber: 1 },
-    { number: 2, label: 'Choose vendors', done: true, stepNumber: 2 },
-    { number: 3, label: 'Build package', active: true, stepNumber: 3 },
-    { number: 4, label: 'Pay deposit', stepNumber: 4 },
-  ];
-
   // When returning to vendors, pass the currently remaining vendor IDs
   const getBackToVendorsHref = () => {
     const currentParams = new URLSearchParams(searchParams.toString());
@@ -177,52 +171,11 @@ function BuildPackagePageContent() {
         </p>
 
         {/* Stepper Progress */}
-        <nav aria-label="Progress" className="flex items-center gap-4 pt-4 flex-wrap">
-          {steps.map((step) => {
-            const isDone = step.done;
-            const isActive = step.active;
-            const isClickable = step.stepNumber === 1 || step.stepNumber === 2;
-
-            const stepContent = (
-              <>
-                <span
-                  className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold transition-colors ${
-                    isDone || isActive
-                      ? `bg-[#266665] text-white ${isClickable ? 'group-hover:bg-[#123B3A]' : ''}`
-                      : 'border border-gray-300 text-gray-500 bg-white'
-                  }`}
-                >
-                  {isDone ? '✓' : step.number}
-                </span>
-                <span
-                  className={`text-xs sm:text-sm font-medium ${
-                    isActive || isDone
-                      ? `text-[#1B2430] font-semibold ${isClickable ? 'group-hover:text-[#266665]' : ''}`
-                      : 'text-gray-400'
-                  }`}
-                >
-                  {step.label}
-                </span>
-              </>
-            );
-
-            return (
-              <div key={step.number} className="flex items-center gap-2">
-                {isClickable ? (
-                  <button
-                    type="button"
-                    onClick={() => handleStepClick(step.stepNumber)}
-                    className="group flex cursor-pointer items-center gap-2 rounded-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#266665] focus-visible:ring-offset-2"
-                  >
-                    {stepContent}
-                  </button>
-                ) : (
-                  stepContent
-                )}
-              </div>
-            );
-          })}
-        </nav>
+        <BookingStepper
+          currentStep={3}
+          onStepClick={handleStepClick}
+          className="pt-4"
+        />
       </div>
 
       {/* Main 2-column layout */}
