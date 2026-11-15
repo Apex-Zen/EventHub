@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { PackageVendor } from './types';
+import ServiceDropdown from './ServiceDropdown';
 
 interface PackageVendorsTableProps {
   vendors: PackageVendor[];
@@ -65,24 +66,11 @@ export default function PackageVendorsTable({
 
                   {/* Service selector */}
                   <td className="py-4 px-4">
-                    <div className="relative inline-block w-full max-w-[210px]">
-                      <select
-                        value={vendor.service}
-                        onChange={(e) => onServiceChange?.(vendor.id, e.target.value)}
-                        className="w-full appearance-none bg-white border border-gray-300 rounded px-3 py-1.5 pr-8 text-xs text-[#1B2430] focus:outline-none focus:ring-1 focus:ring-[#266665] focus:border-[#266665] cursor-pointer"
-                      >
-                        {vendor.serviceOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
+                    <ServiceDropdown
+                      value={vendor.service}
+                      options={vendor.serviceOptions}
+                      onChange={(newService) => onServiceChange?.(vendor.id, newService)}
+                    />
                   </td>
 
                   {/* Quantity */}
