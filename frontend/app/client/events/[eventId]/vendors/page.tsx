@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Suspense, useState, useMemo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
   VendorsHeader,
   VendorFilterSidebar,
@@ -52,7 +52,9 @@ function parsePositiveInteger(value: string | null, fallback: number): number {
 
 function ChooseVendorsPageContent() {
   const router = useRouter();
+  const params = useParams();
   const searchParams = useSearchParams();
+  const eventId = (params?.eventId as string) || '1';
 
   const [vendors, setVendors] = useState<VendorItem[]>(seedVendors);
   const [filterState, setFilterState] = useState<FilterState>(initialFilterState);
@@ -162,10 +164,15 @@ function ChooseVendorsPageContent() {
   };
 
   const handleEventDetailsClick = () => {
-    const eventId = window.location.pathname.match(/\/events\/([^/]+)\/vendors\/?$/)?.[1];
-    const params = new URLSearchParams(window.location.search);
-    if (eventId) params.set('eventId', eventId);
-    router.push(`/client/events/create?${params.toString()}`);
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set('eventId', eventId);
+    router.push(`/client/events/create?${currentParams.toString()}`);
+  };
+
+  const handleReviewPackage = () => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const query = currentParams.toString();
+    router.push(`/client/events/${encodeURIComponent(eventId)}/package${query ? `?${query}` : ''}`);
   };
 
   return (
@@ -248,7 +255,7 @@ function ChooseVendorsPageContent() {
           <PackageSummaryCard
             items={packageItems}
             totalBudget={budget}
-            onReviewPackage={() => router.push('/client/events/1/build-package')}
+            onReviewPackage={handleReviewPackage}
           />
         </aside>
       </div>
