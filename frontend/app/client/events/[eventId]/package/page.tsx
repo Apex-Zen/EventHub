@@ -1,14 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { Suspense, useState } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
   PackageVendorsTable,
   PackageSummaryCard,
   PackageVendor,
 } from '@/components/events/package';
 
-export default function BuildPackagePage() {
+function BuildPackagePageContent() {
+  const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const eventId = (params?.eventId as string) || '1';
+
   const [vendors, setVendors] = useState<PackageVendor[]>([
     {
       id: '1',
@@ -57,24 +62,27 @@ export default function BuildPackagePage() {
   const total = vendors.reduce((sum, v) => sum + v.price, 0);
 
   const steps = [
-    { number: 1, label: 'Event details', done: true },
-    { number: 2, label: 'Choose vendors', done: true },
-    { number: 3, label: 'Build package', active: true },
-    { number: 4, label: 'Pay deposit' },
+    { number: 1, label: 'Event details', done: true, stepNumber: 1 },
+    { number: 2, label: 'Choose vendors', done: true, stepNumber: 2 },
+    { number: 3, label: 'Build package', active: true, stepNumber: 3 },
+    { number: 4, label: 'Pay deposit', stepNumber: 4 },
   ];
+
+  const searchString = searchParams.toString();
+  const backToVendorsHref = `/client/events/${encodeURIComponent(eventId)}/vendors${searchString ? `?${searchString}` : ''}`;
+
+  const handleStepClick = (stepNumber: number) => {
+    if (stepNumber === 1) {
+      const currentParams = new URLSearchParams(searchParams.toString());
+      currentParams.set('eventId', eventId);
+      router.push(`/client/events/create?${currentParams.toString()}`);
+    } else if (stepNumber === 2) {
+      router.push(backToVendorsHref);
+    }
+  };
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
-      {/* Back link */}
-      <div className="mb-3">
-        <Link
-          href="#"
-          className="text-xs sm:text-sm font-medium text-[#4B5563] hover:text-[#1B2430] inline-flex items-center gap-1.5 transition-colors no-underline hover:no-underline"
-        >
-          <span aria-hidden="true">&larr;</span> Back to matching vendors
-        </Link>
-      </div>
-
       {/* Header section */}
       <div className="mb-8">
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1B2430] leading-tight">
@@ -92,13 +100,14 @@ export default function BuildPackagePage() {
           {steps.map((step) => {
             const isDone = step.done;
             const isActive = step.active;
+            const isClickable = step.stepNumber === 1 || step.stepNumber === 2;
 
-            return (
-              <div key={step.number} className="flex items-center gap-2">
+            const stepContent = (
+              <>
                 <span
-                  className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold ${
+                  className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold transition-colors ${
                     isDone || isActive
-                      ? 'bg-[#266665] text-white'
+                      ? `bg-[#266665] text-white ${isClickable ? 'group-hover:bg-[#123B3A]' : ''}`
                       : 'border border-gray-300 text-gray-500 bg-white'
                   }`}
                 >
@@ -107,12 +116,28 @@ export default function BuildPackagePage() {
                 <span
                   className={`text-xs sm:text-sm font-medium ${
                     isActive || isDone
-                      ? 'text-[#1B2430] font-semibold'
+                      ? `text-[#1B2430] font-semibold ${isClickable ? 'group-hover:text-[#266665]' : ''}`
                       : 'text-gray-400'
                   }`}
                 >
                   {step.label}
                 </span>
+              </>
+            );
+
+            return (
+              <div key={step.number} className="flex items-center gap-2">
+                {isClickable ? (
+                  <button
+                    type="button"
+                    onClick={() => handleStepClick(step.stepNumber)}
+                    className="group flex cursor-pointer items-center gap-2 rounded-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#266665] focus-visible:ring-offset-2"
+                  >
+                    {stepContent}
+                  </button>
+                ) : (
+                  stepContent
+                )}
               </div>
             );
           })}
@@ -127,6 +152,7 @@ export default function BuildPackagePage() {
             vendors={vendors}
             onRemoveVendor={handleRemove}
             onServiceChange={handleServiceChange}
+            onAddAnotherVendor={() => router.push(backToVendorsHref)}
             message={message}
             onMessageChange={setMessage}
           />
@@ -144,3 +170,18 @@ export default function BuildPackagePage() {
     </div>
   );
 }
+
+export default function BuildPackagePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-6 md:p-8 max-w-7xl mx-auto text-sm text-[#4B5563]">
+          Loading package...
+        </div>
+      }
+    >
+      <BuildPackagePageContent />
+    </Suspense>
+  );
+}
+
