@@ -56,7 +56,17 @@ function ChooseVendorsPageContent() {
   const searchParams = useSearchParams();
   const eventId = (params?.eventId as string) || '1';
 
-  const [vendors, setVendors] = useState<VendorItem[]>(seedVendors);
+  const initialVendors = useMemo(() => {
+    const vendorParam = searchParams.get('vendors');
+    if (!vendorParam) return seedVendors;
+    const selectedIds = new Set(vendorParam.split(',').map((id) => id.trim()));
+    return seedVendors.map((v) => ({
+      ...v,
+      isAdded: selectedIds.has(v.id),
+    }));
+  }, [searchParams]);
+
+  const [vendors, setVendors] = useState<VendorItem[]>(initialVendors);
   const [filterState, setFilterState] = useState<FilterState>(initialFilterState);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const guestCount = parsePositiveInteger(searchParams.get('guests'), 250);
@@ -171,6 +181,12 @@ function ChooseVendorsPageContent() {
 
   const handleReviewPackage = () => {
     const currentParams = new URLSearchParams(searchParams.toString());
+    const addedIds = vendors.filter((v) => v.isAdded).map((v) => v.id);
+    if (addedIds.length > 0) {
+      currentParams.set('vendors', addedIds.join(','));
+    } else {
+      currentParams.delete('vendors');
+    }
     const query = currentParams.toString();
     router.push(`/client/events/${encodeURIComponent(eventId)}/package${query ? `?${query}` : ''}`);
   };
