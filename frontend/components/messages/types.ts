@@ -28,3 +28,18 @@ export interface ConversationItem {
   messages: MessageItem[];
 }
 
+export type InboxFilter = 'all' | 'vendors' | 'team' | 'unread';
+
+export interface InboxItem {
+  id: string;
+  name: string;
+  roleOrCategory?: string;
+  avatarSrc: string;
+  lastMessage: string;
+  timestamp: string;
+  unreadCount?: number;
+  category: 'vendor' | 'team';
+  href: string;
+}
+
+

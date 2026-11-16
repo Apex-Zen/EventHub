@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { ConversationItem } from './types';
 
 interface ConversationListProps {
@@ -24,10 +25,10 @@ export default function ConversationList({
     <div className="flex flex-col h-full bg-white border-r border-gray-200/80">
       {/* Header with Back Button + Search Bar */}
       <div className="p-4 border-b border-gray-100 flex items-center gap-2.5">
-        <button
-          type="button"
+        <Link
+          href="/client/messages/inbox"
           aria-label="Back to inbox"
-          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-[#266665] shadow-xs transition-colors hover:bg-gray-50 hover:border-[#266665]/40 focus:outline-none"
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-[#266665] shadow-xs transition-colors hover:bg-gray-50 hover:border-[#266665]/40 focus:outline-none no-underline"
         >
           <svg
             className="h-5 w-5"
@@ -42,7 +43,7 @@ export default function ConversationList({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-        </button>
+        </Link>
 
         <div className="relative flex-1">
           <svg
