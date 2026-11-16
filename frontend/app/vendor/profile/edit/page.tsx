@@ -99,6 +99,31 @@ export default function EditVendorProfile() {
 
         </div>
 
+        {/* Right Preview Card Section */}
+        <div className="lg:col-span-4 space-y-4">
+          <div className="bg-white p-6 rounded-sm shadow-sm border border-gray-100">
+            <h3 className="font-bold text-gray-900 mb-4">Preview</h3>
+            <div className="rounded-sm overflow-hidden border border-gray-100">
+              <div className="h-32 bg-gray-900 relative">
+                <img src="/vendor-images/portfolioimg1.jpg" className="w-full h-full object-cover opacity-60" alt="Banner"/>
+              </div>
+              <div className="p-4 bg-white relative">
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white absolute -top-6 left-4 shadow-sm">
+                  <img src="/vendor-images/studioprofile.jpg" className="w-full h-full object-cover" alt="Avatar"/>
+                </div>
+                <div className="pt-4">
+                  <h4 className="font-bold text-sm text-gray-900">Lens & Light Studio</h4>
+                  <p className="text-xs text-gray-500">Photography • Colombo</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-4 p-4 bg-[#E6FFFA] border border-[#B2F5EA] rounded-sm text-xs text-[#234E52] leading-relaxed">
+              ℹ️ Rating and review count come from client reviews and cannot be edited. After saving, clients see the updated profile.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
