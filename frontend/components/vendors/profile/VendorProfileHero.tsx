@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface VendorProfileHeroProps {
   name: string;
+  vendorId?: string;
   ownerName?: string;
   ownerAge?: number;
   category: string;
@@ -14,10 +16,12 @@ interface VendorProfileHeroProps {
   profilePic?: string;
   isAdded?: boolean;
   onToggleAdd?: () => void;
+  messageHref?: string;
 }
 
 export default function VendorProfileHero({
   name,
+  vendorId,
   ownerName,
   ownerAge,
   category,
@@ -28,6 +32,7 @@ export default function VendorProfileHero({
   profilePic = '/images/profile-pic.jpg',
   isAdded = false,
   onToggleAdd,
+  messageHref,
 }: VendorProfileHeroProps) {
   return (
     /*
@@ -97,12 +102,12 @@ export default function VendorProfileHero({
           >
             {isAdded ? 'Added to package ✓' : 'Add to package'}
           </button>
-          <button
-            type="button"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-white bg-transparent px-6 text-sm font-medium text-white shadow backdrop-blur-sm transition-colors hover:bg-white/15"
+          <Link
+            href={messageHref || (vendorId ? `/client/messages?vendorId=${vendorId}` : '/client/messages')}
+            className="inline-flex h-10 items-center justify-center rounded-md border border-white bg-transparent px-6 text-sm font-medium text-white shadow backdrop-blur-sm transition-colors hover:bg-white/15 no-underline"
           >
             Message
-          </button>
+          </Link>
         </div>
       )}
     </div>

@@ -447,6 +447,7 @@ function VendorProfilePageContent() {
       {/* ── Full-bleed hero — no padding, no max-width ─────────── */}
       <VendorProfileHero
         name={vendorDetail.name}
+        vendorId={vendorDetail.id}
         ownerName={vendorDetail.ownerName}
         ownerAge={vendorDetail.ownerAge}
         category={vendorDetail.category}
