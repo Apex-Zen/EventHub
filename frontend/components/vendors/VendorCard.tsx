@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { VendorItem } from './types';
 
 interface VendorCardProps {
@@ -70,9 +71,12 @@ export default function VendorCard({
 
         {/* Actions */}
         <div className="mt-4 flex items-center justify-end gap-3 border-t border-gray-100 pt-3 sm:mt-auto sm:border-t-0 sm:pt-4">
-          <span className="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-medium text-[#266665]">
+          <Link
+            href={`/client/vendors/${vendor.id}`}
+            className="inline-flex h-10 items-center justify-center rounded-md bg-[#DBECEC] px-4 text-sm font-medium text-[#266665] transition-colors hover:bg-[#c5dede]"
+          >
             View profile
-          </span>
+          </Link>
 
           {vendor.isAdded ? (
             <button
