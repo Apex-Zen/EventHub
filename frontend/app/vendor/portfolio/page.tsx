@@ -30,6 +30,67 @@ export default function VendorPortfolio() {
         </div>
       </div>
 
+      {/* Portfolio Photo Grid Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        {/* Photo Card 1 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-48 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg1.jpg" alt="Wedding" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-sm font-medium text-ink-900 mb-3">Mount Lavinia Hotel wedding, March 2026</p>
+            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 2 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-48 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg2.jpg" alt="Homecoming" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-sm font-medium text-ink-900 mb-3">Kandy homecoming, January 2026</p>
+            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 3 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-48 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg3.jpg" alt="Awards Night" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-sm font-medium text-ink-900 mb-3">Office awards night, Hilton Colombo</p>
+            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 4 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-48 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg4.jpg" alt="Engagement" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-sm font-medium text-ink-900 mb-3">Beach engagement, Bentota</p>
+            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   );
 }
