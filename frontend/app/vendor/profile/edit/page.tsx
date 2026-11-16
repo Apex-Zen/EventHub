@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export default function EditVendorProfile() {
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-[#F8FAFC]">
+    <div className="max-w-6xl mx-auto p-6 bg-page">
       
       {/* Top Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-[#111827] font-serif">Edit profile</h1>
+        <h1 className="text-3xl font-bold text-ink-900 font-serif">Edit profile</h1>
         <div className="flex items-center gap-4">
           <Link 
             href="/vendor/profile" 
@@ -15,7 +15,7 @@ export default function EditVendorProfile() {
           >
             Cancel
           </Link>
-          <button className="px-5 py-2.5 bg-[#115E59] text-white font-medium hover:bg-[#0f4c48] transition-colors text-sm rounded-sm">
+          <button className="px-5 py-2.5 bg-green-500 text-white font-medium hover:bg-green-600 transition-colors text-sm rounded-sm">
             Save changes
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function EditVendorProfile() {
               <input 
                 type="text" 
                 defaultValue="Lens & Light Studio" 
-                className="w-full p-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-[#115E59]" 
+                className="w-full p-3 border border-line rounded-sm text-sm focus:outline-none focus:border-green-500"
               />
             </div>
             <div>
@@ -55,7 +55,7 @@ export default function EditVendorProfile() {
               <input 
                 type="text" 
                 defaultValue="Kasun Fernando" 
-                className="w-full p-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-[#115E59]" 
+                className="w-full p-3 border border-line rounded-sm text-sm focus:outline-none focus:border-green-500"
               />
             </div>
           </div>
@@ -63,14 +63,14 @@ export default function EditVendorProfile() {
           <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Category</label>
-              <select className="w-full p-3 border border-gray-200 rounded-sm text-sm bg-white focus:outline-none focus:border-[#115E59]">
+              <select className="w-full p-3 border border-line rounded-sm text-sm bg-white focus:outline-none focus:border-green-500">
                 <option>Photography</option>
                 <option>Videography</option>
               </select>
             </div>
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">District</label>
-              <select className="w-full p-3 border border-gray-200 rounded-sm text-sm bg-white focus:outline-none focus:border-[#115E59]">
+              <select className="w-full p-3 border border-line rounded-sm text-sm bg-white focus:outline-none focus:border-green-500">
                 <option>Colombo</option>
                 <option>Gampaha</option>
                 <option>Kandy</option>
@@ -83,7 +83,7 @@ export default function EditVendorProfile() {
             <input 
               type="text" 
               defaultValue="34" 
-              className="w-full p-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-[#115E59]" 
+              className="w-full p-3 border border-line rounded-sm text-sm focus:outline-none focus:border-green-500"
             />
           </div>
 
@@ -92,7 +92,7 @@ export default function EditVendorProfile() {
             <textarea 
               rows={4}
               defaultValue="Wedding and event photography since 2014. Two photographers, drone coverage on request, edited album in four weeks. Based in Nugegoda, travel anywhere in the Western Province." 
-              className="w-full p-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-[#115E59]" 
+              className="w-full p-3 border border-line rounded-sm text-sm focus:outline-none focus:border-green-500"
             />
             <p className="text-right text-xs text-gray-400 mt-1">312 / 600 characters</p>
           </div>
@@ -118,7 +118,7 @@ export default function EditVendorProfile() {
               </div>
             </div>
             
-            <div className="mt-4 p-4 bg-[#E6FFFA] border border-[#B2F5EA] rounded-sm text-xs text-[#234E52] leading-relaxed">
+            <div className="mt-4 p-4 bg-green-50 border border-green-100 rounded-sm text-xs text-green-600 leading-relaxed">
               ℹ️ Rating and review count come from client reviews and cannot be edited. After saving, clients see the updated profile.
             </div>
           </div>

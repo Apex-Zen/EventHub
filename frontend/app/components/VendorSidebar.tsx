@@ -47,7 +47,7 @@ export default function VendorSidebar() {
                 className={`shrink-0 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors lg:shrink ${
                   isActive
                     ? 'bg-teal-50 text-teal-700 border-l-4 border-teal-600'
-                    : 'text-gray-600 hover:bg-[#DBECEC]'
+                    : 'text-gray-600 hover:bg-green-50'
                 }`}
               >
                 {item.name}
