@@ -30,17 +30,17 @@ export default function VendorPortfolio() {
         </div>
       </div>
 
-      {/* Portfolio Photo Grid Section */}
+      {/* Portfolio Photo Grid Section (8 items) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
         {/* Photo Card 1 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
-          <div className="h-48 bg-gray-200 overflow-hidden">
+          <div className="h-44 bg-gray-200 overflow-hidden">
             <img src="/vendor-images/portfolioimg1.jpg" alt="Wedding" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
-            <p className="text-sm font-medium text-ink-900 mb-3">Mount Lavinia Hotel wedding, March 2026</p>
-            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Mount Lavinia Hotel wedding, March 2026</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
               <button className="text-green-600 hover:underline font-medium">Edit caption</button>
               <button className="text-red-500 hover:underline">Delete</button>
             </div>
@@ -49,12 +49,12 @@ export default function VendorPortfolio() {
 
         {/* Photo Card 2 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
-          <div className="h-48 bg-gray-200 overflow-hidden">
+          <div className="h-44 bg-gray-200 overflow-hidden">
             <img src="/vendor-images/portfolioimg2.jpg" alt="Homecoming" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
-            <p className="text-sm font-medium text-ink-900 mb-3">Kandy homecoming, January 2026</p>
-            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Kandy homecoming, January 2026</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
               <button className="text-green-600 hover:underline font-medium">Edit caption</button>
               <button className="text-red-500 hover:underline">Delete</button>
             </div>
@@ -63,12 +63,12 @@ export default function VendorPortfolio() {
 
         {/* Photo Card 3 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
-          <div className="h-48 bg-gray-200 overflow-hidden">
+          <div className="h-44 bg-gray-200 overflow-hidden">
             <img src="/vendor-images/portfolioimg3.jpg" alt="Awards Night" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
-            <p className="text-sm font-medium text-ink-900 mb-3">Office awards night, Hilton Colombo</p>
-            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Office awards night, Hilton Colombo</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
               <button className="text-green-600 hover:underline font-medium">Edit caption</button>
               <button className="text-red-500 hover:underline">Delete</button>
             </div>
@@ -77,12 +77,68 @@ export default function VendorPortfolio() {
 
         {/* Photo Card 4 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
-          <div className="h-48 bg-gray-200 overflow-hidden">
+          <div className="h-44 bg-gray-200 overflow-hidden">
             <img src="/vendor-images/portfolioimg4.jpg" alt="Engagement" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
-            <p className="text-sm font-medium text-ink-900 mb-3">Beach engagement, Bentota</p>
-            <div className="flex items-center justify-between text-xs pt-2 border-t border-line">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Beach engagement, Bentota</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 5 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-44 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg1.jpg" alt="Temple Ceremony" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Temple ceremony, Kelaniya</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 6 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-44 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg2.jpg" alt="Birthday Party" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Birthday party, Nugegoda</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 7 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-44 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg3.jpg" alt="Product Launch" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Product launch, Colombo 07</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
+              <button className="text-green-600 hover:underline font-medium">Edit caption</button>
+              <button className="text-red-500 hover:underline">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Card 8 */}
+        <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
+          <div className="h-44 bg-gray-200 overflow-hidden">
+            <img src="/vendor-images/portfolioimg4.jpg" alt="Pre-shoot" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          </div>
+          <div className="p-4 flex flex-col justify-between flex-grow">
+            <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Pre-shoot, Galle Fort</p>
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-line">
               <button className="text-green-600 hover:underline font-medium">Edit caption</button>
               <button className="text-red-500 hover:underline">Delete</button>
             </div>
