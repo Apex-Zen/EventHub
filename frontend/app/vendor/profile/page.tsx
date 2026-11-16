@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Link from 'next/link';
 import { Playfair_Display } from 'next/font/google';
 
 const playfair = Playfair_Display({ 
@@ -14,11 +14,13 @@ export default function VendorProfile() {
       <div className="flex justify-between items-start mb-6">
         <div>
           <h1 className="text-3xl font-bold text-[#111827] font-serif">Profile</h1>
-          
         </div>
-        <button className="px-5 py-2.5 border border-[#166534] text-[#166534] font-medium hover:bg-[#F0FDF4] transition-colors text-sm rounded-sm">
+        <Link 
+          href="/vendor/profile/edit" 
+          className="px-5 py-2.5 border border-[#166534] text-[#166534] font-medium hover:bg-[#F0FDF4] transition-colors text-sm rounded-sm text-center"
+        >
           Edit profile
-        </button>
+        </Link>
       </div>
 
       {/* Hero Banner Section */}
@@ -32,21 +34,18 @@ export default function VendorProfile() {
           <div className="flex items-center gap-6">
             
             {/* Profile Image */}
-        <div className="w-28 h-28 rounded-full border-4 border-white overflow-hidden bg-[#E5E7EB] shadow-md flex-shrink-0">
-          <img 
-            src="/vendor-images/studioprofile.jpg" 
-            alt="Profile" 
-            className="w-full h-full object-cover" 
-          />
-        </div>
+            <div className="w-28 h-28 rounded-full border-4 border-white overflow-hidden bg-[#E5E7EB] shadow-md flex-shrink-0">
+              <img 
+                src="/vendor-images/studioprofile.jpg" 
+                alt="Profile" 
+                className="w-full h-full object-cover" 
+              />
+            </div>
             
             {/* Text Details */}
             <div className="text-white mb-2">
               <p className="text-xs font-bold tracking-wider uppercase mb-1 text-gray-300">Photography • Colombo</p>
-              
-            
               <h2 className={`text-5xl font-bold mb-2 tracking-wide ${playfair.className}`}>Lens & Light Studio</h2>
-              
               <p className="text-sm text-gray-200">Kasun Fernando • Age 34 • ★ 4.8 • 62 reviews</p>
             </div>
           </div>
