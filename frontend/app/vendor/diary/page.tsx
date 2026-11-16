@@ -151,6 +151,75 @@ export default function VendorDiary() {
 
         </div>
 
+        {/* Right Section: Block a date & Blocked dates (Takes 4 columns) */}
+        <div className="lg:col-span-4 space-y-6">
+          
+          {/* Block a date Form Card */}
+          <div className="bg-white p-6 rounded-sm shadow-sm border border-line space-y-4">
+            <h3 className="font-serif font-bold text-xl text-ink-900">Block a date</h3>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Date</label>
+              <select className="w-full p-3 border border-line rounded-sm text-sm bg-white text-ink-600 focus:outline-none focus:border-green-600">
+                <option>Choose a date</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Slot</label>
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" className="py-2.5 text-xs font-medium border border-line rounded-sm text-ink-900 hover:border-green-600">Day</button>
+                <button type="button" className="py-2.5 text-xs font-medium border border-line rounded-sm text-ink-900 hover:border-green-600">Night</button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Reason</label>
+              <input 
+                type="text" 
+                placeholder="e.g. Family function" 
+                className="w-full p-3 border border-line rounded-sm text-sm text-ink-900 focus:outline-none focus:border-green-600" 
+              />
+            </div>
+
+            <button className="w-full py-3 bg-green-600 text-white font-medium hover:bg-[#14532d] transition-colors text-sm rounded-sm">
+              Block date
+            </button>
+
+            <p className="text-xs text-ink-400 leading-relaxed">
+              Blocked slots are hidden from clients.
+            </p>
+          </div>
+
+          {/* Blocked Dates List Card */}
+          <div className="bg-white p-6 rounded-sm shadow-sm border border-line space-y-4">
+            <h3 className="font-serif font-bold text-lg text-ink-900">Blocked dates</h3>
+
+            <div className="divide-y divide-line">
+              
+              {/* Item 1 */}
+              <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-ink-900">Thu 24 Dec, day and night</p>
+                  <p className="text-xs text-ink-400">Family function</p>
+                </div>
+                <button className="text-xs font-medium text-green-600 hover:underline">Unblock</button>
+              </div>
+
+              {/* Item 2 */}
+              <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-ink-900">Fri 25 Dec, day and night</p>
+                  <p className="text-xs text-ink-400">Christmas</p>
+                </div>
+                <button className="text-xs font-medium text-green-600 hover:underline">Unblock</button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
