@@ -86,6 +86,92 @@ export default function VendorPricing() {
           </button>
         </div>
 
+        {/* Right Column: Your rules table (7 columns) */}
+        <div className="lg:col-span-7 bg-white p-6 rounded-sm shadow-sm border border-line space-y-4">
+          <h2 className="font-serif font-bold text-xl text-ink-900">Your rules</h2>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-green-50/60 border-b border-line text-xs font-bold text-green-700 uppercase tracking-wider">
+                  <th className="py-3 px-4">Rule</th>
+                  <th className="py-3 px-4">Dates</th>
+                  <th className="py-3 px-4">Applies to</th>
+                  <th className="py-3 px-4">Rate</th>
+                  <th className="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line text-xs">
+                
+                {/* Rule 1 */}
+                <tr>
+                  <td className="py-4 px-4 font-medium text-ink-900">
+                    December wedding season
+                    <span className="block text-[10px] text-ink-400 font-normal">Peak</span>
+                  </td>
+                  <td className="py-4 px-4 text-ink-600">1 Dec – 31 Jan</td>
+                  <td className="py-4 px-4 text-ink-600">All services</td>
+                  <td className="py-4 px-4 font-medium text-ink-900">+15%</td>
+                  <td className="py-4 px-4">
+                    <span className="px-2.5 py-1 bg-green-100 text-green-800 rounded-full text-[10px] font-medium">
+                      Active
+                    </span>
+                  </td>
+                </tr>
+
+                {/* Rule 2 */}
+                <tr>
+                  <td className="py-4 px-4 font-medium text-ink-900">
+                    Sinhala and Tamil New Year
+                    <span className="block text-[10px] text-ink-400 font-normal">Peak</span>
+                  </td>
+                  <td className="py-4 px-4 text-ink-600">10 – 16 Apr 2027</td>
+                  <td className="py-4 px-4 text-ink-600">All services</td>
+                  <td className="py-4 px-4 font-medium text-ink-900">+20%</td>
+                  <td className="py-4 px-4">
+                    <span className="px-2.5 py-1 bg-sky-100 text-sky-800 rounded-full text-[10px] font-medium">
+                      Scheduled
+                    </span>
+                  </td>
+                </tr>
+
+                {/* Rule 3 */}
+                <tr>
+                  <td className="py-4 px-4 font-medium text-ink-900">
+                    Monsoon offer
+                    <span className="block text-[10px] text-ink-400 font-normal">Off-peak</span>
+                  </td>
+                  <td className="py-4 px-4 text-ink-600">1 May – 31 Jul 2027</td>
+                  <td className="py-4 px-4 text-ink-600">Pre-shoot session</td>
+                  <td className="py-4 px-4 font-medium text-ink-900">-10%</td>
+                  <td className="py-4 px-4">
+                    <span className="px-2.5 py-1 bg-sky-100 text-sky-800 rounded-full text-[10px] font-medium">
+                      Scheduled
+                    </span>
+                  </td>
+                </tr>
+
+                {/* Rule 4 */}
+                <tr>
+                  <td className="py-4 px-4 font-medium text-ink-900">
+                    Poya day
+                    <span className="block text-[10px] text-ink-400 font-normal">Fixed rate</span>
+                  </td>
+                  <td className="py-4 px-4 text-ink-600">Every Poya</td>
+                  <td className="py-4 px-4 text-ink-600">Drone add-on</td>
+                  <td className="py-4 px-4 font-medium text-ink-900">LKR 30,000</td>
+                  <td className="py-4 px-4">
+                    <span className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-[10px] font-medium">
+                      Paused
+                    </span>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
 
     </div>
