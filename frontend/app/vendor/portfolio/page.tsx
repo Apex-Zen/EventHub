@@ -36,7 +36,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 1 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg1.jpg" alt="Wedding" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/hotelwedding.jpg" alt="Wedding" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Mount Lavinia Hotel wedding, March 2026</p>
@@ -50,7 +50,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 2 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg2.jpg" alt="Homecoming" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/homecoming.jpg" alt="Homecoming" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Kandy homecoming, January 2026</p>
@@ -64,7 +64,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 3 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg3.jpg" alt="Awards Night" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/office%20award%20night.jpg" alt="Awards Night" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Office awards night, Hilton Colombo</p>
@@ -92,7 +92,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 5 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg1.jpg" alt="Temple Ceremony" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/templeceromany.jpg" alt="Temple Ceremony" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Temple ceremony, Kelaniya</p>
@@ -106,7 +106,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 6 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg2.jpg" alt="Birthday Party" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/birthdayparty.jpg" alt="Birthday Party" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Birthday party, Nugegoda</p>
@@ -120,7 +120,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 7 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg3.jpg" alt="Product Launch" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/product%20launch.jpg" alt="Product Launch" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Product launch, Colombo 07</p>
@@ -134,7 +134,7 @@ export default function VendorPortfolio() {
         {/* Photo Card 8 */}
         <div className="bg-white rounded-sm overflow-hidden border border-line shadow-sm flex flex-col">
           <div className="h-44 bg-gray-200 overflow-hidden">
-            <img src="/vendor-images/portfolioimg4.jpg" alt="Pre-shoot" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+            <img src="/preshoot.jpg" alt="Pre-shoot" className="w-full h-full object-cover hover:scale-105 transition-transform" />
           </div>
           <div className="p-4 flex flex-col justify-between flex-grow">
             <p className="text-xs font-medium text-ink-900 mb-4 leading-relaxed">Pre-shoot, Galle Fort</p>
