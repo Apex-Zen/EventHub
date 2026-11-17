@@ -10,6 +10,84 @@ export default function VendorPricing() {
         <p className="text-sm text-ink-600">Charge a different rate for busy dates.</p>
       </div>
 
+      {/* Main Content Layout (Grid) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Left Column: Add a price rule form (5 columns) */}
+        <div className="lg:col-span-5 bg-white p-6 rounded-sm shadow-sm border border-line space-y-5">
+          <h2 className="font-serif font-bold text-xl text-ink-900">Add a price rule</h2>
+
+          {/* Rule Name */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Rule name</label>
+            <input 
+              type="text" 
+              defaultValue="December wedding season" 
+              className="w-full p-3 border border-line rounded-sm text-sm text-ink-900 bg-white focus:outline-none focus:border-green-600" 
+            />
+          </div>
+
+          {/* From & To Dates */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">From</label>
+              <input 
+                type="text" 
+                defaultValue="1 Dec 2026" 
+                className="w-full p-3 border border-line rounded-sm text-sm text-ink-900 bg-white focus:outline-none focus:border-green-600" 
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">To</label>
+              <input 
+                type="text" 
+                defaultValue="31 Jan 2027" 
+                className="w-full p-3 border border-line rounded-sm text-sm text-ink-900 bg-white focus:outline-none focus:border-green-600" 
+              />
+            </div>
+          </div>
+
+          {/* Applies to */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Applies to</label>
+            <select className="w-full p-3 border border-line rounded-sm text-sm bg-white text-ink-900 focus:outline-none focus:border-green-600">
+              <option>All services</option>
+            </select>
+          </div>
+
+          {/* Change and Value */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Change</label>
+              <select className="w-full p-3 border border-line rounded-sm text-sm bg-white text-ink-900 focus:outline-none focus:border-green-600">
+                <option>Increase by %</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink-600 mb-2">Value</label>
+              <input 
+                type="text" 
+                defaultValue="15" 
+                className="w-full p-3 border border-line rounded-sm text-sm text-ink-900 bg-white focus:outline-none focus:border-green-600" 
+              />
+            </div>
+          </div>
+
+          {/* Preview Box */}
+          <div className="p-4 bg-green-50/70 border border-green-600/30 rounded-sm">
+            <p className="text-xs text-green-900 leading-relaxed font-medium">
+              Full-day coverage becomes LKR 207,000 on these dates.
+            </p>
+          </div>
+
+          {/* Save Rule Button */}
+          <button className="w-full py-3 bg-green-600 text-white font-medium hover:bg-[#14532d] transition-colors text-sm rounded-sm">
+            Save rule
+          </button>
+        </div>
+
+      </div>
+
     </div>
   );
 }
