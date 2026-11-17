@@ -26,7 +26,7 @@ export default function VendorHalls() {
             <div className="flex items-center gap-4">
               <div className="w-36 h-24 bg-gray-200 rounded-sm overflow-hidden flex-shrink-0">
                 <img 
-                  src="/vendor-images/portfolioimg1.jpg" 
+                  src="/hotelballroom1.jpg" 
                   alt="Grand Ballroom" 
                   className="w-full h-full object-cover" 
                 />
@@ -105,7 +105,7 @@ export default function VendorHalls() {
             <div className="flex items-center gap-4">
               <div className="w-36 h-24 bg-gray-200 rounded-sm overflow-hidden flex-shrink-0">
                 <img 
-                  src="/vendor-images/portfolioimg2.jpg" 
+                  src="/hotelballroom2.jpg" 
                   alt="Outdoor Lawn" 
                   className="w-full h-full object-cover" 
                 />
