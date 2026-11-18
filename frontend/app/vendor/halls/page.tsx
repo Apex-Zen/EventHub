@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function VendorHalls() {
   return (
@@ -10,9 +11,9 @@ export default function VendorHalls() {
           <h1 className="text-3xl font-bold text-ink-900 font-serif mb-1">Halls and time slots</h1>
           <p className="text-sm text-ink-600">For venue vendors. Each hall has its own slots, price and diary.</p>
         </div>
-        <button className="px-5 py-2.5 bg-green-600 text-white font-medium hover:bg-[#14532d] transition-colors text-sm rounded-sm">
+        <Link href="/vendor/halls/new" className="px-5 py-2.5 bg-green-600 text-white font-medium hover:bg-[#14532d] transition-colors text-sm rounded-sm">
           + Add hall
-        </button>
+        </Link>
       </div>
 
       {/* Halls List Container */}
