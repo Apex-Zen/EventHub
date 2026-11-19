@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Frontend: dev",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--prefix", "frontend", "run", "dev"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend: build",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--prefix", "frontend", "run", "build"],
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "Frontend: lint",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--prefix", "frontend", "run", "lint"],
+      "problemMatcher": "$eslint-stylish"
+    },
+    {
+      "label": "Frontend: typecheck",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--prefix", "frontend", "run", "typecheck"],
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "Frontend: test",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--prefix", "frontend", "test"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Backend: build",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--prefix", "backend", "run", "build"],
+      "problemMatcher": "$tsc"
+    }
+  ]
+}

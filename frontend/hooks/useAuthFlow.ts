@@ -11,7 +11,7 @@ export function useAuthFlow() {
         operation.current += 1;
         pending.current = false;
     }, []);
-    const [showLanding, setShowLanding] = useState(true);
+    const [showLanding, setShowLanding] = useState(false);
     const [mode, setMode] = useState<Mode>("signup");
     const [step, setStep] = useState<Step>("form");
     const [role, setRole] = useState<Role>("Client");
