@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EventHub Gate Scanner
 
-## Getting Started
+The scanner is a responsive web app that runs in a phone or laptop browser. Use a URL such as `/scan?event=GFJN` to open a specific event. Camera scanning requires a secure context (HTTPS, or localhost); manual code entry remains available without a camera.
 
-First, run the development server:
+The interface uses the EventHub palette and typography: Primary `#266585`, Pressed `#123B3A`, Tint `#DBECEC`, Ink `#1B2430`, Arrived `#2E9D5B`, Pending `#E0A100`, and Failed `#D64545`, with Poppins for UI text and Playfair Display for headings.
+
+## Run locally
+
+Start the demo backend from `backend`:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+In another terminal, start the scanner from `frontend`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000/scan?event=GFJN`. Set `NEXT_PUBLIC_EVENTHUB_DEFAULT_EVENT_ID` to change the default event when a URL does not include `?event=`. To test from a phone on the same network, open the frontend using the computer's LAN address and ensure the backend is reachable on port `5000`. Phone camera permissions generally require HTTPS; localhost is the exception.
 
-## Learn More
+## Connect to EventHub
 
-To learn more about Next.js, take a look at the following resources:
+The frontend uses the scanner API contract below. Set `NEXT_PUBLIC_EVENTHUB_API_URL` to the API origin when it is hosted separately; for example, `https://api.example.com`. If the site is served over HTTPS and this variable is omitted, requests use the site's origin, which must proxy `/api/scanner` to the EventHub backend. This avoids mixed-content requests on HTTPS sites.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `GET /api/scanner/events/{eventId}` returns `{ event, demoMode }`.
+- `GET /api/scanner/events/{eventId}/stream` sends `stats` server-sent events containing `{ event, demoMode }`.
+- `POST /api/scanner/scan` accepts `{ eventId, code }` and returns the scan result shape used in `app/page.tsx`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The backend currently included in this repository is a **demo ticket store** persisted to a local JSON file; it is not connected to EventHub's production events or ticket database. The production EventHub backend must implement this contract (or an adapter for its existing ticket API) and validate staff authorization server-side before check-in. Do not put credentials in `NEXT_PUBLIC_*` variables.
