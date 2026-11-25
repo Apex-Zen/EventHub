@@ -21,7 +21,7 @@ const defaultPlanningCards: PlanningCardData[] = [
     imageSrc: '/images/public-event.jpg',
     imageAlt: 'Public event stage and crowd',
     buttonText: 'Plan a public event',
-    href: '#',
+    href: '/client/events/public',
   },
 ];
 
