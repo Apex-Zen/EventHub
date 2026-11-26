@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   PublicEventDetailsCard,
   TicketCategoriesCard,
@@ -27,6 +28,7 @@ const INITIAL_TIERS: TicketTier[] = [
 ];
 
 export default function PlanPublicEventPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState<PublicEventFormData>(INITIAL_FORM_DATA);
   const [tiers, setTiers] = useState<TicketTier[]>(INITIAL_TIERS);
   const [feedback, setFeedback] = useState<{
@@ -71,11 +73,7 @@ export default function PlanPublicEventPage() {
   };
 
   const handlePublish = () => {
-    setFeedback({
-      type: 'success',
-      message: `Event page published at ${publicSlug}.`,
-    });
-    setTimeout(() => setFeedback(null), 4000);
+    router.push('/client/events/public/sales');
   };
 
   const handleSaveDraft = () => {
