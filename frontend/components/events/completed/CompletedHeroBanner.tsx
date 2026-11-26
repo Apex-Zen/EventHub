@@ -1,18 +1,15 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 
 interface CompletedHeroBannerProps {
   eventTitle: string;
-  backHref?: string;
   subtitle: string;
   coverImageSrc: string;
 }
 
 export default function CompletedHeroBanner({
   eventTitle,
-  backHref = '/client/events',
   subtitle,
   coverImageSrc,
 }: CompletedHeroBannerProps) {
@@ -27,13 +24,6 @@ export default function CompletedHeroBanner({
 
       <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-end px-4 sm:px-6 lg:px-8 pb-7 sm:pb-8">
         <div className="space-y-2">
-          <Link
-            href={backHref}
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-white/90 hover:text-white transition-colors no-underline"
-          >
-            <span aria-hidden="true">&larr;</span> {eventTitle}
-          </Link>
-
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-white leading-tight">
               Event completed
