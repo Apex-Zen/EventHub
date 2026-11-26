@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface ConfirmedEventHeaderCardProps {
   label: string;
   dateTime: string;
   venueAndGuests: string;
   imageSrc: string;
+  cancelHref?: string;
   isCancelled?: boolean;
   onCancelEvent?: () => void;
 }
@@ -16,6 +18,7 @@ export default function ConfirmedEventHeaderCard({
   dateTime,
   venueAndGuests,
   imageSrc,
+  cancelHref,
   isCancelled = false,
   onCancelEvent,
 }: ConfirmedEventHeaderCardProps) {
@@ -46,6 +49,13 @@ export default function ConfirmedEventHeaderCard({
               <span className="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700">
                 Event cancelled
               </span>
+            ) : cancelHref ? (
+              <Link
+                href={cancelHref}
+                className="text-sm font-medium text-[#266665] hover:text-rose-600 transition-colors"
+              >
+                Cancel event
+              </Link>
             ) : (
               <button
                 type="button"
