@@ -3,7 +3,9 @@ import Link from 'next/link';
 import StatusBadge from './StatusBadge';
 import { EventListItemProps } from './types';
 
-export default function EventListItem({ event }: EventListItemProps) {
+export default function EventListItem({ event, onDelete }: EventListItemProps) {
+  const isDraft = event.isDraft ?? /draft/i.test(event.statusText);
+
   return (
     <div className="flex items-center justify-between py-4 sm:py-5 gap-4 transition hover:bg-gray-50/70 -mx-2 px-2 sm:-mx-3 sm:px-3 rounded-lg">
       {/* Event Details Left Side */}
@@ -21,21 +23,34 @@ export default function EventListItem({ event }: EventListItemProps) {
           </h4>
           <p className="text-xs sm:text-sm text-[#4B5563] mt-1 leading-normal truncate">
             {event.subtitle}
+            {event.lastEdited && (
+              <span className="text-gray-400"> · Edited {event.lastEdited}</span>
+            )}
           </p>
         </div>
       </div>
 
       {/* Status & Action Right Side */}
       <div className="flex items-center gap-4 sm:gap-6 flex-shrink-0">
-        <StatusBadge
-          text={event.statusText}
-          variant={event.statusVariant}
-        />
+        {isDraft ? (
+          <button
+            type="button"
+            onClick={() => onDelete && onDelete(event.id)}
+            className="text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors cursor-pointer"
+          >
+            Delete
+          </button>
+        ) : (
+          <StatusBadge
+            text={event.statusText}
+            variant={event.statusVariant}
+          />
+        )}
         <Link
           href={event.href || '#'}
           className="text-sm font-medium text-[#1B2430] hover:text-[#266665] no-underline hover:no-underline transition-colors"
         >
-          Open
+          {isDraft ? 'Resume' : 'Open'}
         </Link>
       </div>
     </div>
