@@ -20,6 +20,8 @@ export interface EventItemData {
   statusText: string;
   statusVariant?: BadgeVariant;
   href?: string;
+  isDraft?: boolean;
+  lastEdited?: string;
 }
 
 export interface WelcomeHeroProps {
@@ -45,6 +47,7 @@ export interface StatusBadgeProps {
 
 export interface EventListItemProps {
   event: EventItemData;
+  onDelete?: (id: string) => void;
 }
 
 export interface YourEventsSectionProps {
