@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useParams } from 'next/navigation';
 import {
   ConfirmedEventHeaderCard,
   BeforeTheDayCard,
@@ -49,7 +50,8 @@ const TIMELINE_ITEMS: TimelineItem[] = [
 ];
 
 export default function ConfirmedEventDetailPage() {
-  const [isCancelled, setIsCancelled] = useState(false);
+  const params = useParams();
+  const eventId = (params?.eventId as string) || '4';
 
   return (
     <div className="min-h-screen bg-[#F8FAFA] py-8 px-4 sm:px-6 lg:px-8">
@@ -60,8 +62,7 @@ export default function ConfirmedEventDetailPage() {
           dateTime="Sat 12 Dec 2026 · 6.30 pm"
           venueAndGuests="Waters Edge, Battaramulla · 250 guests"
           imageSrc="/images/light-studio.jpg"
-          isCancelled={isCancelled}
-          onCancelEvent={() => setIsCancelled(true)}
+          cancelHref={`/client/events/${encodeURIComponent(eventId)}/cancel`}
         />
 
         {/* 2-Column Content: Before the day & Timeline on the day */}
