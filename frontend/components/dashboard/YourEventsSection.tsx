@@ -15,7 +15,7 @@ const defaultEvents: EventItemData[] = [
     statusText: 'Deposit paid',
     statusVariant: 'green',
     tabCategory: 'upcoming',
-    href: '/client/events/1/waiting',
+    href: '/client/events/1/confirmed',
   },
   {
     id: '3',
