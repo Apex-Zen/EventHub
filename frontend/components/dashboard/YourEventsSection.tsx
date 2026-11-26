@@ -36,6 +36,16 @@ const defaultEvents: EventItemData[] = [
     statusVariant: 'teal',
     href: '#',
   },
+  {
+    id: '4',
+    title: 'Perera–Silva wedding',
+    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · All stages released',
+    imageSrc: '/images/event-1.jpg',
+    imageAlt: 'Completed wedding reception',
+    statusText: 'Completed',
+    statusVariant: 'green',
+    href: '/client/events/4/completed',
+  },
 ];
 
 export default function YourEventsSection({
