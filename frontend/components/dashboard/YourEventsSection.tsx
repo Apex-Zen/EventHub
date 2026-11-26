@@ -24,7 +24,33 @@ const defaultEvents: EventItemData[] = [
     imageAlt: 'Office party celebration',
     statusText: 'Draft',
     statusVariant: 'gray',
-    href: '#',
+    isDraft: true,
+    lastEdited: '2 days ago',
+    href: '/client/events/create',
+  },
+  {
+    id: '5',
+    title: 'Colombo Indie Music Fest',
+    subtitle: 'Sat 26 Dec 2026 · Public · Colombo',
+    imageSrc: '/images/public-event.jpg',
+    imageAlt: 'Indie music festival stage',
+    statusText: 'Draft',
+    statusVariant: 'gray',
+    isDraft: true,
+    lastEdited: '5 days ago',
+    href: '/client/events/public',
+  },
+  {
+    id: '6',
+    title: 'Kandy Heritage Dinner',
+    subtitle: 'Sun 10 Jan 2027 · Night · Kandy',
+    imageSrc: '/images/private-event.jpg',
+    imageAlt: 'Heritage dinner setup',
+    statusText: 'Draft',
+    statusVariant: 'gray',
+    isDraft: true,
+    lastEdited: '3 weeks ago',
+    href: '/client/events/create',
   },
   {
     id: '3',
@@ -53,12 +79,17 @@ export default function YourEventsSection({
   seeAllHref = '#',
   events = defaultEvents,
 }: YourEventsSectionProps) {
+  const [eventList, setEventList] = useState<EventItemData[]>(events);
   const [activeTab, setActiveTab] = useState<'drafts' | 'confirmed'>('drafts');
-  const drafts = events.filter((event) =>
-    /draft|in progress|planning/i.test(event.statusText),
+  const drafts = eventList.filter((event) =>
+    event.isDraft || /draft|in progress|planning/i.test(event.statusText),
   );
-  const confirmed = events.filter((event) => !drafts.includes(event));
+  const confirmed = eventList.filter((event) => !drafts.includes(event));
   const visibleEvents = activeTab === 'drafts' ? drafts : confirmed;
+
+  const handleDeleteDraft = (id: string) => {
+    setEventList((prev) => prev.filter((item) => item.id !== id));
+  };
 
   return (
     <section
@@ -120,7 +151,13 @@ export default function YourEventsSection({
         className="divide-y divide-gray-100"
       >
         {visibleEvents.length ? (
-          visibleEvents.map((event) => <EventListItem key={event.id} event={event} />)
+          visibleEvents.map((event) => (
+            <EventListItem
+              key={event.id}
+              event={event}
+              onDelete={handleDeleteDraft}
+            />
+          ))
         ) : (
           <p className="py-8 text-center text-sm text-[#4B5563]">
             No {activeTab === 'drafts' ? 'drafts' : 'confirmed events'}.
