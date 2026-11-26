@@ -48,7 +48,7 @@ function DashboardHeader() {
       <nav className="dashboard-nav" aria-label="Main navigation">
         <a href="/">Home</a>
         <a href="/">My events</a>
-        <a href="/" className="active">Payments</a>
+        <a href="/receipts" className="active">Payments</a>
         <a href="/">Messages</a>
       </nav>
       <div className="dashboard-user">
