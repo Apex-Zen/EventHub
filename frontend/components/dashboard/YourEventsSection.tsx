@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import EventListItem from './EventListItem';
-import { EventItemData, YourEventsSectionProps } from './types';
+import { EventItemData, EventTabCategory, YourEventsSectionProps } from './types';
 
 const defaultEvents: EventItemData[] = [
   {
@@ -14,7 +14,51 @@ const defaultEvents: EventItemData[] = [
     imageAlt: 'Wedding reception',
     statusText: 'Deposit paid',
     statusVariant: 'green',
-    href: '#',
+    tabCategory: 'upcoming',
+    href: '/client/events/1/waiting',
+  },
+  {
+    id: '3',
+    title: 'Galle Face Jazz Night',
+    subtitle: 'Sat 14 Nov 2026 · Public · 312 of 500 sold',
+    imageSrc: '/images/event-3.jpg',
+    imageAlt: 'Jazz performance night',
+    statusText: 'On sale',
+    statusVariant: 'teal',
+    tabCategory: 'upcoming',
+    href: '/client/events/public/sales',
+  },
+  {
+    id: '7',
+    title: 'Perera–Silva wedding',
+    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · 2 of 3 accepted',
+    imageSrc: '/images/event-1.jpg',
+    imageAlt: 'Wedding reception on hold',
+    statusText: 'Dates on hold',
+    statusVariant: 'amber',
+    tabCategory: 'upcoming',
+    href: '/client/events/7/hold',
+  },
+  {
+    id: '4',
+    title: 'Perera–Silva wedding',
+    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · All stages released',
+    imageSrc: '/images/event-1.jpg',
+    imageAlt: 'Completed wedding reception',
+    statusText: 'Completed',
+    statusVariant: 'green',
+    tabCategory: 'past',
+    href: '/client/events/4/completed',
+  },
+  {
+    id: '8',
+    title: 'Negombo Beach Brunch',
+    subtitle: 'Sun 08 Nov 2026 · Day · Negombo · Cancelled by client',
+    imageSrc: '/images/kandyan-frames.jpg',
+    imageAlt: 'Beach brunch',
+    statusText: 'Cancelled',
+    statusVariant: 'red',
+    tabCategory: 'cancelled',
   },
   {
     id: '2',
@@ -26,6 +70,7 @@ const defaultEvents: EventItemData[] = [
     statusVariant: 'gray',
     isDraft: true,
     lastEdited: '2 days ago',
+    tabCategory: 'drafts',
     href: '/client/events/create',
   },
   {
@@ -38,6 +83,7 @@ const defaultEvents: EventItemData[] = [
     statusVariant: 'gray',
     isDraft: true,
     lastEdited: '5 days ago',
+    tabCategory: 'drafts',
     href: '/client/events/public',
   },
   {
@@ -50,38 +96,16 @@ const defaultEvents: EventItemData[] = [
     statusVariant: 'gray',
     isDraft: true,
     lastEdited: '3 weeks ago',
+    tabCategory: 'drafts',
     href: '/client/events/create',
   },
-  {
-    id: '3',
-    title: 'Galle Face Jazz Night',
-    subtitle: 'Sat 14 Nov 2026 · Public · 312 of 500 sold',
-    imageSrc: '/images/event-3.jpg',
-    imageAlt: 'Jazz performance night',
-    statusText: 'On sale',
-    statusVariant: 'teal',
-    href: '#',
-  },
-  {
-    id: '4',
-    title: 'Perera–Silva wedding',
-    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · All stages released',
-    imageSrc: '/images/event-1.jpg',
-    imageAlt: 'Completed wedding reception',
-    statusText: 'Completed',
-    statusVariant: 'green',
-    href: '/client/events/4/completed',
-  },
-  {
-    id: '7',
-    title: 'Perera–Silva wedding',
-    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · 2 of 3 accepted',
-    imageSrc: '/images/event-1.jpg',
-    imageAlt: 'Wedding reception on hold',
-    statusText: 'Dates on hold',
-    statusVariant: 'amber',
-    href: '/client/events/7/hold',
-  },
+];
+
+const TABS: { id: EventTabCategory; label: string }[] = [
+  { id: 'upcoming', label: 'Upcoming' },
+  { id: 'past', label: 'Past' },
+  { id: 'cancelled', label: 'Cancelled' },
+  { id: 'drafts', label: 'Drafts' },
 ];
 
 export default function YourEventsSection({
@@ -90,15 +114,43 @@ export default function YourEventsSection({
   events = defaultEvents,
 }: YourEventsSectionProps) {
   const [eventList, setEventList] = useState<EventItemData[]>(events);
-  const [activeTab, setActiveTab] = useState<'drafts' | 'confirmed'>('drafts');
-  const drafts = eventList.filter((event) =>
-    event.isDraft || /draft|in progress|planning/i.test(event.statusText),
-  );
-  const confirmed = eventList.filter((event) => !drafts.includes(event));
-  const visibleEvents = activeTab === 'drafts' ? drafts : confirmed;
+  const [activeTab, setActiveTab] = useState<EventTabCategory>('upcoming');
+
+  const getCategory = (event: EventItemData): EventTabCategory => {
+    if (event.tabCategory) return event.tabCategory;
+    if (event.isDraft || /draft|in progress|planning/i.test(event.statusText)) {
+      return 'drafts';
+    }
+    if (/completed/i.test(event.statusText)) return 'past';
+    if (/cancelled/i.test(event.statusText)) return 'cancelled';
+    return 'upcoming';
+  };
+
+  const visibleEvents = eventList.filter((e) => getCategory(e) === activeTab);
 
   const handleDeleteDraft = (id: string) => {
     setEventList((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleDownloadReceipt = (event: EventItemData) => {
+    const receiptText = [
+      'EVENTHUB - EVENT RECEIPT',
+      '========================',
+      `Event: ${event.title}`,
+      `Details: ${event.subtitle}`,
+      `Status: ${event.statusText}`,
+      `Generated: ${new Date().toLocaleDateString()}`,
+    ].join('\n');
+
+    const blob = new Blob([receiptText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${event.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-receipt.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -121,43 +173,35 @@ export default function YourEventsSection({
         </Link>
       </div>
 
-      <div role="tablist" aria-label="Event status" className="flex gap-6 border-b border-gray-200 mb-2">
-        <button
-          id="drafts-tab"
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'drafts'}
-          aria-controls="events-panel"
-          onClick={() => setActiveTab('drafts')}
-          className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors ${
-            activeTab === 'drafts'
-              ? 'border-[#266665] text-[#266665]'
-              : 'border-transparent text-gray-500 hover:text-[#1B2430]'
-          }`}
-        >
-          Drafts <span className="ml-2 text-xs text-gray-500">{drafts.length}</span>
-        </button>
-        <button
-          id="confirmed-tab"
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'confirmed'}
-          aria-controls="events-panel"
-          onClick={() => setActiveTab('confirmed')}
-          className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors ${
-            activeTab === 'confirmed'
-              ? 'border-[#266665] text-[#266665]'
-              : 'border-transparent text-gray-500 hover:text-[#1B2430]'
-          }`}
-        >
-          Confirmed <span className="ml-2 text-xs text-gray-500">{confirmed.length}</span>
-        </button>
+      <div role="tablist" aria-label="Event status" className="flex gap-6 border-b border-gray-200 mb-2 overflow-x-auto no-scrollbar">
+        {TABS.map((tab) => {
+          const count = eventList.filter((e) => getCategory(e) === tab.id).length;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              id={`${tab.id}-tab`}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls="events-panel"
+              onClick={() => setActiveTab(tab.id)}
+              className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors whitespace-nowrap cursor-pointer ${
+                isActive
+                  ? 'border-[#266665] text-[#266665]'
+                  : 'border-transparent text-gray-500 hover:text-[#1B2430]'
+              }`}
+            >
+              {tab.label} <span className="ml-1.5 text-xs text-gray-500">{count}</span>
+            </button>
+          );
+        })}
       </div>
 
       <div
         id="events-panel"
         role="tabpanel"
-        aria-labelledby={activeTab === 'drafts' ? 'drafts-tab' : 'confirmed-tab'}
+        aria-labelledby={`${activeTab}-tab`}
         className="divide-y divide-gray-100"
       >
         {visibleEvents.length ? (
@@ -166,15 +210,15 @@ export default function YourEventsSection({
               key={event.id}
               event={event}
               onDelete={handleDeleteDraft}
+              onDownloadReceipt={handleDownloadReceipt}
             />
           ))
         ) : (
           <p className="py-8 text-center text-sm text-[#4B5563]">
-            No {activeTab === 'drafts' ? 'drafts' : 'confirmed events'}.
+            No {activeTab} events.
           </p>
         )}
       </div>
     </section>
   );
 }
-
