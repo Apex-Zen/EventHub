@@ -1,5 +1,7 @@
 export type BadgeVariant = 'teal' | 'gray' | 'green' | 'amber' | 'red';
 
+export type EventTabCategory = 'upcoming' | 'past' | 'cancelled' | 'drafts';
+
 export interface PlanningCardData {
   id: string;
   category: string;
@@ -22,6 +24,7 @@ export interface EventItemData {
   href?: string;
   isDraft?: boolean;
   lastEdited?: string;
+  tabCategory?: EventTabCategory;
 }
 
 export interface WelcomeHeroProps {
@@ -48,6 +51,7 @@ export interface StatusBadgeProps {
 export interface EventListItemProps {
   event: EventItemData;
   onDelete?: (id: string) => void;
+  onDownloadReceipt?: (event: EventItemData) => void;
 }
 
 export interface YourEventsSectionProps {
