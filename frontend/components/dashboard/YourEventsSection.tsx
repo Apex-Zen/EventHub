@@ -72,6 +72,16 @@ const defaultEvents: EventItemData[] = [
     statusVariant: 'green',
     href: '/client/events/4/completed',
   },
+  {
+    id: '7',
+    title: 'Perera–Silva wedding',
+    subtitle: 'Sat 12 Dec 2026 · Night · Colombo · 2 of 3 accepted',
+    imageSrc: '/images/event-1.jpg',
+    imageAlt: 'Wedding reception on hold',
+    statusText: 'Dates on hold',
+    statusVariant: 'amber',
+    href: '/client/events/7/hold',
+  },
 ];
 
 export default function YourEventsSection({
