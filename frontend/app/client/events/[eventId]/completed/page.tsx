@@ -69,7 +69,6 @@ export default function EventCompletedPage() {
       {/* Full-bleed Dark Event Hero Banner */}
       <CompletedHeroBanner
         eventTitle="Perera–Silva wedding"
-        backHref="/client/events"
         subtitle="Marked complete by the event manager on Sat 12 Dec, 11.40 pm. All three payment stages are released."
         coverImageSrc="/images/event-1.jpg"
       />
