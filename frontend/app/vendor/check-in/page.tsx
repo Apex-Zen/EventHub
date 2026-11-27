@@ -13,6 +13,7 @@ const eventDetails = {
 
 const mockCheckIn = {
   distanceMeters: 140,
+  minimumAllowedMeters: 100,
   allowedWithinMeters: 200,
   arrivalTime: '4.52 pm',
   rejectedDistance: '1.4 km',
@@ -83,7 +84,67 @@ export default function CheckInPage() {
         <p className="text-sm text-gray-500 mt-1">{eventDetails.callTime}</p>
       </section>
 
-      <p className="text-sm text-gray-500">{view} view</p>
+      {view === 'ready' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <section className="bg-gray-100 rounded-lg border border-gray-200 p-6 sm:p-8 flex flex-col items-center justify-center">
+            <div
+              aria-label="You are within the venue check-in area"
+              className="relative w-56 h-56 max-w-full rounded-full border-2 border-dashed border-gray-400 bg-white flex-shrink-0"
+            >
+              <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                <span className="h-3 w-3 rounded-full bg-teal-700 ring-4 ring-teal-100" />
+                <span className="text-xs font-medium text-gray-700">you</span>
+              </div>
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+                venue
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
+              {mockCheckIn.allowedWithinMeters} m check-in area
+            </p>
+          </section>
+
+          <section className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 sm:p-6 space-y-5">
+            <div className="space-y-4">
+              <div className="flex items-start justify-between gap-4 text-sm">
+                <span className="text-gray-500">Distance to venue</span>
+                <span className="font-semibold text-gray-900">
+                  {mockCheckIn.distanceMeters} m
+                </span>
+              </div>
+              <div className="flex items-start justify-between gap-4 text-sm">
+                <span className="text-gray-500">Check-in allowed within</span>
+                <span className="font-semibold text-gray-900">
+                  {mockCheckIn.minimumAllowedMeters}-{mockCheckIn.allowedWithinMeters} m
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-4 pt-1">
+                <span className="text-sm text-gray-500">Status</span>
+                <span className="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                  Pending
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setView('arrived')}
+              className="min-h-11 w-full rounded-md bg-teal-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Check in now
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('code')}
+              className="min-h-11 w-full rounded-md px-4 py-2 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Location off? Use code or QR
+            </button>
+          </section>
+        </div>
+      ) : (
+        <p className="text-sm text-gray-500">{view} view</p>
+      )}
     </div>
   );
 }
