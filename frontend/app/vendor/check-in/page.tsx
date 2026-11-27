@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState, type ClipboardEvent, type KeyboardEvent } from 'react';
 
 type View = 'ready' | 'arrived' | 'rejected' | 'code';
 
@@ -25,6 +25,60 @@ const mockCheckIn = {
 // TODO: replace with POST /api/vendor/check-in and use returned arrival time/distance/payout when backend is ready
 export default function CheckInPage() {
   const [view, setView] = useState<View>('ready');
+  const [code, setCode] = useState<string[]>(() => Array.from({ length: 6 }, () => ''));
+  const [codeError, setCodeError] = useState('');
+  const [qrMessage, setQrMessage] = useState('');
+  const codeInputs = useRef<Array<HTMLInputElement | null>>([]);
+
+  function handleCodeChange(index: number, value: string) {
+    const digit = value.replace(/\D/g, '').slice(-1);
+    const nextCode = [...code];
+    nextCode[index] = digit;
+    setCode(nextCode);
+
+    if (digit && index < nextCode.length - 1) {
+      codeInputs.current[index + 1]?.focus();
+    }
+
+    if (nextCode.every(Boolean)) {
+      setCodeError('');
+    }
+  }
+
+  function handleCodeKeyDown(
+    index: number,
+    event: KeyboardEvent<HTMLInputElement>,
+  ) {
+    if (event.key !== 'Backspace') return;
+
+    if (!code[index] && index > 0) {
+      event.preventDefault();
+      const nextCode = [...code];
+      nextCode[index - 1] = '';
+      setCode(nextCode);
+      codeInputs.current[index - 1]?.focus();
+    }
+  }
+
+  function handleCodePaste(event: ClipboardEvent<HTMLInputElement>) {
+    event.preventDefault();
+    const digits = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    const nextCode = Array.from({ length: 6 }, (_, index) => digits[index] ?? '');
+    setCode(nextCode);
+    setCodeError('');
+    codeInputs.current[Math.min(digits.length, 5)]?.focus();
+  }
+
+  // TODO: validate the code with the backend
+  function handleCodeSubmit() {
+    if (code.join('').length !== 6) {
+      setCodeError('Enter the 6-digit code.');
+      return;
+    }
+
+    setCodeError('');
+    setView('arrived');
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -239,8 +293,79 @@ export default function CheckInPage() {
             </button>
           </div>
         </div>
+      ) : view === 'code' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <section className="rounded-lg border border-gray-200 bg-gray-100 p-5 sm:p-6">
+            <p className="text-sm text-gray-700">
+              Location is off. Check in with the 6-digit code from the event
+              manager, or scan the QR code at the venue entrance.
+            </p>
+          </section>
+
+          <section className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 sm:p-6 space-y-5">
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-3">Enter code</p>
+              <div className="flex justify-between gap-2">
+                {code.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={(element) => {
+                      codeInputs.current[index] = element;
+                    }}
+                    id={`check-in-code-${index + 1}`}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(event) => handleCodeChange(index, event.target.value)}
+                    onKeyDown={(event) => handleCodeKeyDown(index, event)}
+                    onPaste={handleCodePaste}
+                    aria-label={`Digit ${index + 1} of 6`}
+                    aria-describedby={codeError ? 'check-in-code-error' : undefined}
+                    aria-invalid={Boolean(codeError)}
+                    className="h-12 w-10 min-w-0 rounded-md border border-gray-300 text-center text-lg font-semibold text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 sm:w-12"
+                  />
+                ))}
+              </div>
+              {codeError && (
+                <p id="check-in-code-error" className="text-xs text-red-600 mt-2">
+                  {codeError}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleCodeSubmit}
+              className="min-h-11 w-full rounded-md bg-teal-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Check in with code
+            </button>
+
+            <div className="flex items-center gap-3" aria-hidden="true">
+              <span className="h-px flex-1 bg-gray-200" />
+              <span className="text-xs text-gray-500">or</span>
+              <span className="h-px flex-1 bg-gray-200" />
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                setQrMessage('QR scanning will be available in the mobile app.')
+              }
+              className="min-h-11 w-full rounded-md border border-teal-700 px-5 py-3 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Scan venue QR code
+            </button>
+            {qrMessage && <p className="text-sm text-gray-500">{qrMessage}</p>}
+
+            <p className="text-sm text-gray-500">
+              A valid code or QR sets your status to Arrived and releases stage 2.
+            </p>
+          </section>
+        </div>
       ) : (
-        <p className="text-sm text-gray-500">{view} view</p>
+        null
       )}
     </div>
   );
