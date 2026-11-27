@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, type FormEvent } from 'react';
 
 const request = {
   client: 'Nadeesha Perera',
@@ -14,6 +15,24 @@ const request = {
 };
 
 export default function RejectPackageRequestPage() {
+  const [reason, setReason] = useState('');
+  const [message, setMessage] = useState('');
+  const [reasonError, setReasonError] = useState('');
+  const [messageError, setMessageError] = useState('');
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextReasonError = reason ? '' : 'Please select a reason.';
+    const nextMessageError =
+      reason === 'Other' && !message.trim()
+        ? 'Please provide a message when selecting Other.'
+        : '';
+
+    setReasonError(nextReasonError);
+    setMessageError(nextMessageError);
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -72,6 +91,96 @@ export default function RejectPackageRequestPage() {
             </div>
           </div>
         </section>
+
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-5"
+        >
+          <div>
+            <label
+              htmlFor="rejection-reason"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Reason
+            </label>
+            <select
+              id="rejection-reason"
+              value={reason}
+              onChange={(event) => {
+                setReason(event.target.value);
+                setReasonError('');
+                if (event.target.value !== 'Other') setMessageError('');
+              }}
+              required
+              aria-describedby={reasonError ? 'reason-error' : undefined}
+              className="w-full rounded-md border border-gray-300 bg-white p-3 text-sm text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              <option value="">Select a reason</option>
+              <option value="Date no longer available">Date no longer available</option>
+              <option value="Price or budget mismatch">Price or budget mismatch</option>
+              <option value="Service not offered">Service not offered</option>
+              <option value="Double booked">Double booked</option>
+              <option value="Other">Other</option>
+            </select>
+            {reasonError && (
+              <p id="reason-error" className="text-xs text-red-600 mt-2">
+                {reasonError}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="client-message"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Message to client <span className="text-gray-500">(optional)</span>
+            </label>
+            <textarea
+              id="client-message"
+              value={message}
+              onChange={(event) => {
+                setMessage(event.target.value);
+                if (event.target.value.trim()) setMessageError('');
+              }}
+              maxLength={300}
+              rows={4}
+              required={reason === 'Other'}
+              aria-describedby={
+                messageError ? 'message-error message-count' : 'message-count'
+              }
+              className="w-full rounded-md border border-gray-300 p-3 text-sm text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            />
+            {messageError && (
+              <p id="message-error" className="text-xs text-red-600 mt-2">
+                {messageError}
+              </p>
+            )}
+            <p id="message-count" className="text-xs text-gray-500 text-right mt-1">
+              {message.length}/300
+            </p>
+          </div>
+
+          <p className="rounded-md bg-amber-50 p-4 text-sm text-gray-700">
+            Rejecting will release the Sat 12 Dec (night) hold and notify the client.
+          </p>
+
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+            <Link
+              href="/vendor/dashboard"
+              className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Confirm rejection
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
