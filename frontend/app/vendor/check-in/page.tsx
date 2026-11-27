@@ -193,6 +193,52 @@ export default function CheckInPage() {
             </Link>
           </section>
         </div>
+      ) : view === 'rejected' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <section className="bg-gray-100 rounded-lg border border-gray-200 p-6 sm:p-8 flex flex-col items-center justify-center">
+            <div
+              aria-label="Venue location"
+              className="relative w-56 h-56 max-w-full rounded-full border-2 border-dashed border-gray-400 bg-white flex-shrink-0"
+            >
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+                venue
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
+              you are {mockCheckIn.rejectedDistance} away
+            </p>
+          </section>
+
+          <div className="space-y-4">
+            <section
+              role="alert"
+              className="bg-white rounded-lg border border-red-600 shadow-sm p-5 sm:p-6"
+            >
+              <h2 className="text-xl font-bold font-serif text-red-600">
+                Check-in rejected
+              </h2>
+              <p className="text-sm text-gray-700 mt-3">
+                You are {mockCheckIn.rejectedDistance} from the venue. Move within
+                200 m and try again. The 50% stage stays held until you check in.
+              </p>
+            </section>
+
+            <button
+              type="button"
+              onClick={() => setView('ready')}
+              className="min-h-11 w-full rounded-md bg-teal-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Try again
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('code')}
+              className="min-h-11 w-full rounded-md px-4 py-2 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Location off? Use code or QR
+            </button>
+          </div>
+        </div>
       ) : (
         <p className="text-sm text-gray-500">{view} view</p>
       )}
