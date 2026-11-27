@@ -19,7 +19,9 @@ export default function RejectPackageRequestPage() {
   const [message, setMessage] = useState('');
   const [reasonError, setReasonError] = useState('');
   const [messageError, setMessageError] = useState('');
+  const [rejected, setRejected] = useState(false);
 
+  // TODO: replace with PATCH /api/vendor/package-requests/:id { status: "rejected", reason } when backend is ready
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -31,6 +33,61 @@ export default function RejectPackageRequestPage() {
 
     setReasonError(nextReasonError);
     setMessageError(nextMessageError);
+
+    if (!nextReasonError && !nextMessageError) {
+      setRejected(true);
+    }
+  }
+
+  if (rejected) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mx-auto">
+          <section className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 text-center">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="w-16 h-16 text-gray-500 mx-auto mb-5"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+              <path
+                d="M8 12h8"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <h1 className="text-3xl font-bold font-serif text-gray-900">
+              Request rejected
+            </h1>
+            <p className="text-sm text-gray-500 mt-3">
+              Sat 12 Dec (night) is free again, and the client has been notified.
+            </p>
+            <div className="mt-6 rounded-md bg-gray-50 p-4 text-left">
+              <p className="text-xs font-medium text-gray-500 mb-1">
+                Rejection reason
+              </p>
+              <p className="text-sm text-gray-900">{reason}</p>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-8">
+              <Link
+                href="/vendor/dashboard"
+                className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+              >
+                Back to dashboard
+              </Link>
+              <Link
+                href="/vendor/diary"
+                className="px-6 py-2 bg-teal-700 text-white rounded text-sm font-medium hover:bg-teal-800 transition-colors shadow-sm text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+              >
+                View diary
+              </Link>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
   }
 
   return (
