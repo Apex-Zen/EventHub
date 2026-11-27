@@ -22,6 +22,7 @@ const mockCheckIn = {
   netPayout: 'LKR 81,000',
 };
 
+// TODO: replace with POST /api/vendor/check-in and use returned arrival time/distance/payout when backend is ready
 export default function CheckInPage() {
   const [view, setView] = useState<View>('ready');
 
@@ -140,6 +141,56 @@ export default function CheckInPage() {
             >
               Location off? Use code or QR
             </button>
+          </section>
+        </div>
+      ) : view === 'arrived' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <section
+            role="status"
+            className="bg-white rounded-lg border border-green-700 shadow-sm p-5 sm:p-6"
+          >
+            <h2 className="text-xl font-bold font-serif text-green-700">Arrived</h2>
+            <p className="text-sm text-gray-700 mt-3">
+              Checked in at {mockCheckIn.arrivalTime}, {mockCheckIn.distanceMeters} m
+              from the venue. The event manager sees you as green.
+            </p>
+          </section>
+
+          <section className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 sm:p-6 space-y-5">
+            <div>
+              <h2 className="text-xl font-bold font-serif text-gray-900">
+                Stage 2 released
+              </h2>
+              <div className="mt-4 space-y-4">
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-gray-500">Gross (50%)</span>
+                  <span className="font-semibold text-gray-900">
+                    {mockCheckIn.grossPayout}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-gray-500">Commission (10%)</span>
+                  <span className="font-semibold text-gray-900">
+                    {mockCheckIn.commission}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-4 border-t border-gray-200 pt-4 text-sm">
+                  <span className="font-medium text-gray-700">Net to you</span>
+                  <span className="font-bold text-gray-900">
+                    {mockCheckIn.netPayout}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500">
+              Shows on Payouts as Pending.
+            </p>
+            <Link
+              href="/vendor/payouts"
+              className="flex min-h-11 w-full items-center justify-center rounded-md border border-teal-700 px-5 py-3 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Open payouts
+            </Link>
           </section>
         </div>
       ) : (
