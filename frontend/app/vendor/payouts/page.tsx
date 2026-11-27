@@ -136,6 +136,71 @@ export default function VendorPayouts() {
           Failed: the bank rejected the transfer for Fonseka anniversary. Update the payout account and it is retried automatically.
         </div>
       </div>
+
+      {/* Payout Receipts Card */}
+      <div className="bg-white p-6 rounded-sm shadow-sm border border-line">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-serif font-bold text-lg text-ink-900">Payout receipts</h2>
+          <button className="text-xs font-medium text-ink-900 hover:text-green-600 transition-colors">
+            Download all (ZIP)
+          </button>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-50 border-y border-line text-[10px] font-bold uppercase tracking-wider text-ink-500">
+                <th className="py-3 px-4">Receipt No.</th>
+                <th className="py-3 px-4">Event</th>
+                <th className="py-3 px-4">Stage</th>
+                <th className="py-3 px-4">Net</th>
+                <th className="py-3 px-4">Paid on</th>
+                <th className="py-3 px-4 text-right"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line text-xs">
+              <tr>
+                <td className="py-3.5 px-4 font-mono text-ink-700">EH-P-2026-01188</td>
+                <td className="py-3.5 px-4 text-ink-900">Wickrama birthday</td>
+                <td className="py-3.5 px-4 text-ink-600">3 · 30%</td>
+                <td className="py-3.5 px-4 text-ink-900">LKR 27,000</td>
+                <td className="py-3.5 px-4 text-ink-500">9 Nov</td>
+                <td className="py-3.5 px-4 text-right">
+                  <button className="font-medium text-ink-900 hover:text-green-600 transition-colors">
+                    Download PDF
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td className="py-3.5 px-4 font-mono text-ink-700">EH-P-2026-01102</td>
+                <td className="py-3.5 px-4 text-ink-900">Wickrama birthday</td>
+                <td className="py-3.5 px-4 text-ink-600">2 · 50%</td>
+                <td className="py-3.5 px-4 text-ink-900">LKR 45,000</td>
+                <td className="py-3.5 px-4 text-ink-500">8 Nov</td>
+                <td className="py-3.5 px-4 text-right">
+                  <button className="font-medium text-ink-900 hover:text-green-600 transition-colors">
+                    Download PDF
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td className="py-3.5 px-4 font-mono text-ink-700">EH-P-2026-00951</td>
+                <td className="py-3.5 px-4 text-ink-900">Perera–Silva wedding</td>
+                <td className="py-3.5 px-4 text-ink-600">1 · 20%</td>
+                <td className="py-3.5 px-4 text-ink-900">LKR 32,400</td>
+                <td className="py-3.5 px-4 text-ink-500">21 Oct</td>
+                <td className="py-3.5 px-4 text-right">
+                  <button className="font-medium text-ink-900 hover:text-green-600 transition-colors">
+                    Download PDF
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
