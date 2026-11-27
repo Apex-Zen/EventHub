@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function VendorPackageRequest() {
   return (
@@ -53,12 +54,12 @@ export default function VendorPackageRequest() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3 mt-2">
-            <button className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors">
+            <Link href="/vendor/dashboard/package-request/reject" className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors">
               Reject
-            </button>
-            <button className="px-6 py-2 bg-teal-700 text-white rounded text-sm font-medium hover:bg-teal-800 transition-colors shadow-sm">
+            </Link>
+            <Link href="/vendor/dashboard/package-request/accept" className="px-6 py-2 bg-teal-700 text-white rounded text-sm font-medium hover:bg-teal-800 transition-colors shadow-sm">
               Accept
-            </button>
+            </Link>
           </div>
 
         </div>
