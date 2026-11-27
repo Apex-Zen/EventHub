@@ -1,0 +1,244 @@
+'use client';
+
+import Link from 'next/link';
+import { useState, type FormEvent } from 'react';
+
+const request = {
+  client: 'Nadeesha Perera',
+  event: 'Perera-Silva wedding',
+  date: 'Sat 12 Dec (night)',
+  service: 'Full-day coverage',
+  price: 'LKR 180,000',
+  hold: 'Hold ends in 31 h',
+  image:
+    'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=200&q=80',
+};
+
+export default function RejectPackageRequestPage() {
+  const [reason, setReason] = useState('');
+  const [message, setMessage] = useState('');
+  const [reasonError, setReasonError] = useState('');
+  const [messageError, setMessageError] = useState('');
+  const [rejected, setRejected] = useState(false);
+
+  // TODO: replace with PATCH /api/vendor/package-requests/:id { status: "rejected", reason } when backend is ready
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextReasonError = reason ? '' : 'Please select a reason.';
+    const nextMessageError =
+      reason === 'Other' && !message.trim()
+        ? 'Please provide a message when selecting Other.'
+        : '';
+
+    setReasonError(nextReasonError);
+    setMessageError(nextMessageError);
+
+    if (!nextReasonError && !nextMessageError) {
+      setRejected(true);
+    }
+  }
+
+  if (rejected) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mx-auto">
+          <section className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 text-center">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="w-16 h-16 text-gray-500 mx-auto mb-5"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+              <path
+                d="M8 12h8"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <h1 className="text-3xl font-bold font-serif text-gray-900">
+              Request rejected
+            </h1>
+            <p className="text-sm text-gray-500 mt-3">
+              Sat 12 Dec (night) is free again, and the client has been notified.
+            </p>
+            <div className="mt-6 rounded-md bg-gray-50 p-4 text-left">
+              <p className="text-xs font-medium text-gray-500 mb-1">
+                Rejection reason
+              </p>
+              <p className="text-sm text-gray-900">{reason}</p>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-8">
+              <Link
+                href="/vendor/dashboard"
+                className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+              >
+                Back to dashboard
+              </Link>
+              <Link
+                href="/vendor/diary"
+                className="px-6 py-2 bg-teal-700 text-white rounded text-sm font-medium hover:bg-teal-800 transition-colors shadow-sm text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+              >
+                View diary
+              </Link>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="max-w-3xl mx-auto space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold font-serif text-gray-900">
+            Reject package request
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Rejecting this request will release the date so it is available again.
+          </p>
+        </div>
+
+        <Link
+          href="/vendor/dashboard"
+          className="inline-block text-sm text-teal-700 hover:text-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+        >
+          Back to dashboard
+        </Link>
+
+        <section className="bg-white rounded-lg border border-gray-200 border-l-[4px] border-l-teal-700 shadow-sm p-6">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+            <div className="w-24 h-32 rounded bg-gray-100 flex-shrink-0 overflow-hidden">
+              <img
+                src={request.image}
+                alt="Wedding Couple"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="flex-1 space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  Request summary
+                </h2>
+                <span className="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-full font-medium border border-amber-100">
+                  {request.hold}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[max-content_1fr] gap-x-6 gap-y-3 text-sm">
+                <span className="text-gray-500">Client</span>
+                <span className="font-semibold text-gray-900">{request.client}</span>
+
+                <span className="text-gray-500">Event</span>
+                <span className="font-semibold text-gray-900">{request.event}</span>
+
+                <span className="text-gray-500">Date</span>
+                <span className="font-semibold text-gray-900">{request.date}</span>
+
+                <span className="text-gray-500">Service</span>
+                <span className="font-semibold text-gray-900">{request.service}</span>
+
+                <span className="text-gray-500">Price</span>
+                <span className="font-semibold text-gray-900">{request.price}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-5"
+        >
+          <div>
+            <label
+              htmlFor="rejection-reason"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Reason
+            </label>
+            <select
+              id="rejection-reason"
+              value={reason}
+              onChange={(event) => {
+                setReason(event.target.value);
+                setReasonError('');
+                if (event.target.value !== 'Other') setMessageError('');
+              }}
+              required
+              aria-describedby={reasonError ? 'reason-error' : undefined}
+              className="w-full rounded-md border border-gray-300 bg-white p-3 text-sm text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              <option value="">Select a reason</option>
+              <option value="Date no longer available">Date no longer available</option>
+              <option value="Price or budget mismatch">Price or budget mismatch</option>
+              <option value="Service not offered">Service not offered</option>
+              <option value="Double booked">Double booked</option>
+              <option value="Other">Other</option>
+            </select>
+            {reasonError && (
+              <p id="reason-error" className="text-xs text-red-600 mt-2">
+                {reasonError}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="client-message"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Message to client <span className="text-gray-500">(optional)</span>
+            </label>
+            <textarea
+              id="client-message"
+              value={message}
+              onChange={(event) => {
+                setMessage(event.target.value);
+                if (event.target.value.trim()) setMessageError('');
+              }}
+              maxLength={300}
+              rows={4}
+              required={reason === 'Other'}
+              aria-describedby={
+                messageError ? 'message-error message-count' : 'message-count'
+              }
+              className="w-full rounded-md border border-gray-300 p-3 text-sm text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            />
+            {messageError && (
+              <p id="message-error" className="text-xs text-red-600 mt-2">
+                {messageError}
+              </p>
+            )}
+            <p id="message-count" className="text-xs text-gray-500 text-right mt-1">
+              {message.length}/300
+            </p>
+          </div>
+
+          <p className="rounded-md bg-amber-50 p-4 text-sm text-gray-700">
+            Rejecting will release the Sat 12 Dec (night) hold and notify the client.
+          </p>
+
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+            <Link
+              href="/vendor/dashboard"
+              className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              className="px-6 py-2 border border-teal-700 text-teal-700 rounded text-sm font-medium hover:bg-teal-50 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+            >
+              Confirm rejection
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
