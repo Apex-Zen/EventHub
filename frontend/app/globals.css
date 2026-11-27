@@ -2,7 +2,8 @@
 
 :root {
   --background: #f7fbfb;
-  --foreground: #1b2430;
+  --ink: #1b2430;
+  --foreground: var(--ink);
   --primary: #266665;
   --primary-pressed: #123b3a;
   --tint: #dbecec;
@@ -30,11 +31,22 @@ body {
     radial-gradient(ellipse at 12% 8%, rgb(219 236 236 / 55%), transparent 36%),
     var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins), sans-serif;
 }
 
 * {
   box-sizing: border-box;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .desktop-break {
@@ -234,7 +246,15 @@ body {
 .receipt-button:focus-visible,
 .progress-button:focus-visible,
 .use-another-card:focus-visible,
-.pay-again-button:focus-visible {
+.pay-again-button:focus-visible,
+.deposit-pay-button:focus-visible,
+.deposit-back-link:focus-visible,
+.dashboard-nav a:focus-visible,
+.event-tabs button:focus-visible,
+.table-link:focus-visible,
+.table-pay-button:focus-visible,
+.download-all-button:focus-visible,
+.receipts-table td button:focus-visible {
   outline: 3px solid rgb(38 102 101 / 35%);
   outline-offset: 3px;
 }
@@ -892,12 +912,13 @@ body {
   height: 7px;
   flex: 1;
   gap: 2px;
-  background: #c4dddd;
+  background: var(--tint);
 }
 
 .progress-track span {
-  width: 20%;
+  height: 100%;
   background: var(--primary);
+  transition: width 200ms ease;
 }
 
 .vendor-progress small {
@@ -999,11 +1020,11 @@ body {
 
 .download-all-button {
   min-height: 39px;
-  border: 1px solid #79a7a6;
+  border: 1px solid var(--primary);
   border-radius: 0;
   background: #fff;
   padding: 0 19px;
-  color: #266665;
+  color: var(--primary);
   cursor: pointer;
   font: inherit;
   font-size: 12px;
@@ -1068,7 +1089,7 @@ body {
 
 .receipts-table th {
   height: 34px;
-  background: #c8d7d4;
+  background: var(--tint);
   color: #68778a;
   font-size: 9px;
   font-weight: 700;
@@ -1103,7 +1124,7 @@ body {
 .receipts-table td button {
   border: 0;
   background: transparent;
-  color: #266665;
+  color: var(--primary);
   cursor: pointer;
   font: inherit;
   font-size: 11px;
@@ -1221,13 +1242,13 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #dceeee;
+  background: var(--tint);
   color: #91a5a6;
   font-size: 10px;
 }
 
 .refund-steps li.complete .refund-step-number {
-  background: #287674;
+  background: var(--primary);
   color: #fff;
 }
 
@@ -1269,7 +1290,7 @@ body {
 
 .refund-history-table th {
   height: 32px;
-  background: #dceeee;
+  background: var(--tint);
   color: #8995a5;
   font-size: 9px;
   font-weight: 700;
@@ -1292,6 +1313,422 @@ body {
 
 .refund-history-table tbody td {
   height: 42px;
+}
+
+.deposit-page {
+  width: min(calc(100% - 48px), 1064px);
+  margin: 58px auto 48px;
+}
+
+.deposit-heading {
+  margin-bottom: 17px;
+}
+
+.deposit-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.deposit-back-link:hover {
+  color: var(--primary-pressed);
+}
+
+.deposit-heading h1 {
+  margin: 8px 0 0;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: 33px;
+  line-height: 1.15;
+}
+
+.checkout-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+}
+
+.checkout-progress li {
+  display: flex;
+  min-width: 0;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 8px;
+  color: #647184;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.checkout-progress li:not(:last-child)::after {
+  width: clamp(16px, 3vw, 42px);
+  height: 1px;
+  margin-left: 4px;
+  background: #8db4b2;
+  content: "";
+}
+
+.checkout-progress li[aria-current="step"] {
+  color: var(--foreground);
+}
+
+.checkout-step-marker {
+  display: inline-flex;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--tint);
+  color: #829e9d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.checkout-step-marker svg {
+  width: 15px;
+  height: 15px;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.checkout-progress li.complete .checkout-step-marker,
+.checkout-progress li[aria-current="step"] .checkout-step-marker {
+  background: var(--primary);
+  color: #fff;
+}
+
+.deposit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.15fr) minmax(280px, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.deposit-event-card,
+.deposit-pay-card,
+.deposit-tax-card {
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgb(34 54 78 / 8%);
+}
+
+.deposit-event-card {
+  padding: 24px;
+}
+
+.deposit-event-overview {
+  display: grid;
+  grid-template-columns: 125px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 17px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e1e7ed;
+}
+
+.deposit-event-image {
+  display: grid;
+  min-height: 86px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse at 50% 80%, rgb(245 221 159 / 95%) 0 12%, transparent 13%),
+    radial-gradient(ellipse at 50% 100%, #476d57 0 30%, transparent 31%),
+    linear-gradient(155deg, #263b32 0%, #a2784d 46%, #21392f 100%);
+}
+
+.deposit-event-image span {
+  display: grid;
+  width: 41px;
+  height: 41px;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 62%);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 86%);
+  font-size: 22px;
+}
+
+.deposit-event-copy {
+  min-width: 0;
+}
+
+.deposit-event-copy h2 {
+  margin: 0 0 4px;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.deposit-event-copy p {
+  margin: 0;
+  color: #68778a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.deposit-event-copy p span {
+  margin: 0 3px;
+}
+
+.deposit-event-copy small {
+  display: block;
+  margin-top: 4px;
+  color: #8995a5;
+  font-size: 10px;
+}
+
+.deposit-package-total {
+  display: grid;
+  gap: 5px;
+  justify-items: end;
+}
+
+.deposit-package-total span {
+  color: #8995a5;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.deposit-package-total strong {
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.release-schedule {
+  margin-top: 16px;
+}
+
+.release-schedule h3 {
+  margin: 0 0 10px;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: 16px;
+}
+
+.release-schedule ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.release-stage {
+  display: grid;
+  min-height: 67px;
+  grid-template-columns: 36px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 13px;
+  border-bottom: 1px solid #e1e7ed;
+}
+
+.release-stage-number {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--primary);
+  font-size: 12px;
+}
+
+.release-stage-copy strong {
+  color: var(--foreground);
+  font-size: 11px;
+}
+
+.release-stage-copy strong span {
+  color: #8995a5;
+  padding: 0 2px;
+}
+
+.release-stage-copy p {
+  margin: 3px 0 0;
+  color: #8995a5;
+  font-size: 10px;
+}
+
+.release-stage-status {
+  border-radius: 999px;
+  background: #f3f7fa;
+  padding: 5px 10px;
+  color: #68778a;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.release-stage-amount {
+  min-width: 93px;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: 15px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.escrow-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 14px;
+  border-radius: 3px;
+  background: var(--tint);
+  padding: 12px;
+  color: #465564;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.escrow-notice svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  stroke: var(--primary);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.escrow-notice p {
+  margin: 0;
+}
+
+.deposit-sidebar {
+  display: grid;
+  gap: 14px;
+}
+
+.deposit-pay-card,
+.deposit-tax-card {
+  padding: 23px 24px;
+}
+
+.deposit-pay-card h2,
+.deposit-tax-card h2 {
+  margin: 0;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: 20px;
+}
+
+.deposit-label {
+  display: block;
+  margin-top: 12px;
+  color: var(--primary);
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.deposit-amount {
+  display: block;
+  margin: 10px 0 12px;
+  color: var(--foreground);
+  font-family: var(--font-playfair-display), Georgia, serif;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.deposit-balance {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid #e1e7ed;
+  padding-top: 12px;
+  color: #68778a;
+  font-size: 10px;
+}
+
+.deposit-balance strong {
+  color: var(--foreground);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.gateway-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 12px;
+  color: #788596;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.gateway-note svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  stroke: #68778a;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.deposit-pay-button {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.deposit-pay-button:hover {
+  background: var(--primary-pressed);
+}
+
+.deposit-tax-card h2 {
+  margin-bottom: 13px;
+}
+
+.deposit-tax-card dl {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+}
+
+.deposit-tax-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #68778a;
+  font-size: 10px;
+}
+
+.deposit-tax-card dd {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.deposit-tax-card .deposit-tax-total {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.deposit-tax-card > p {
+  margin: 13px 0 0;
+  color: #8995a5;
+  font-size: 9px;
+  line-height: 1.5;
 }
 
 @keyframes payment-spin {
@@ -1423,6 +1860,29 @@ body {
   .milestone-stages {
     grid-template-columns: 1fr;
   }
+
+  .deposit-page {
+    width: min(calc(100% - 32px), 650px);
+    margin-top: 32px;
+  }
+
+  .deposit-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .deposit-event-card {
+    padding: 18px;
+  }
+
+  .deposit-sidebar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .deposit-pay-card,
+  .deposit-tax-card {
+    padding: 19px;
+  }
 }
 
 @media (max-width: 380px) {
@@ -1450,6 +1910,52 @@ body {
   .declined-actions {
     flex-direction: column;
   }
+
+  .checkout-progress {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .checkout-progress li:not(:last-child)::after {
+    width: 16px;
+  }
+
+  .deposit-event-overview {
+    grid-template-columns: 74px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .deposit-event-image {
+    min-height: 70px;
+  }
+
+  .deposit-package-total {
+    grid-column: 2;
+    justify-items: start;
+  }
+
+  .release-stage {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 9px;
+  }
+
+  .release-stage-number {
+    width: 32px;
+    height: 32px;
+  }
+
+  .release-stage-status {
+    display: none;
+  }
+
+  .release-stage-amount {
+    min-width: auto;
+    font-size: 13px;
+  }
+
+  .deposit-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1471,7 +1977,13 @@ body {
   }
 
   .dashboard-header,
-  .success-actions {
+  .success-actions,
+  .receipts-filters,
+  .download-all-button,
+  .table-link,
+  .table-pay-button,
+  .receipts-table th:last-child,
+  .receipts-table td:last-child {
     display: none;
   }
 
